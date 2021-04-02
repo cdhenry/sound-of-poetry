@@ -7,7 +7,7 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(pos, synsetid) AS total FROM images_synsets";
+  var queryTotal = "SELECT COUNT(*) AS total FROM images_synsets";
   var limit = req.query.limit || 20;
   var page = req.query.page;
   var offset = (page - 1) * limit;
@@ -22,8 +22,8 @@ router.get("/", function (req, res) {
 
     var query = `
       SELECT *
-      FROM images_synsets is
-      JOIN wordsxsensesxsynsets wss ON is.synsetid = wss.synsetid
+      FROM images_synsets iss
+      JOIN wordsXsensesXsynsets wss ON iss.synsetid = wss.synsetid
       LIMIT ${limit}
       OFFSET ${offset};
     `;

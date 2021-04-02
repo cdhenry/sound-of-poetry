@@ -30,15 +30,15 @@ export default function Library(): JSX.Element {
     const limit = 20
 
     const getList = useCallback(
-        async (page: number = 1) => {
+        async (page: number = 1, filter: LibraryFilterEnum = LibraryFilterEnum.Poems) => {
             try {
                 setIsLoading(true)
                 let data = { total: 0, items: [] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[] }
-                if (filterType === LibraryFilterEnum.Poems) data = await _poemService.getPoems({ limit, page })
-                else if (filterType === LibraryFilterEnum.Poets) data = await _poetService.getPoets({ limit, page })
-                else if (filterType === LibraryFilterEnum.Words) data = await _wordService.getWords({ limit, page })
-                else if (filterType === LibraryFilterEnum.Sounds) data = await _soundService.getSounds({ limit, page })
-                else if (filterType === LibraryFilterEnum.Images) data = await _imageService.getImages({ limit, page })
+                if (filter === LibraryFilterEnum.Poems) data = await _poemService.getPoems({ limit, page })
+                else if (filter === LibraryFilterEnum.Poets) data = await _poetService.getPoets({ limit, page })
+                else if (filter === LibraryFilterEnum.Words) data = await _wordService.getWords({ limit, page })
+                else if (filter === LibraryFilterEnum.Sounds) data = await _soundService.getSounds({ limit, page })
+                else if (filter === LibraryFilterEnum.Images) data = await _imageService.getImages({ limit, page })
 
                 setTotal(data.total)
                 setList(data.items)
@@ -48,17 +48,16 @@ export default function Library(): JSX.Element {
                 setIsLoading(false)
             }
         },
-        [filterType, _poemService, _poetService, _soundService, _wordService, _imageService]
+        [_poemService, _poetService, _soundService, _wordService, _imageService]
     )
 
     const handlePageChange = async (pageNumber: number) => {
-        getList(pageNumber)
+        getList(pageNumber, filterType)
     }
 
     const handleFilterChange = async (filter: LibraryFilterEnum) => {
         setFilterType(filter)
-        switch (filter) {
-        }
+        getList(1, filter)
     }
 
     useEffect(() => {
