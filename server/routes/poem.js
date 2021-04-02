@@ -1,4 +1,4 @@
-var config = require("../../db-config.js");
+var config = require("../db-config.js");
 var mysql = require("mysql");
 var express = require("express");
 var router = express.Router();
