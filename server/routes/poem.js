@@ -17,22 +17,21 @@ router.get("/", function (req, res) {
     if (err) {
       return err;
     } else {
-      //store Total count in variable
       totalCount = rows[0].total;
     }
 
     var query = `
-    SELECT *
-    FROM poem
-    LIMIT ${limit}
-    OFFSET ${offset};
-  `;
+      SELECT *
+      FROM poem
+      LIMIT ${limit}
+      OFFSET ${offset};
+    `;
 
     connection.query(query, function (err, rest) {
       if (err) {
         return err;
       } else {
-        res.json({ total: totalCount, poems: rest });
+        res.json({ total: totalCount, items: rest });
       }
     });
   });
