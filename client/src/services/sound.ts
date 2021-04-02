@@ -1,7 +1,7 @@
 import axios from 'axios';
 import FreeSound from 'freesound-client';
 
-import tokens from '../../../config-tokens';
+import tokens from '../common/assets/config-tokens';
 import { IPaginatedList, IPaginatedParams } from '../interfaces/shared';
 import { ISound } from '../interfaces/sound';
 
