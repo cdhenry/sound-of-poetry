@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Shelf from '../../components/molecules/Shelf';
 import { LibraryFilterEnum } from '../../enums/filters';
@@ -29,35 +29,27 @@ export default function Library(): JSX.Element {
     const [total, setTotal] = useState(0)
     const limit = 20
 
-    const getList = async (page: number = 1) => {
-        try {
-            setIsLoading(true)
-            let data
-            switch (filterType) {
-                case LibraryFilterEnum.Poems:
-                    data = await _poemService.getPoems({ limit, page })
-                    break
-                case LibraryFilterEnum.Poets:
-                    data = await _poetService.getPoets({ limit, page })
-                    break
-                case LibraryFilterEnum.Words:
-                    data = await _wordService.getWords({ limit, page })
-                    break
-                case LibraryFilterEnum.Sounds:
-                    data = await _soundService.getSounds({ limit, page })
-                    break
-                case LibraryFilterEnum.Images:
-                    data = await _imageService.getImages({ limit, page })
-                    break
+    const getList = useCallback(
+        async (page: number = 1) => {
+            try {
+                setIsLoading(true)
+                let data = { total: 0, items: [] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[] }
+                if (filterType === LibraryFilterEnum.Poems) data = await _poemService.getPoems({ limit, page })
+                else if (filterType === LibraryFilterEnum.Poets) data = await _poetService.getPoets({ limit, page })
+                else if (filterType === LibraryFilterEnum.Words) data = await _wordService.getWords({ limit, page })
+                else if (filterType === LibraryFilterEnum.Sounds) data = await _soundService.getSounds({ limit, page })
+                else if (filterType === LibraryFilterEnum.Images) data = await _imageService.getImages({ limit, page })
+
+                setTotal(data.total)
+                setList(data.items)
+            } catch (e) {
+                console.log(e)
+            } finally {
+                setIsLoading(false)
             }
-            setTotal(data.total)
-            setList(data.items)
-        } catch (e) {
-            console.log(e)
-        } finally {
-            setIsLoading(false)
-        }
-    }
+        },
+        [filterType, _poemService, _poetService, _soundService, _wordService, _imageService]
+    )
 
     const handlePageChange = async (pageNumber: number) => {
         getList(pageNumber)
@@ -71,7 +63,7 @@ export default function Library(): JSX.Element {
 
     useEffect(() => {
         if (!list.length) getList()
-    })
+    }, [list, getList])
 
     return (
         <LibraryTemplate
@@ -83,7 +75,7 @@ export default function Library(): JSX.Element {
                     <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
                         <Shelf
                             context="Library"
-                            items={list.map((item: IPoem | IPoet | IWord | ISound | IImage) => {
+                            items={list?.map((item: IPoem | IPoet | IWord | ISound | IImage) => {
                                 switch (filterType) {
                                     case LibraryFilterEnum.Poems:
                                         return { title: (item as IPoem).title }
