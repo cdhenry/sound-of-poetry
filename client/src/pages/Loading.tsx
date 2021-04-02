@@ -1,7 +1,5 @@
 import React from 'react';
 
-function Loading(): JSX.Element {
-    return <></>
+export default function Loading(): JSX.Element {
+    return <section className="flex justify-center items-center h-screen">Loading...</section>
 }
-
-export default Loading

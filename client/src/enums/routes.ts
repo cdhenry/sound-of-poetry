@@ -1,3 +1,7 @@
 export enum RoutesEnum {
-    dashboard = '/dashboard'
+    Map = '/map',
+    Home = '/home',
+    Library = '/library',
+    Studio = '/studio',
+    Theater = '/theater'
 }
