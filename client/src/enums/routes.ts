@@ -1,6 +1,6 @@
 export enum RoutesEnum {
     Map = '/map',
-    Home = '/home',
+    Home = '/',
     Library = '/library',
     Studio = '/studio',
     Theater = '/theater'
