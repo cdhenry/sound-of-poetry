@@ -47,7 +47,7 @@ router.get("/:poem", function (req, res) {
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
-      res.json(rows);
+      res.json(rows[0]);
     }
   });
 });
