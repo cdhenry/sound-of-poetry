@@ -15,7 +15,7 @@ function App(): JSX.Element {
 
     return (
         <Router history={history}>
-            <section className="flex bg-coolGray-200 min-h-screen">
+            <section className="background flex bg-coolGray-200 min-h-screen">
                 <section className="flex-grow">
                     <Navigation />
                     <main>
