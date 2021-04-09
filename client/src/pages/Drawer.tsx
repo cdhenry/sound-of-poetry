@@ -15,7 +15,7 @@ export default function Drawer(): JSX.Element {
                 </button>
             </div>
             {isAsideVisible && (
-                <aside className="flex-none min-w-xs max-w-xs min-h-full bg-blueGray-500">
+                <aside className="flex-none min-w-xs max-w-xs min-h-full bg-indigo-100">
                     <section className="flex flex-col justify-center items-center">Drawer</section>
                 </aside>
             )}
