@@ -11,8 +11,8 @@ export class PoemService {
         return response.data as IPaginatedList<IPoem>
     }
 
-    public async getPoem(params: { id: number }) {
-        let response = await axios.get(`${this._baseUrl}`, { params })
+    public async getPoem(id: number) {
+        let response = await axios.get(`${this._baseUrl}${id}`)
         return response.data as IPoem
     }
 }

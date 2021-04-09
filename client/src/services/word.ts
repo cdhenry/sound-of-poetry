@@ -11,8 +11,8 @@ export class WordService {
         return response.data as IPaginatedList<IWord>
     }
 
-    public async getWord(params: { id: number }) {
-        let response = await axios.get(`${this._baseUrl}`, { params })
+    public async getWord(id: number) {
+        let response = await axios.get(`${this._baseUrl}${id}`)
         return response.data as IWord
     }
 }

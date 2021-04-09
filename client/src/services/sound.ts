@@ -18,8 +18,8 @@ export class SoundService {
         return response.data as IPaginatedList<ISound>
     }
 
-    public async getSound(params: { id: number }) {
-        let response = await axios.get(`${this._baseUrl}`, { params })
+    public async getSound(id: number) {
+        let response = await axios.get(`${this._baseUrl}${id}`)
         return response.data as ISound
     }
 

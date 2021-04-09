@@ -15,10 +15,10 @@ function App(): JSX.Element {
 
     return (
         <Router history={history}>
-            <section className="background flex bg-coolGray-200 min-h-screen">
+            <section className="background flex min-h-screen">
                 <section className="flex-grow">
                     <Navigation />
-                    <main>
+                    <main className="m-4">
                         <Routes />
                     </main>
                 </section>

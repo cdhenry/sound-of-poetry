@@ -18,7 +18,7 @@ library.add(faBook, faHome, faMicrophone, faPen, faMapMarkerAlt, faTimes)
 
 export default function Navigation(): JSX.Element {
     const defaultClassName =
-        'relative flex justify-around items-center p-5 min-w-1/2 border border-2 border-black rounded bg-indigo-100 shadow-lg'
+        'relative flex justify-around items-center p-5 min-w-1/2 border border-2 border-gray-500 rounded bg-indigo-100 shadow-lg'
     const linkClassName =
         'hover:transform hover:scale-150 transition delay-100 duration-200 ease-in ease-out active:text-gray-500'
     const [isNavVisible, setIsNavVisible] = useState(true)

@@ -7,9 +7,7 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
     const { total, limit, children } = props
 
     const onChange = (data: { selected: number }) => {
-        let selected = data.selected
-        console.log(selected)
-        props.handlePageChange(selected)
+        props.handlePageChange(data.selected)
     }
 
     return (

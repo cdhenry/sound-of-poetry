@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { randomInteger } from '../../common/utils/randomInteger';
+import Paper from '../../components/atoms/Paper';
 import Shelf from '../../components/molecules/Shelf';
 import { LibraryFilterEnum } from '../../enums/filters';
+import { HandwritingFontEnum } from '../../enums/fonts';
 import { IImage } from '../../interfaces/image';
 import { IPoem } from '../../interfaces/poem';
 import { IPoet } from '../../interfaces/poet';
@@ -24,13 +27,29 @@ export default function Library(): JSX.Element {
     const _soundService: SoundService = soundService
     const _imageService: ImageService = imageService
     const [isLoading, setIsLoading] = useState(true)
+    const [isList, setIsList] = useState(true)
     const [list, setList] = useState([] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[])
+    const [listItem, setListItem] = useState({} as IPoem | IPoet | IWord | ISound | IImage)
+    const [listItemHandwriting, setListItemHandwriting] = useState('' as never)
     const [filterType, setFilterType] = useState(LibraryFilterEnum.Poems)
     const [total, setTotal] = useState(0)
     const limit = 20
 
+    const handlePageChange = async (pageNumber: number) => {
+        await getList(pageNumber, filterType)
+    }
+
+    const handleFilterChange = async (filter: LibraryFilterEnum) => {
+        setFilterType(filter)
+        await getList(1, filter)
+    }
+
+    const handleListItem = async (id: any, handwriting: never) => {
+        await getListItem(id, handwriting)
+    }
+
     const getList = useCallback(
-        async (page: number = 1, filter: LibraryFilterEnum = LibraryFilterEnum.Poems) => {
+        async (page: number = 1, filter: LibraryFilterEnum = filterType) => {
             try {
                 setIsLoading(true)
                 let data = { total: 0, items: [] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[] }
@@ -42,22 +61,59 @@ export default function Library(): JSX.Element {
 
                 setTotal(data.total)
                 setList(data.items)
+                setIsList(true)
             } catch (e) {
                 console.log(e)
             } finally {
                 setIsLoading(false)
             }
         },
-        [_poemService, _poetService, _soundService, _wordService, _imageService]
+        [_poemService, _poetService, _soundService, _wordService, _imageService, filterType]
     )
 
-    const handlePageChange = async (pageNumber: number) => {
-        getList(pageNumber, filterType)
-    }
+    const getListItem = useCallback(
+        async (id: any, handwriting: never, filter: LibraryFilterEnum = filterType) => {
+            try {
+                setIsLoading(true)
+                let data = {} as IPoem | IPoet | IWord | ISound | IImage
+                if (filter === LibraryFilterEnum.Poems) data = await _poemService.getPoem(id)
+                else if (filter === LibraryFilterEnum.Poets) data = await _poetService.getPoet(id)
+                else if (filter === LibraryFilterEnum.Words) data = await _wordService.getWord(id)
+                else if (filter === LibraryFilterEnum.Sounds) data = await _soundService.getSound(id)
+                else if (filter === LibraryFilterEnum.Images) data = await _imageService.getImage(id)
 
-    const handleFilterChange = async (filter: LibraryFilterEnum) => {
-        setFilterType(filter)
-        getList(1, filter)
+                setListItemHandwriting(handwriting)
+                setListItem(data)
+                setIsList(false)
+            } catch (e) {
+                console.log(e)
+            } finally {
+                setIsLoading(false)
+            }
+        },
+        [_poemService, _poetService, _soundService, _wordService, _imageService, filterType]
+    )
+
+    const displayListItem = (): React.ReactNode => {
+        let content
+        switch (filterType) {
+            case LibraryFilterEnum.Poems:
+                content = (listItem as IPoem).poem_string
+                break
+            case LibraryFilterEnum.Poets:
+                content = (listItem as IPoet).bio
+                break
+            case LibraryFilterEnum.Words:
+                content = (listItem as IWord).definition
+                break
+            case LibraryFilterEnum.Sounds:
+                content = (listItem as ISound).ytid
+                break
+            case LibraryFilterEnum.Images:
+                content = (listItem as IImage).image_url
+                break
+        }
+        return <Paper handwritingEnumKey={listItemHandwriting}>{content}</Paper>
     }
 
     useEffect(() => {
@@ -70,29 +126,53 @@ export default function Library(): JSX.Element {
             content={
                 isLoading ? (
                     <Loading />
-                ) : (
+                ) : isList ? (
                     <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
                         <Shelf
                             context="Library"
                             items={list?.map((item: IPoem | IPoet | IWord | ISound | IImage) => {
+                                const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
+                                const handwritingEnumKey = handwritingEnumKeys[
+                                    randomInteger(0, handwritingEnumKeys.length - 1)
+                                ] as never
                                 switch (filterType) {
-                                    case LibraryFilterEnum.Poems:
-                                        return { title: (item as IPoem).title }
                                     case LibraryFilterEnum.Poets:
-                                        return { title: (item as IPoet).name }
+                                        item = item as IPoet
+                                        return { id: item.id, title: item.name, handleListItem, handwritingEnumKey }
                                     case LibraryFilterEnum.Words:
-                                        return { title: (item as IWord).lemma }
+                                        item = item as IWord
+                                        return {
+                                            id: item.wordid,
+                                            title: item.lemma,
+                                            handleListItem,
+                                            handwritingEnumKey
+                                        }
                                     case LibraryFilterEnum.Sounds:
-                                        return { title: (item as ISound).display_name }
+                                        item = item as ISound
+                                        return {
+                                            id: item.ytid,
+                                            title: item.display_name,
+                                            handleListItem,
+                                            handwritingEnumKey
+                                        }
                                     case LibraryFilterEnum.Images:
                                         item = item as IImage
-                                        return { title: item.lemma, cover: { src: item.image_url, alt: item.lemma } }
+                                        return {
+                                            id: item.image_url,
+                                            title: item.lemma,
+                                            cover: { src: item.image_url, alt: item.lemma },
+                                            handleListItem,
+                                            handwritingEnumKey
+                                        }
                                     default:
-                                        return { title: '' }
+                                        item = item as IPoem
+                                        return { id: item.id, title: item.title, handleListItem, handwritingEnumKey }
                                 }
                             })}
                         />
                     </PaginateTemplate>
+                ) : (
+                    displayListItem()
                 )
             }
         />
