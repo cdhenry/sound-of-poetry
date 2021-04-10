@@ -5,6 +5,7 @@ import Paper from '../../components/atoms/Paper';
 import Shelf from '../../components/molecules/Shelf';
 import { LibraryFilterEnum } from '../../enums/filters';
 import { HandwritingFontEnum } from '../../enums/fonts';
+import { TailwindHeightEnum } from '../../enums/tailwind';
 import { IImage } from '../../interfaces/image';
 import { IPoem } from '../../interfaces/poem';
 import { IPoet } from '../../interfaces/poet';
@@ -33,7 +34,7 @@ export default function Library(): JSX.Element {
     const [listItemHandwriting, setListItemHandwriting] = useState('' as never)
     const [filterType, setFilterType] = useState(LibraryFilterEnum.Poems)
     const [total, setTotal] = useState(0)
-    const limit = 20
+    const limit = 15
 
     const handlePageChange = async (pageNumber: number) => {
         await getList(pageNumber, filterType)
@@ -113,16 +114,34 @@ export default function Library(): JSX.Element {
                 content = (listItem as IImage).image_url
                 break
         }
-        return <Paper handwritingEnumKey={listItemHandwriting}>{content}</Paper>
+        return (
+            <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                {content}
+            </Paper>
+        )
     }
 
     useEffect(() => {
         if (!list.length) getList()
     }, [list, getList])
 
+    const handleBack = () => {
+        handleFilterChange(filterType)
+    }
+
     return (
         <LibraryTemplate
-            header={<LibraryFilters handleFilterChange={handleFilterChange} />}
+            header={
+                isList ? (
+                    <LibraryFilters handleFilterChange={handleFilterChange} />
+                ) : (
+                    <div className="flex justify-center">
+                        <button className="p-2 border-gray-500 border-2 rounded bg-indigo-100" onClick={handleBack}>
+                            Back
+                        </button>
+                    </div>
+                )
+            }
             content={
                 isLoading ? (
                     <Loading />
@@ -166,7 +185,12 @@ export default function Library(): JSX.Element {
                                         }
                                     default:
                                         item = item as IPoem
-                                        return { id: item.id, title: item.title, handleListItem, handwritingEnumKey }
+                                        return {
+                                            id: item.id,
+                                            title: item.title,
+                                            handleListItem,
+                                            handwritingEnumKey
+                                        }
                                 }
                             })}
                         />

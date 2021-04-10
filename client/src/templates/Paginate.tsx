@@ -11,8 +11,8 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
     }
 
     return (
-        <section className="flex flex-col">
-            <div className="flex-none flex justify-between m-2">
+        <section className="flex flex-col p-2">
+            <div className="flex-none flex justify-between mb-2">
                 <div>Total: {total}</div>
                 <ReactPaginate
                     previousLabel={'<'}

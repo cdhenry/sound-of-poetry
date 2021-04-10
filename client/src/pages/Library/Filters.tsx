@@ -4,8 +4,8 @@ import { LibraryFilterEnum } from '../../enums/filters';
 import { ILibraryFilters } from '../../interfaces/filters';
 
 export default function LibraryFilters(props: ILibraryFilters): JSX.Element {
-    const defaultClassName = 'flex justify-around p-2 border-gray-500 border-2 rounded bg-gray-50'
-    const buttonClassName = 'cursor-pointer bg-gray-50 hover:text-gray-500 active:text-black'
+    const defaultClassName = 'flex justify-around p-2 border-gray-500 border-2 rounded bg-indigo-100'
+    const buttonClassName = 'cursor-pointer bg-transparent'
     const handleFilterChange = (event: MouseEvent<HTMLInputElement>) => {
         props.handleFilterChange((event.target as HTMLInputElement).value as LibraryFilterEnum)
     }

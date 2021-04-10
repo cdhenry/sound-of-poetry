@@ -15,14 +15,16 @@ function App(): JSX.Element {
 
     return (
         <Router history={history}>
-            <section className="background flex min-h-screen">
-                <section className="flex-grow">
+            <section className="background h-screen overflow-y-hidden">
+                <nav className="absolute bg-transparent left-4 top-28">
                     <Navigation />
-                    <main className="m-4">
-                        <Routes />
-                    </main>
-                </section>
-                <Drawer />
+                </nav>
+                <aside className="absolute bg-transparent right-4 top-28">
+                    <Drawer />
+                </aside>
+                <main className="h-screen overflow-y-auto">
+                    <Routes />
+                </main>
             </section>
         </Router>
     )

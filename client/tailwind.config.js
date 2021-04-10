@@ -367,6 +367,7 @@ module.exports = {
             '4/6': '66.666667%',
             '5/6': '83.333333%',
             full: '100%',
+            'screen-90': '90vh',
             screen: '100vh'
         }),
         inset: (theme, { negative }) => ({
@@ -481,6 +482,9 @@ module.exports = {
         minHeight: {
             0: '0px',
             full: '100%',
+            '1/4-screen': '25vh',
+            '1/2-screen': '50vh',
+            '3/4-screen': '75vh',
             screen: '100vh'
         },
         minWidth: {
