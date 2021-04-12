@@ -30,7 +30,7 @@ export default function Library(): JSX.Element {
     const [isLoading, setIsLoading] = useState(true)
     const [isList, setIsList] = useState(true)
     const [list, setList] = useState([] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[])
-    const [listItem, setListItem] = useState({} as IPoem | IPoet | IWord | ISound | IImage)
+    const [listItem, setListItem] = useState({} as any)
     const [listItemHandwriting, setListItemHandwriting] = useState('' as never)
     const [filterType, setFilterType] = useState(LibraryFilterEnum.Poems)
     const [total, setTotal] = useState(0)
@@ -47,6 +47,10 @@ export default function Library(): JSX.Element {
 
     const handleListItem = async (id: any, handwriting: never) => {
         await getListItem(id, handwriting)
+    }
+
+    const handleBack = async () => {
+        await handleFilterChange(filterType)
     }
 
     const getList = useCallback(
@@ -76,9 +80,12 @@ export default function Library(): JSX.Element {
         async (id: any, handwriting: never, filter: LibraryFilterEnum = filterType) => {
             try {
                 setIsLoading(true)
-                let data = {} as IPoem | IPoet | IWord | ISound | IImage
-                if (filter === LibraryFilterEnum.Poems) data = await _poemService.getPoem(id)
-                else if (filter === LibraryFilterEnum.Poets) data = await _poetService.getPoet(id)
+                let data = {} as any
+                if (filter === LibraryFilterEnum.Poems) {
+                    const poem = await _poemService.getPoem(id)
+                    const wordList = await _poemService.getPoemWords(id)
+                    data = { wordList, poem }
+                } else if (filter === LibraryFilterEnum.Poets) data = await _poetService.getPoet(id)
                 else if (filter === LibraryFilterEnum.Words) data = await _wordService.getWord(id)
                 else if (filter === LibraryFilterEnum.Sounds) data = await _soundService.getSound(id)
                 else if (filter === LibraryFilterEnum.Images) data = await _imageService.getImage(id)
@@ -95,11 +102,31 @@ export default function Library(): JSX.Element {
         [_poemService, _poetService, _soundService, _wordService, _imageService, filterType]
     )
 
-    const displayListItem = (): React.ReactNode => {
+    const displayListItem = () => {
         let content
         switch (filterType) {
             case LibraryFilterEnum.Poems:
-                content = (listItem as IPoem).poem_string
+                const poemLines = listItem.poem.poem_string.split(/\n/)
+                const lemmas = listItem.wordList.map((word: any) => word.lemma)
+                let linkedArr: React.ReactNode[] = []
+                poemLines.forEach((line: any) => {
+                    const words = line.split(' ')
+                    words.forEach((word: string) => {
+                        const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
+                        const cleanedWord = word.replace(regex, '').toLowerCase()
+                        linkedArr.push(
+                            lemmas.includes(cleanedWord) ? (
+                                <>
+                                    <a className="underline hover:bg-rose-200 cursor-pointer">{word}</a>{' '}
+                                </>
+                            ) : (
+                                <span>{word} </span>
+                            )
+                        )
+                    })
+                    linkedArr.push(<br />)
+                })
+                content = linkedArr
                 break
             case LibraryFilterEnum.Poets:
                 content = (listItem as IPoet).bio
@@ -114,9 +141,10 @@ export default function Library(): JSX.Element {
                 content = (listItem as IImage).image_url
                 break
         }
+        console.log('displayListItem', content)
         return (
             <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
-                {content}
+                <>{content}</>
             </Paper>
         )
     }
@@ -124,10 +152,6 @@ export default function Library(): JSX.Element {
     useEffect(() => {
         if (!list.length) getList()
     }, [list, getList])
-
-    const handleBack = () => {
-        handleFilterChange(filterType)
-    }
 
     return (
         <LibraryTemplate

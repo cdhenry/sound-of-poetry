@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { IPoem } from '../interfaces/poem';
+import { IPoem, IPoemWord } from '../interfaces/poem';
 import { IPaginatedList, IPaginatedParams } from '../interfaces/shared';
 
 export class PoemService {
@@ -14,6 +14,11 @@ export class PoemService {
     public async getPoem(id: number) {
         let response = await axios.get(`${this._baseUrl}${id}`)
         return response.data as IPoem
+    }
+
+    public async getPoemWords(id: number) {
+        let response = await axios.get(`${this._baseUrl}${id}/words`)
+        return response.data as IPoemWord[]
     }
 }
 

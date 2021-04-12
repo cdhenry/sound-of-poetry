@@ -55,12 +55,11 @@ router.get("/:poem", function (req, res) {
 router.get("/:poem/words", function (req, res) {
   var id = req.params.poem;
   var query = `
-    SELECT use_count
-    FROM poemhas_openword
-    WHERE poem_id = ${id}
-    ORDER BY DESC
-    LIMIT 1;
-  `;
+      SELECT pw.poem_id, pw.word_id, w.lemma, pw.use_count
+      FROM poem_wordnet pw
+      JOIN words w ON pw.word_id = w.wordid
+      WHERE pw.poem_id = ${id};
+    `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {

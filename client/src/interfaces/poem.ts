@@ -7,3 +7,10 @@ export interface IPoem {
     url: string
     video_url: string
 }
+
+export interface IPoemWord {
+    poem_id: number
+    word_id: number
+    lemma: string
+    use_count: number
+}
