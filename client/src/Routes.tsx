@@ -1,5 +1,5 @@
 import React, { Fragment, lazy, LazyExoticComponent, Suspense } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { RoutesEnum } from './enums/routes';
 import Loading from './pages/Loading';
@@ -10,18 +10,37 @@ interface RouteConfig {
     component: (() => JSX.Element) | LazyExoticComponent<any>
 }
 
-const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Home = lazy(() => import('./pages/Home'))
+const Map = lazy(() => import('./pages/Map'))
+const Library = lazy(() => import('./pages/Library'))
+const Studio = lazy(() => import('./pages/Studio'))
+const Theater = lazy(() => import('./pages/Theater'))
 
 const routesConfig: RouteConfig[] = [
     {
         exact: true,
         path: '/',
-        component: () => <Redirect to={RoutesEnum.dashboard} />
+        component: Home
     },
     {
         exact: true,
-        path: RoutesEnum.dashboard,
-        component: Dashboard
+        path: RoutesEnum.Map,
+        component: Map
+    },
+    {
+        exact: true,
+        path: RoutesEnum.Library,
+        component: Library
+    },
+    {
+        exact: true,
+        path: RoutesEnum.Studio,
+        component: Studio
+    },
+    {
+        exact: true,
+        path: RoutesEnum.Theater,
+        component: Theater
     }
 ]
 
@@ -34,7 +53,7 @@ const renderRoutes = (routes: RouteConfig[]): JSX.Element => (
 
                 return (
                     <Route
-                        key={i}
+                        key={`Route${i}`}
                         path={route.path}
                         exact={route.exact}
                         render={(props: any) => (
@@ -49,8 +68,6 @@ const renderRoutes = (routes: RouteConfig[]): JSX.Element => (
     </Suspense>
 )
 
-function Routes(): JSX.Element {
+export default function Routes(): JSX.Element {
     return renderRoutes(routesConfig)
 }
-
-export default Routes
