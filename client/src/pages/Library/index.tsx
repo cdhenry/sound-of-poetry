@@ -34,7 +34,7 @@ export default function Library(): JSX.Element {
     const [listItemHandwriting, setListItemHandwriting] = useState('' as never)
     const [filterType, setFilterType] = useState(LibraryFilterEnum.Poems)
     const [total, setTotal] = useState(0)
-    const limit = 15
+    const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
         await getList(pageNumber, filterType)
@@ -117,10 +117,12 @@ export default function Library(): JSX.Element {
                         linkedArr.push(
                             lemmas.includes(cleanedWord) ? (
                                 <>
-                                    <a className="underline hover:bg-rose-200 cursor-pointer">{word}</a>{' '}
+                                    <a className="cursor-pointer whitespace-pre underline hover:text-rose-500 hover:text-shadow-lg">
+                                        {word}
+                                    </a>{' '}
                                 </>
                             ) : (
-                                <span>{word} </span>
+                                <span className="whitespace-pre">{word} </span>
                             )
                         )
                     })

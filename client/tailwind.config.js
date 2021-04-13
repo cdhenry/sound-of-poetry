@@ -750,7 +750,8 @@ module.exports = {
             20: '20',
             30: '30',
             40: '40',
-            50: '50'
+            50: '50',
+            'above-map': '401'
         }
     },
     variantOrder: [
@@ -893,6 +894,7 @@ module.exports = {
         require('@tailwindcss/typography'),
         require('@tailwindcss/forms'),
         require('@tailwindcss/line-clamp'),
-        require('@tailwindcss/aspect-ratio')
+        require('@tailwindcss/aspect-ratio'),
+        require('tailwindcss-textshadow')
     ]
 }
