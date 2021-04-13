@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 db-config.js*
 config-tokens.js*
+
+# ide
+.idea/**/*
