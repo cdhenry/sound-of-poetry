@@ -10,6 +10,7 @@ const poemRouter = require("./routes/poem");
 const wordRouter = require("./routes/word");
 const soundRouter = require("./routes/sound");
 const imageRouter = require("./routes/image");
+const mapRouter = require("./routes/map")
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use("/poem", poemRouter);
 app.use("/word", wordRouter);
 app.use("/sound", soundRouter);
 app.use("/image", imageRouter);
+app.use("/map", mapRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
