@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import MapChart from "../../components/charts/MapChart";
+import MapChart from "../../components/molecules/MapChart";
 import {poetService, PoetService} from "../../services/poet";
 import { IMap } from "../../interfaces/map";
 import Loading from '../Loading';
@@ -8,7 +8,7 @@ import MapTemplate from "../../templates/Map";
 
 export default function Map(): JSX.Element {
     const _mapService: PoetService = poetService
-    const [hasData, setHasData] = useState(true)
+    const [hasError, setError] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([] as IMap[])
     const getMapData = useCallback(
@@ -17,9 +17,8 @@ export default function Map(): JSX.Element {
                 setIsLoading(true);
                 let data = await _mapService.getCountPoetsByRegion();
                 setData(data);
-                setHasData(true);
             } catch (e) {
-                console.log(e);
+                setError(e);
             } finally {
                 setIsLoading(false);
             }
@@ -36,9 +35,9 @@ export default function Map(): JSX.Element {
             content={
                 isLoading ? (
                     <Loading />
-                ) : hasData ? (
+                ) : !hasError ? (
                     <MapChart data={data} />
-                ) : null
+                ) : "Error" //TODO(danom): implement pretty error atom
             }
         />
     )
