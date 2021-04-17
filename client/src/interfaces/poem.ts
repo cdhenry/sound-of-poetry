@@ -1,3 +1,5 @@
+import { ISelectOption } from './filters';
+
 export interface IPoem {
     audio_url: string
     id: number
@@ -13,4 +15,11 @@ export interface IPoemWord {
     word_id: number
     lemma: string
     use_count: number
+}
+
+export interface IGetPoemsQuery {
+    titles?: ISelectOption[]
+    poets?: ISelectOption[]
+    tags?: ISelectOption[]
+    words?: ISelectOption[]
 }

@@ -1,6 +1,6 @@
 export interface IPaginatedParams {
     limit: number
-    page: number
+    pageNumber: number
 }
 
 export interface IPaginatedList<T> {
