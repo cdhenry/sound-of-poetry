@@ -7,10 +7,10 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(*) AS total FROM images_synsets";
+  var queryTotal = "SELECT COUNT(id) AS total FROM poet";
   var limit = req.query.limit || 20;
-  var page = req.query.page;
-  var offset = (page - 1) * limit;
+  var pageNumber = req.query.pageNumber;
+  var offset = (pageNumber - 1) * limit;
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -22,8 +22,7 @@ router.get("/", function (req, res) {
 
     var query = `
       SELECT *
-      FROM images_synsets iss
-      JOIN wordsXsensesXsynsets wss ON iss.synsetid = wss.synsetid
+      FROM poet
       LIMIT ${limit}
       OFFSET ${offset};
     `;
@@ -38,11 +37,11 @@ router.get("/", function (req, res) {
   });
 });
 
-router.get("/:image", function (req, res) {
-  var id = req.params.image;
+router.get("/:poet", function (req, res) {
+  var id = req.params.poet;
   var query = `
-    SELECT image
-    FROM image
+    SELECT *
+    FROM poet
     WHERE id = ${id};
   `;
   connection.query(query, function (err, rows, fields) {

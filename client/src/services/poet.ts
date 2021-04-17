@@ -4,7 +4,7 @@ import { IPoet } from '../interfaces/poet';
 import { IPaginatedList, IPaginatedParams } from '../interfaces/shared';
 
 export class PoetService {
-    private _baseUrl: string = 'poet/'
+    private _baseUrl: string = 'poets/'
 
     public async getPoets(params: IPaginatedParams) {
         let response = await axios.get(`${this._baseUrl}`, { params })

@@ -6,7 +6,7 @@ import { IPaginatedList, IPaginatedParams } from '../interfaces/shared';
 import { ISound } from '../interfaces/sound';
 
 export class SoundService {
-    private _baseUrl: string = 'sound/'
+    private _baseUrl: string = 'sounds/'
     private _freeSound = new FreeSound()
 
     constructor() {

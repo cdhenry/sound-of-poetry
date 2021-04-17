@@ -4,7 +4,7 @@ import { IPaginatedList, IPaginatedParams } from '../interfaces/shared';
 import { IWord } from '../interfaces/word';
 
 export class WordService {
-    private _baseUrl: string = 'word/'
+    private _baseUrl: string = 'words/'
 
     public async getWords(params: IPaginatedParams) {
         let response = await axios.get(`${this._baseUrl}`, { params })
