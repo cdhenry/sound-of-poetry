@@ -15,6 +15,11 @@ export class PoetService {
         let response = await axios.get(`${this._baseUrl}${id}`)
         return response.data as IPoet
     }
+
+    public async getCountPoetsByRegion() {
+        let response = await axios.get(`${this._baseUrl}regions/`)
+        return response.data
+    }
 }
 
 export const poetService = new PoetService()
