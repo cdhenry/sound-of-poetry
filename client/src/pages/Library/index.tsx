@@ -38,7 +38,7 @@ export default function Library(): JSX.Element {
     const [headerFilterType, setHeaderFilterType] = useState(LibraryHeaderFilterEnum.Poems)
     const [total, setTotal] = useState(0)
     const [getPoemQuery, setGetPoemQuery] = useState({} as IGetPoemsQuery)
-    const limit = 20
+    const limit = 15
 
     const handlePageChange = async (pageNumber: number) => {
         await getList(pageNumber, headerFilterType)
