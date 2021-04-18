@@ -9,6 +9,7 @@ export default function Paper(props: IPaper): JSX.Element {
 
     return (
         <section className={defaultClassName}>
+            <div>{props.header}</div>
             <div>{props.children}</div>
         </section>
     )

@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { randomInteger } from '../../common/utils/randomInteger';
+import Header from '../../components/atoms/Header';
 import Paper from '../../components/atoms/Paper';
 import Shelf from '../../components/molecules/Shelf';
 import { LibraryHeaderFilterEnum } from '../../enums/filters';
 import { HandwritingFontEnum } from '../../enums/fonts';
+import { HeaderTypeEnum } from '../../enums/headerType';
 import { TailwindHeightEnum } from '../../enums/tailwind';
 import { IImage } from '../../interfaces/image';
 import { IGetPoemsQuery, IPoem } from '../../interfaces/poem';
@@ -38,7 +40,7 @@ export default function Library(): JSX.Element {
     const [headerFilterType, setHeaderFilterType] = useState(LibraryHeaderFilterEnum.Poems)
     const [total, setTotal] = useState(0)
     const [getPoemQuery, setGetPoemQuery] = useState({} as IGetPoemsQuery)
-    const limit = 15
+    const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
         await getList(pageNumber, headerFilterType)
@@ -123,18 +125,18 @@ export default function Library(): JSX.Element {
     )
 
     const displayListItem = () => {
-        let content
         switch (headerFilterType) {
             case LibraryHeaderFilterEnum.Poems:
-                const poemLines = listItem.poem.poem_string.split(/\n/)
+                const poem = listItem.poem as IPoem
+                const poemLines = poem.poem_string.split(/\n/)
                 const wordNetLemmas = listItem.wordNetList.map((word: any) => word.lemma)
-                let linkedArr: React.ReactNode[] = []
+                let poemContent: React.ReactNode[] = []
                 poemLines.forEach((line: any) => {
                     const words = line.split(' ')
                     words.forEach((word: string) => {
                         const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
                         const cleanedWord = word.replace(regex, '').toLowerCase()
-                        linkedArr.push(
+                        poemContent.push(
                             <>
                                 <button
                                     className={`whitespace-pre hover:text-shadow-lg ${
@@ -148,29 +150,46 @@ export default function Library(): JSX.Element {
                             </>
                         )
                     })
-                    linkedArr.push(<br />)
+                    poemContent.push(<br />)
                 })
-                content = linkedArr
-                break
+                return (
+                    <Paper
+                        height={TailwindHeightEnum.Screen90}
+                        handwritingEnumKey={listItemHandwriting}
+                        header={<Header headerType={HeaderTypeEnum.HeaderWeb}>{poem.title}</Header>}
+                    >
+                        <>{poemContent}</>
+                    </Paper>
+                )
             case LibraryHeaderFilterEnum.Poets:
-                content = (listItem as IPoet).bio
-                break
+                const poetContent = (listItem as IPoet).bio
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{poetContent}</>
+                    </Paper>
+                )
             case LibraryHeaderFilterEnum.Words:
-                content = (listItem as IWord).definition
-                break
+                const wordContent = (listItem as IWord).definition
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{wordContent}</>
+                    </Paper>
+                )
             case LibraryHeaderFilterEnum.Sounds:
-                content = (listItem as ISound).ytid
-                break
+                const soundContent = (listItem as ISound).ytid
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{soundContent}</>
+                    </Paper>
+                )
             case LibraryHeaderFilterEnum.Images:
-                content = (listItem as IImage).image_url
-                break
+                const imageContent = (listItem as IImage).image_url
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{imageContent}</>
+                    </Paper>
+                )
         }
-
-        return (
-            <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
-                <>{content}</>
-            </Paper>
-        )
     }
 
     const displayClassFilters = () => {
@@ -186,7 +205,7 @@ export default function Library(): JSX.Element {
 
     useEffect(() => {
         getList()
-    }, [])
+    }, [getList])
 
     return (
         <LibraryTemplate
@@ -203,7 +222,7 @@ export default function Library(): JSX.Element {
             }
             content={
                 <>
-                    {!isLoading && isList && displayClassFilters()}
+                    {isList && displayClassFilters()}
                     {isLoading ? (
                         <Loading />
                     ) : isList ? (
