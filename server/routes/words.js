@@ -37,6 +37,21 @@ router.get("/", function (req, res) {
   });
 });
 
+router.get("/lemmas", function (req, res) {
+  var lemma = req.query.lemma;
+  var query = `
+    SELECT wordid as value, lemma as label
+    FROM words
+    WHERE lemma LIKE '%${lemma}%'
+  `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
 router.get("/:word", function (req, res) {
   var id = req.params.word;
   var query = `

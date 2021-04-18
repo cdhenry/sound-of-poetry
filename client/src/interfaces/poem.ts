@@ -1,5 +1,3 @@
-import { ISelectOption } from './filters';
-
 export interface IPoem {
     audio_url: string
     id: number
@@ -18,8 +16,12 @@ export interface IPoemWord {
 }
 
 export interface IGetPoemsQuery {
-    titles?: ISelectOption[]
-    poets?: ISelectOption[]
-    tags?: ISelectOption[]
-    words?: ISelectOption[]
+    titles?: number[]
+    poets?: number[]
+    tags?: number[]
+    words?: number[]
+}
+
+export interface IGetTitlesParams {
+    title: string
 }

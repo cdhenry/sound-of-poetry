@@ -14,3 +14,7 @@ export interface IWord {
     definition: string
     sampleset: string
 }
+
+export interface IGetLemmas {
+    lemma: string
+}

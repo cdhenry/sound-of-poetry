@@ -30,6 +30,7 @@ export default function Library(): JSX.Element {
     const _wordService: WordService = wordService
     const _soundService: SoundService = soundService
     const _imageService: ImageService = imageService
+
     const [isLoading, setIsLoading] = useState(true)
     const [isList, setIsList] = useState(true)
     const [list, setList] = useState([] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[])
@@ -37,6 +38,7 @@ export default function Library(): JSX.Element {
     const [listItemHandwriting, setListItemHandwriting] = useState('' as never)
     const [headerFilterType, setHeaderFilterType] = useState(LibraryHeaderFilterEnum.Poems)
     const [total, setTotal] = useState(0)
+    const [getPoemQuery, setGetPoemQuery] = useState({} as IGetPoemsQuery)
     const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
@@ -49,7 +51,8 @@ export default function Library(): JSX.Element {
     }
 
     const handleClassFilterChange = async (selectedOptions: IGetPoemsQuery) => {
-        await getList(1, headerFilterType, selectedOptions)
+        setGetPoemQuery({ ...getPoemQuery, ...selectedOptions })
+        await getList(1, headerFilterType, { ...getPoemQuery, ...selectedOptions })
     }
 
     const handleListItem = async (id: any, handwriting: never) => {
@@ -181,8 +184,8 @@ export default function Library(): JSX.Element {
     }
 
     useEffect(() => {
-        if (!list.length) getList()
-    }, [list, getList])
+        getList()
+    }, [])
 
     return (
         <LibraryTemplate
@@ -198,11 +201,11 @@ export default function Library(): JSX.Element {
                 )
             }
             content={
-                isLoading ? (
-                    <Loading />
-                ) : isList ? (
-                    <div className="flex flex-col mt-3">
-                        {displayClassFilters()}
+                <>
+                    {list.length && displayClassFilters()}
+                    {isLoading ? (
+                        <Loading />
+                    ) : isList ? (
                         <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
                             <Shelf
                                 context="Library"
@@ -252,10 +255,10 @@ export default function Library(): JSX.Element {
                                 })}
                             />
                         </PaginateTemplate>
-                    </div>
-                ) : (
-                    displayListItem()
-                )
+                    ) : (
+                        displayListItem()
+                    )}
+                </>
             }
         />
     )
