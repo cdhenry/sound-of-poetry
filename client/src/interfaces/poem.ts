@@ -14,3 +14,14 @@ export interface IPoemWord {
     lemma: string
     use_count: number
 }
+
+export interface IGetPoemsQuery {
+    titles?: number[]
+    poets?: number[]
+    tags?: number[]
+    words?: number[]
+}
+
+export interface IGetTitlesParams {
+    title: string
+}

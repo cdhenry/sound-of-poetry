@@ -7,3 +7,7 @@ export interface IPoet {
     bio: string
     url: string
 }
+
+export interface IGetPoetNames {
+    name: string
+}

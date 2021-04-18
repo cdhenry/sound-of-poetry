@@ -1,13 +1,13 @@
 import React, { MouseEvent } from 'react';
 
-import { LibraryFilterEnum } from '../../enums/filters';
-import { ILibraryFilters } from '../../interfaces/filters';
+import { LibraryHeaderFilterEnum } from '../../enums/filters';
+import { ILibraryHeaderFilters } from '../../interfaces/filters';
 
-export default function LibraryFilters(props: ILibraryFilters): JSX.Element {
+export default function LibraryHeaderFilters(props: ILibraryHeaderFilters): JSX.Element {
     const defaultClassName = 'flex justify-around p-2 border-gray-500 border-2 rounded bg-indigo-100'
     const buttonClassName = 'cursor-pointer bg-transparent'
     const handleFilterChange = (event: MouseEvent<HTMLInputElement>) => {
-        props.handleFilterChange((event.target as HTMLInputElement).value as LibraryFilterEnum)
+        props.handleFilterChange((event.target as HTMLInputElement).value as LibraryHeaderFilterEnum)
     }
 
     return (
@@ -16,31 +16,31 @@ export default function LibraryFilters(props: ILibraryFilters): JSX.Element {
                 type="button"
                 className={buttonClassName}
                 onClick={handleFilterChange}
-                value={LibraryFilterEnum.Poems}
+                value={LibraryHeaderFilterEnum.Poems}
             />
             <input
                 type="button"
                 className={buttonClassName}
                 onClick={handleFilterChange}
-                value={LibraryFilterEnum.Poets}
+                value={LibraryHeaderFilterEnum.Poets}
             />
             <input
                 type="button"
                 className={buttonClassName}
                 onClick={handleFilterChange}
-                value={LibraryFilterEnum.Words}
+                value={LibraryHeaderFilterEnum.Words}
             />
             <input
                 type="button"
                 className={buttonClassName}
                 onClick={handleFilterChange}
-                value={LibraryFilterEnum.Sounds}
+                value={LibraryHeaderFilterEnum.Sounds}
             />
             <input
                 type="button"
                 className={buttonClassName}
                 onClick={handleFilterChange}
-                value={LibraryFilterEnum.Images}
+                value={LibraryHeaderFilterEnum.Images}
             />
         </section>
     )

@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { randomInteger } from '../../common/utils/randomInteger';
+import Header from '../../components/atoms/Header';
 import Paper from '../../components/atoms/Paper';
 import Shelf from '../../components/molecules/Shelf';
-import { LibraryFilterEnum } from '../../enums/filters';
+import { LibraryHeaderFilterEnum } from '../../enums/filters';
 import { HandwritingFontEnum } from '../../enums/fonts';
+import { HeaderTypeEnum } from '../../enums/headerType';
 import { TailwindHeightEnum } from '../../enums/tailwind';
 import { IImage } from '../../interfaces/image';
-import { IPoem } from '../../interfaces/poem';
+import { IGetPoemsQuery, IPoem } from '../../interfaces/poem';
 import { IPoet } from '../../interfaces/poet';
 import { ISound } from '../../interfaces/sound';
 import { IWord } from '../../interfaces/word';
@@ -19,7 +21,10 @@ import { WordService, wordService } from '../../services/word';
 import LibraryTemplate from '../../templates/Library';
 import PaginateTemplate from '../../templates/Paginate';
 import Loading from '../Loading';
-import LibraryFilters from './Filters';
+import LibraryHeaderFilters from './HeaderFilters';
+import LibraryPoemFilters from './PoemFilters';
+import LibraryPoetFilters from './PoetFilters';
+import LibraryWordFilters from './WordFilters';
 
 export default function Library(): JSX.Element {
     const _poemService: PoemService = poemService
@@ -32,17 +37,23 @@ export default function Library(): JSX.Element {
     const [list, setList] = useState([] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[])
     const [listItem, setListItem] = useState({} as any)
     const [listItemHandwriting, setListItemHandwriting] = useState('' as never)
-    const [filterType, setFilterType] = useState(LibraryFilterEnum.Poems)
+    const [headerFilterType, setHeaderFilterType] = useState(LibraryHeaderFilterEnum.Poems)
     const [total, setTotal] = useState(0)
-    const limit = 15
+    const [getPoemQuery, setGetPoemQuery] = useState({} as IGetPoemsQuery)
+    const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
-        await getList(pageNumber, filterType)
+        await getList(pageNumber, headerFilterType)
     }
 
-    const handleFilterChange = async (filter: LibraryFilterEnum) => {
-        setFilterType(filter)
-        await getList(1, filter)
+    const handleHeaderFilterChange = async (headerFilter: LibraryHeaderFilterEnum) => {
+        setHeaderFilterType(headerFilter)
+        await getList(1, headerFilter)
+    }
+
+    const handleClassFilterChange = async (selectedOptions: IGetPoemsQuery) => {
+        setGetPoemQuery({ ...getPoemQuery, ...selectedOptions })
+        await getList(1, headerFilterType, { ...getPoemQuery, ...selectedOptions })
     }
 
     const handleListItem = async (id: any, handwriting: never) => {
@@ -50,19 +61,30 @@ export default function Library(): JSX.Element {
     }
 
     const handleBack = async () => {
-        await handleFilterChange(filterType)
+        await handleHeaderFilterChange(headerFilterType)
     }
 
     const getList = useCallback(
-        async (page: number = 1, filter: LibraryFilterEnum = filterType) => {
+        async (
+            pageNumber: number = 1,
+            headerFilter: LibraryHeaderFilterEnum = headerFilterType,
+            selectedOptions?: IGetPoemsQuery
+        ) => {
             try {
                 setIsLoading(true)
                 let data = { total: 0, items: [] as IPoem[] | IPoet[] | IWord[] | ISound[] | IImage[] }
-                if (filter === LibraryFilterEnum.Poems) data = await _poemService.getPoems({ limit, page })
-                else if (filter === LibraryFilterEnum.Poets) data = await _poetService.getPoets({ limit, page })
-                else if (filter === LibraryFilterEnum.Words) data = await _wordService.getWords({ limit, page })
-                else if (filter === LibraryFilterEnum.Sounds) data = await _soundService.getSounds({ limit, page })
-                else if (filter === LibraryFilterEnum.Images) data = await _imageService.getImages({ limit, page })
+
+                if (headerFilter === LibraryHeaderFilterEnum.Poems) {
+                    data = await _poemService.getPoems({ limit, pageNumber }, selectedOptions)
+                } else if (headerFilter === LibraryHeaderFilterEnum.Poets) {
+                    data = await _poetService.getPoets({ limit, pageNumber })
+                } else if (headerFilter === LibraryHeaderFilterEnum.Words) {
+                    data = await _wordService.getWords({ limit, pageNumber })
+                } else if (headerFilter === LibraryHeaderFilterEnum.Sounds) {
+                    data = await _soundService.getSounds({ limit, pageNumber })
+                } else if (headerFilter === LibraryHeaderFilterEnum.Images) {
+                    data = await _imageService.getImages({ limit, pageNumber })
+                }
 
                 setTotal(data.total)
                 setList(data.items)
@@ -73,22 +95,22 @@ export default function Library(): JSX.Element {
                 setIsLoading(false)
             }
         },
-        [_poemService, _poetService, _soundService, _wordService, _imageService, filterType]
+        [_poemService, _poetService, _soundService, _wordService, _imageService, headerFilterType]
     )
 
     const getListItem = useCallback(
-        async (id: any, handwriting: never, filter: LibraryFilterEnum = filterType) => {
+        async (id: any, handwriting: never, filter: LibraryHeaderFilterEnum = headerFilterType) => {
             try {
                 setIsLoading(true)
                 let data = {} as any
-                if (filter === LibraryFilterEnum.Poems) {
+                if (filter === LibraryHeaderFilterEnum.Poems) {
                     const poem = await _poemService.getPoem(id)
-                    const wordList = await _poemService.getPoemWords(id)
-                    data = { wordList, poem }
-                } else if (filter === LibraryFilterEnum.Poets) data = await _poetService.getPoet(id)
-                else if (filter === LibraryFilterEnum.Words) data = await _wordService.getWord(id)
-                else if (filter === LibraryFilterEnum.Sounds) data = await _soundService.getSound(id)
-                else if (filter === LibraryFilterEnum.Images) data = await _imageService.getImage(id)
+                    const wordNetList = await _poemService.getPoemWordNet(id)
+                    data = { wordNetList, poem }
+                } else if (filter === LibraryHeaderFilterEnum.Poets) data = await _poetService.getPoet(id)
+                else if (filter === LibraryHeaderFilterEnum.Words) data = await _wordService.getWord(id)
+                else if (filter === LibraryHeaderFilterEnum.Sounds) data = await _soundService.getSound(id)
+                else if (filter === LibraryHeaderFilterEnum.Images) data = await _imageService.getImage(id)
 
                 setListItemHandwriting(handwriting)
                 setListItem(data)
@@ -99,65 +121,97 @@ export default function Library(): JSX.Element {
                 setIsLoading(false)
             }
         },
-        [_poemService, _poetService, _soundService, _wordService, _imageService, filterType]
+        [_poemService, _poetService, _soundService, _wordService, _imageService, headerFilterType]
     )
 
     const displayListItem = () => {
-        let content
-        switch (filterType) {
-            case LibraryFilterEnum.Poems:
-                const poemLines = listItem.poem.poem_string.split(/\n/)
-                const lemmas = listItem.wordList.map((word: any) => word.lemma)
-                let linkedArr: React.ReactNode[] = []
+        switch (headerFilterType) {
+            case LibraryHeaderFilterEnum.Poems:
+                const poem = listItem.poem as IPoem
+                const poemLines = poem.poem_string.split(/\n/)
+                const wordNetLemmas = listItem.wordNetList.map((word: any) => word.lemma)
+                let poemContent: React.ReactNode[] = []
                 poemLines.forEach((line: any) => {
                     const words = line.split(' ')
                     words.forEach((word: string) => {
                         const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
                         const cleanedWord = word.replace(regex, '').toLowerCase()
-                        linkedArr.push(
-                            lemmas.includes(cleanedWord) ? (
-                                <>
-                                    <a className="underline hover:bg-rose-200 cursor-pointer">{word}</a>{' '}
-                                </>
-                            ) : (
-                                <span>{word} </span>
-                            )
+                        poemContent.push(
+                            <>
+                                <button
+                                    className={`whitespace-pre hover:text-shadow-lg ${
+                                        wordNetLemmas.includes(cleanedWord)
+                                            ? 'hover:text-cyan-500'
+                                            : 'hover:text-rose-500'
+                                    }`}
+                                >
+                                    {word}
+                                </button>{' '}
+                            </>
                         )
                     })
-                    linkedArr.push(<br />)
+                    poemContent.push(<br />)
                 })
-                content = linkedArr
-                break
-            case LibraryFilterEnum.Poets:
-                content = (listItem as IPoet).bio
-                break
-            case LibraryFilterEnum.Words:
-                content = (listItem as IWord).definition
-                break
-            case LibraryFilterEnum.Sounds:
-                content = (listItem as ISound).ytid
-                break
-            case LibraryFilterEnum.Images:
-                content = (listItem as IImage).image_url
-                break
+                return (
+                    <Paper
+                        height={TailwindHeightEnum.Screen90}
+                        handwritingEnumKey={listItemHandwriting}
+                        header={<Header headerType={HeaderTypeEnum.HeaderWeb}>{poem.title}</Header>}
+                    >
+                        <>{poemContent}</>
+                    </Paper>
+                )
+            case LibraryHeaderFilterEnum.Poets:
+                const poetContent = (listItem as IPoet).bio
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{poetContent}</>
+                    </Paper>
+                )
+            case LibraryHeaderFilterEnum.Words:
+                const wordContent = (listItem as IWord).definition
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{wordContent}</>
+                    </Paper>
+                )
+            case LibraryHeaderFilterEnum.Sounds:
+                const soundContent = (listItem as ISound).ytid
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{soundContent}</>
+                    </Paper>
+                )
+            case LibraryHeaderFilterEnum.Images:
+                const imageContent = (listItem as IImage).image_url
+                return (
+                    <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
+                        <>{imageContent}</>
+                    </Paper>
+                )
         }
-        console.log('displayListItem', content)
-        return (
-            <Paper height={TailwindHeightEnum.Screen90} handwritingEnumKey={listItemHandwriting}>
-                <>{content}</>
-            </Paper>
-        )
+    }
+
+    const displayClassFilters = () => {
+        switch (headerFilterType) {
+            case LibraryHeaderFilterEnum.Poems:
+                return <LibraryPoemFilters handleFilterChange={handleClassFilterChange} />
+            case LibraryHeaderFilterEnum.Poets:
+                return <LibraryPoetFilters handleFilterChange={handleClassFilterChange} />
+            case LibraryHeaderFilterEnum.Words:
+                return <LibraryWordFilters handleFilterChange={handleClassFilterChange} />
+        }
     }
 
     useEffect(() => {
-        if (!list.length) getList()
-    }, [list, getList])
+        getList()
+    }, [getList])
 
     return (
         <LibraryTemplate
             header={
                 isList ? (
-                    <LibraryFilters handleFilterChange={handleFilterChange} />
+                    <LibraryHeaderFilters handleFilterChange={handleHeaderFilterChange} />
                 ) : (
                     <div className="flex justify-center">
                         <button className="p-2 border-gray-500 border-2 rounded bg-indigo-100" onClick={handleBack}>
@@ -167,61 +221,64 @@ export default function Library(): JSX.Element {
                 )
             }
             content={
-                isLoading ? (
-                    <Loading />
-                ) : isList ? (
-                    <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
-                        <Shelf
-                            context="Library"
-                            items={list?.map((item: IPoem | IPoet | IWord | ISound | IImage) => {
-                                const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
-                                const handwritingEnumKey = handwritingEnumKeys[
-                                    randomInteger(0, handwritingEnumKeys.length - 1)
-                                ] as never
-                                switch (filterType) {
-                                    case LibraryFilterEnum.Poets:
-                                        item = item as IPoet
-                                        return { id: item.id, title: item.name, handleListItem, handwritingEnumKey }
-                                    case LibraryFilterEnum.Words:
-                                        item = item as IWord
-                                        return {
-                                            id: item.wordid,
-                                            title: item.lemma,
-                                            handleListItem,
-                                            handwritingEnumKey
-                                        }
-                                    case LibraryFilterEnum.Sounds:
-                                        item = item as ISound
-                                        return {
-                                            id: item.ytid,
-                                            title: item.display_name,
-                                            handleListItem,
-                                            handwritingEnumKey
-                                        }
-                                    case LibraryFilterEnum.Images:
-                                        item = item as IImage
-                                        return {
-                                            id: item.image_url,
-                                            title: item.lemma,
-                                            cover: { src: item.image_url, alt: item.lemma },
-                                            handleListItem,
-                                            handwritingEnumKey
-                                        }
-                                    default:
-                                        item = item as IPoem
-                                        return {
-                                            id: item.id,
-                                            title: item.title,
-                                            handleListItem,
-                                            handwritingEnumKey
-                                        }
-                                }
-                            })}
-                        />
-                    </PaginateTemplate>
-                ) : (
-                    displayListItem()
-                )
+                <>
+                    {isList && displayClassFilters()}
+                    {isLoading ? (
+                        <Loading />
+                    ) : isList ? (
+                        <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
+                            <Shelf
+                                context="Library"
+                                items={list?.map((item: IPoem | IPoet | IWord | ISound | IImage) => {
+                                    const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
+                                    const handwritingEnumKey = handwritingEnumKeys[
+                                        randomInteger(0, handwritingEnumKeys.length - 1)
+                                    ] as never
+                                    switch (headerFilterType) {
+                                        case LibraryHeaderFilterEnum.Poets:
+                                            item = item as IPoet
+                                            return { id: item.id, title: item.name, handleListItem, handwritingEnumKey }
+                                        case LibraryHeaderFilterEnum.Words:
+                                            item = item as IWord
+                                            return {
+                                                id: item.wordid,
+                                                title: item.lemma,
+                                                handleListItem,
+                                                handwritingEnumKey
+                                            }
+                                        case LibraryHeaderFilterEnum.Sounds:
+                                            item = item as ISound
+                                            return {
+                                                id: item.ytid,
+                                                title: item.display_name,
+                                                handleListItem,
+                                                handwritingEnumKey
+                                            }
+                                        case LibraryHeaderFilterEnum.Images:
+                                            item = item as IImage
+                                            return {
+                                                id: item.image_url,
+                                                title: item.lemma,
+                                                cover: { src: item.image_url, alt: item.lemma },
+                                                handleListItem,
+                                                handwritingEnumKey
+                                            }
+                                        default:
+                                            item = item as IPoem
+                                            return {
+                                                id: item.id,
+                                                title: item.title,
+                                                handleListItem,
+                                                handwritingEnumKey
+                                            }
+                                    }
+                                })}
+                            />
+                        </PaginateTemplate>
+                    ) : (
+                        displayListItem()
+                    )}
+                </>
             }
         />
     )

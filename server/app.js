@@ -5,11 +5,11 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
-const poetRouter = require("./routes/poet");
-const poemRouter = require("./routes/poem");
-const wordRouter = require("./routes/word");
-const soundRouter = require("./routes/sound");
-const imageRouter = require("./routes/image");
+const poetRouter = require("./routes/poets");
+const poemRouter = require("./routes/poems");
+const wordRouter = require("./routes/words");
+const soundRouter = require("./routes/sounds");
+const imageRouter = require("./routes/images");
 
 var app = express();
 
@@ -21,11 +21,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // routes
 app.use("/", indexRouter);
-app.use("/poet", poetRouter);
-app.use("/poem", poemRouter);
-app.use("/word", wordRouter);
-app.use("/sound", soundRouter);
-app.use("/image", imageRouter);
+app.use("/poets", poetRouter);
+app.use("/poems", poemRouter);
+app.use("/words", wordRouter);
+app.use("/sounds", soundRouter);
+app.use("/images", imageRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

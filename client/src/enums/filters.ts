@@ -1,4 +1,4 @@
-export enum LibraryFilterEnum {
+export enum LibraryHeaderFilterEnum {
     Poems = 'Poems',
     Poets = 'Poets',
     Words = 'Words',

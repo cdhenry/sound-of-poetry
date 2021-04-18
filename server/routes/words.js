@@ -7,10 +7,10 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(ytid) AS total FROM youtube_sound";
+  var queryTotal = "SELECT COUNT(wordid) AS total FROM dict";
   var limit = req.query.limit || 20;
-  var page = req.query.page;
-  var offset = (page - 1) * limit;
+  var pageNumber = req.query.pageNumber;
+  var offset = (pageNumber - 1) * limit;
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -22,9 +22,7 @@ router.get("/", function (req, res) {
 
     var query = `
       SELECT *
-      FROM youtube_sound ys
-      JOIN ytid_mid ym ON ys.ytid = ym.ytid
-      JOIN audio_classes ac ON ym.m_id = ac.m_id
+      FROM dict
       LIMIT ${limit}
       OFFSET ${offset};
     `;
@@ -39,12 +37,27 @@ router.get("/", function (req, res) {
   });
 });
 
-router.get("/:sound", function (req, res) {
-  var id = req.params.sound;
+router.get("/lemmas", function (req, res) {
+  var lemma = req.query.lemma;
   var query = `
-    SELECT *
-    FROM youtube_sound
-    WHERE ytid = ${id};
+    SELECT wordid as value, lemma as label
+    FROM words
+    WHERE lemma LIKE '%${lemma}%'
+  `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/:word", function (req, res) {
+  var id = req.params.word;
+  var query = `
+    SELECT word
+    FROM word
+    WHERE id = ${id};
   `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);

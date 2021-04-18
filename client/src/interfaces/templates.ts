@@ -9,3 +9,8 @@ export interface ILibraryTemplate {
     header: React.ReactNode
     content: React.ReactNode
 }
+
+export interface IMapTemplate {
+    header: React.ReactNode
+    content: React.ReactNode
+}

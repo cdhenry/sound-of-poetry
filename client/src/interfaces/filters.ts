@@ -1,5 +1,10 @@
-import { LibraryFilterEnum } from '../enums/filters';
+import { LibraryHeaderFilterEnum } from '../enums/filters';
+import { IGetPoemsQuery } from './poem';
 
-export interface ILibraryFilters {
-    handleFilterChange: (filterType: LibraryFilterEnum) => void
+export interface ILibraryHeaderFilters {
+    handleFilterChange: (filterType: LibraryHeaderFilterEnum) => void
+}
+
+export interface ILibraryClassFilters {
+    handleFilterChange: (selectedOptions: IGetPoemsQuery) => void
 }

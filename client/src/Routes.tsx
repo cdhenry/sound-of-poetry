@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, LazyExoticComponent, Suspense } from 'react';
+import React, { lazy, LazyExoticComponent, Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { RoutesEnum } from './enums/routes';
@@ -48,7 +48,6 @@ const renderRoutes = (routes: RouteConfig[]): JSX.Element => (
     <Suspense fallback={Loading}>
         <Switch>
             {routes.map((route: any, i: number) => {
-                const Layout = route.layout || Fragment
                 const Component = route.component
 
                 return (
@@ -56,11 +55,7 @@ const renderRoutes = (routes: RouteConfig[]): JSX.Element => (
                         key={`Route${i}`}
                         path={route.path}
                         exact={route.exact}
-                        render={(props: any) => (
-                            <Layout>
-                                <Component {...props} />
-                            </Layout>
-                        )}
+                        render={(props: any) => <Component {...props} />}
                     />
                 )
             })}

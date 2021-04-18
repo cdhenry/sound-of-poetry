@@ -9,8 +9,8 @@ var connection = mysql.createPool(config);
 router.get("/", function (req, res) {
   var queryTotal = "SELECT COUNT(*) AS total FROM images_synsets";
   var limit = req.query.limit || 20;
-  var page = req.query.page;
-  var offset = (page - 1) * limit;
+  var pageNumber = req.query.pageNumber;
+  var offset = (pageNumber - 1) * limit;
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
