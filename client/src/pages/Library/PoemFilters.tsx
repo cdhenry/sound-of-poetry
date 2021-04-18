@@ -9,7 +9,8 @@ import { PoetService, poetService } from '../../services/poet';
 import { WordService, wordService } from '../../services/word';
 
 export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Element {
-    const defaultClassName = 'grid grid-cols-4 gap-2 p-2 border-gray-500 border-2 rounded bg-indigo-100'
+    const defaultClassName =
+        'grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2 p-2 border-gray-500 border-2 rounded bg-indigo-100'
     const _poemService: PoemService = poemService
     const _poetService: PoetService = poetService
     const _wordService: WordService = wordService
@@ -60,7 +61,7 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
 
     useEffect(() => {
         getTags()
-    }, [])
+    }, [getTags])
 
     return isLoading ? (
         <div className="flex justify-center">Loading...</div>
