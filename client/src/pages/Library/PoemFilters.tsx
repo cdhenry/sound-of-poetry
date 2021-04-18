@@ -81,7 +81,7 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
                     loadOptions={loadPoets}
                     onChange={onPoetChange}
                 />
-                <Select placeholder="Type to select tags" options={tagOptions} onChange={onTagChange} isMulti />
+                <Select placeholder="Tags" options={tagOptions} onChange={onTagChange} isMulti />
                 <AsyncSelect
                     isMulti
                     placeholder="Words"
