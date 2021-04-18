@@ -43,7 +43,8 @@ export default function Library(): JSX.Element {
     const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
-        await getList(pageNumber, headerFilterType)
+        let page = pageNumber + 1
+        await getList(page, headerFilterType)
     }
 
     const handleHeaderFilterChange = async (headerFilter: LibraryHeaderFilterEnum) => {
