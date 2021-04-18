@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import MapChart from '../../components/molecules/MapChart';
+import MapChart from '../../components/atoms/MapChart';
 import { IMap } from '../../interfaces/map';
 import { PoetService, poetService } from '../../services/poet';
 import MapTemplate from '../../templates/Map';
