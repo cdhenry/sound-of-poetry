@@ -750,8 +750,7 @@ module.exports = {
             20: '20',
             30: '30',
             40: '40',
-            50: '50',
-            'above-map': '401'
+            50: '50'
         }
     },
     variantOrder: [

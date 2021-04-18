@@ -16,6 +16,11 @@ export class PoetService {
         return response.data as ISelectOption[]
     }
 
+    public async getCountPoetsByRegion() {
+        let response = await axios.get(`${this._baseUrl}regions/`)
+        return response.data
+    }
+
     public async getPoet(id: number) {
         let response = await axios.get(`${this._baseUrl}${id}`)
         return response.data as IPoet

@@ -1,30 +1,38 @@
-import React from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import React, { useCallback, useEffect, useState } from 'react';
 
+import MapChart from '../../components/molecules/MapChart';
+import { IMap } from '../../interfaces/map';
+import { PoetService, poetService } from '../../services/poet';
 import MapTemplate from '../../templates/Map';
+import Loading from '../Loading';
 
 export default function Map(): JSX.Element {
+    const _mapService: PoetService = poetService
+    const [hasError, setError] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [data, setData] = useState([] as IMap[])
+    const getMapData = useCallback(async () => {
+        try {
+            setIsLoading(true)
+            let data = await _mapService.getCountPoetsByRegion()
+            setData(data)
+        } catch (e) {
+            setError(e)
+        } finally {
+            setIsLoading(false)
+        }
+    }, [_mapService])
+
+    useEffect(() => {
+        if (!data.length) getMapData()
+    }, [getMapData, data.length])
+
     return (
         <MapTemplate
-            header={'Maps'}
+            header={'Map'}
             content={
-                <MapContainer className="w-3/4 h-screen-90" center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-                    <TileLayer
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={[51.505, -0.09]}>
-                        <Popup>
-                            A pretty CSS3 popup. <br /> Easily customizable.
-                        </Popup>
-                    </Marker>
-                </MapContainer>
+                isLoading ? <Loading /> : !hasError ? <MapChart data={data} /> : 'Error' //TODO(danom): implement pretty error atom
             }
         />
-        // <section className="flex flex-col items-center justify-center">
-        //     <header className="text-lg">Maps</header>
-
-        //     <footer>Timeline</footer>
-        // </section>
     )
 }

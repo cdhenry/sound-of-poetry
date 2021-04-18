@@ -16,10 +16,10 @@ function App(): JSX.Element {
     return (
         <Router history={history}>
             <section className="background h-screen overflow-y-hidden">
-                <nav className="absolute bg-transparent left-4 top-28 z-above-map">
+                <nav className="absolute bg-transparent left-4 top-28">
                     <Navigation />
                 </nav>
-                <aside className="absolute bg-transparent right-4 top-28 z-above-map">
+                <aside className="absolute bg-transparent right-4 top-28">
                     <Drawer />
                 </aside>
                 <main className="h-screen overflow-y-auto">
