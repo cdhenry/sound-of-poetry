@@ -7,7 +7,6 @@ import { ISelectOption } from '../../interfaces/shared';
 import { PoemService, poemService } from '../../services/poem';
 import { PoetService, poetService } from '../../services/poet';
 import { WordService, wordService } from '../../services/word';
-import Loading from '../Loading';
 
 export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Element {
     const defaultClassName = 'grid grid-cols-4 gap-2 p-2 border-gray-500 border-2 rounded bg-indigo-100'
@@ -57,37 +56,40 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
         props.handleFilterChange({ words: words.map((item) => item.value) })
     }
 
-    useEffect(() => {
-        if (!tagOptions.length) getTags()
-    }, [tagOptions, getTags])
+    const noOptionsMessage = () => 'Type to populate options'
 
-    return (
+    useEffect(() => {
+        getTags()
+    }, [])
+
+    return isLoading ? (
+        <div className="flex justify-center">Loading...</div>
+    ) : (
         <section className={defaultClassName}>
-            {isLoading ? (
-                <Loading />
-            ) : (
-                <>
-                    <AsyncSelect
-                        isMulti
-                        placeholder="Type to select titles"
-                        loadOptions={loadTitles}
-                        onChange={onTitleChange}
-                    />
-                    <AsyncSelect
-                        isMulti
-                        placeholder="Type to select poets"
-                        loadOptions={loadPoets}
-                        onChange={onPoetChange}
-                    />
-                    <Select placeholder="Type to select tags" options={tagOptions} onChange={onTagChange} isMulti />
-                    <AsyncSelect
-                        isMulti
-                        placeholder="Type to select words"
-                        loadOptions={loadWords}
-                        onChange={onWordChange}
-                    />
-                </>
-            )}
+            <>
+                <AsyncSelect
+                    isMulti
+                    placeholder="Titles"
+                    noOptionsMessage={noOptionsMessage}
+                    loadOptions={loadTitles}
+                    onChange={onTitleChange}
+                />
+                <AsyncSelect
+                    isMulti
+                    placeholder="Poets"
+                    noOptionsMessage={noOptionsMessage}
+                    loadOptions={loadPoets}
+                    onChange={onPoetChange}
+                />
+                <Select placeholder="Type to select tags" options={tagOptions} onChange={onTagChange} isMulti />
+                <AsyncSelect
+                    isMulti
+                    placeholder="Words"
+                    noOptionsMessage={noOptionsMessage}
+                    loadOptions={loadWords}
+                    onChange={onWordChange}
+                />
+            </>
         </section>
     )
 }

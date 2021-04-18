@@ -203,7 +203,7 @@ export default function Library(): JSX.Element {
             }
             content={
                 <>
-                    {list.length && isList && displayClassFilters()}
+                    {!isLoading && isList && displayClassFilters()}
                     {isLoading ? (
                         <Loading />
                     ) : isList ? (
