@@ -104,8 +104,8 @@ export default function Library(): JSX.Element {
                 let data = {} as any
                 if (filter === LibraryHeaderFilterEnum.Poems) {
                     const poem = await _poemService.getPoem(id)
-                    const wordList = await _poemService.getPoemWords(id)
-                    data = { wordList, poem }
+                    const wordNetList = await _poemService.getPoemWordNet(id)
+                    data = { wordNetList, poem }
                 } else if (filter === LibraryHeaderFilterEnum.Poets) data = await _poetService.getPoet(id)
                 else if (filter === LibraryHeaderFilterEnum.Words) data = await _wordService.getWord(id)
                 else if (filter === LibraryHeaderFilterEnum.Sounds) data = await _soundService.getSound(id)
@@ -128,7 +128,7 @@ export default function Library(): JSX.Element {
         switch (headerFilterType) {
             case LibraryHeaderFilterEnum.Poems:
                 const poemLines = listItem.poem.poem_string.split(/\n/)
-                const lemmas = listItem.wordList.map((word: any) => word.lemma)
+                const wordNetLemmas = listItem.wordNetList.map((word: any) => word.lemma)
                 let linkedArr: React.ReactNode[] = []
                 poemLines.forEach((line: any) => {
                     const words = line.split(' ')
@@ -136,15 +136,17 @@ export default function Library(): JSX.Element {
                         const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
                         const cleanedWord = word.replace(regex, '').toLowerCase()
                         linkedArr.push(
-                            lemmas.includes(cleanedWord) ? (
-                                <>
-                                    <a className="cursor-pointer whitespace-pre underline hover:text-rose-500 hover:text-shadow-lg">
-                                        {word}
-                                    </a>{' '}
-                                </>
-                            ) : (
-                                <span className="whitespace-pre">{word} </span>
-                            )
+                            <>
+                                <button
+                                    className={`whitespace-pre hover:text-shadow-lg ${
+                                        wordNetLemmas.includes(cleanedWord)
+                                            ? 'hover:text-cyan-500'
+                                            : 'hover:text-rose-500'
+                                    }`}
+                                >
+                                    {word}
+                                </button>{' '}
+                            </>
                         )
                     })
                     linkedArr.push(<br />)
@@ -202,7 +204,7 @@ export default function Library(): JSX.Element {
             }
             content={
                 <>
-                    {list.length && displayClassFilters()}
+                    {list.length && isList && displayClassFilters()}
                     {isLoading ? (
                         <Loading />
                     ) : isList ? (

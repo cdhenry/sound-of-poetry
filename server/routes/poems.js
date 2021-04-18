@@ -114,13 +114,29 @@ router.get("/:poem", function (req, res) {
   });
 });
 
-router.get("/:poem/words", function (req, res) {
+router.get("/:poem/words/wordnet", function (req, res) {
   var id = req.params.poem;
   var query = `
       SELECT pw.poem_id, pw.word_id, w.lemma, pw.use_count
       FROM poem_wordnet pw
       JOIN words w ON pw.word_id = w.wordid
       WHERE pw.poem_id = ${id};
+    `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/:poem/words/nonwordnet", function (req, res) {
+  var id = req.params.poem;
+  var query = `
+      SELECT pw.poem_id, pnw.word_id, nw.lemma, pnw.use_count
+      FROM poem_non_wordnet pnw
+      JOIN non_wordnet nw ON pnw.word_id = nw.wordid
+      WHERE pnw.poem_id = ${id};
     `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);

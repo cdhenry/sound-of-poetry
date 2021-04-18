@@ -27,8 +27,13 @@ export class PoemService {
         return response.data as IPoem
     }
 
-    public async getPoemWords(id: number) {
-        const response = await axios.get(`${this._baseUrl}${id}/words`)
+    public async getPoemWordNet(id: number) {
+        const response = await axios.get(`${this._baseUrl}${id}/words/wordnet`)
+        return response.data as IPoemWord[]
+    }
+
+    public async getPoemNonWordNet(id: number) {
+        const response = await axios.get(`${this._baseUrl}${id}/words/nonwordnet`)
         return response.data as IPoemWord[]
     }
 }
