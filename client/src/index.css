@@ -14,4 +14,12 @@
     .background {
         background: linear-gradient(240deg, rgba(150, 50, 50, 0.3), rgba(0, 0, 200, 0));
     }
+
+    .toggle-input:checked {
+        background-color: #3b82f6;
+    }
+
+    .toggle-input:checked ~ span:last-child {
+        --tw-translate-x: 2rem;
+    }
 }

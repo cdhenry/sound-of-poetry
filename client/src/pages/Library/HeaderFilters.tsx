@@ -1,13 +1,15 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent } from 'react'
 
-import { LibraryHeaderFilterEnum } from '../../enums/filters';
-import { ILibraryHeaderFilters } from '../../interfaces/filters';
+import ToggleInput from '../../components/atoms/ToggleInput'
+import { LibraryHeaderFilterEnum } from '../../enums/filters'
+import { ILibraryHeaderFilters } from '../../interfaces/filters'
 
 export default function LibraryHeaderFilters(props: ILibraryHeaderFilters): JSX.Element {
     const defaultClassName = 'flex justify-around p-2 border-gray-500 border-2 rounded bg-indigo-100'
     const buttonClassName = 'cursor-pointer bg-transparent'
     const handleFilterChange = (event: MouseEvent<HTMLInputElement>) => {
-        props.handleFilterChange((event.target as HTMLInputElement).value as LibraryHeaderFilterEnum)
+        const target = event.target as HTMLInputElement
+        props.handleFilterChange(target.value as LibraryHeaderFilterEnum, target.checked)
     }
 
     return (
@@ -41,6 +43,13 @@ export default function LibraryHeaderFilters(props: ILibraryHeaderFilters): JSX.
                 className={buttonClassName}
                 onClick={handleFilterChange}
                 value={LibraryHeaderFilterEnum.Images}
+            />
+            <ToggleInput
+                label="View"
+                labelLeft="Grid"
+                labelRight="List"
+                onClick={handleFilterChange}
+                value={LibraryHeaderFilterEnum.View}
             />
         </section>
     )
