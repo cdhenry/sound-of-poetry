@@ -35,13 +35,13 @@ export default function Library(): JSX.Element {
             setIsDisplayAsGrid(isChecked || false)
         } else {
             setHeaderFilterType(headerFilter)
-            await getList(1, headerFilter)
+            await getList(0, headerFilter)
         }
     }
 
     const handleClassFilterChange = async (selectedOptions: IGetPoemsQuery) => {
         setGetPoemQuery({ ...getPoemQuery, ...selectedOptions })
-        await getList(1, headerFilterType, { ...getPoemQuery, ...selectedOptions })
+        await getList(0, headerFilterType, { ...getPoemQuery, ...selectedOptions })
     }
 
     const handleBack = async () => {
@@ -50,7 +50,7 @@ export default function Library(): JSX.Element {
 
     const getList = useCallback(
         async (
-            pageNumber: number = 1,
+            pageNumber: number = 0,
             headerFilter: LibraryHeaderFilterEnum = headerFilterType,
             selectedOptions?: IGetPoemsQuery
         ) => {

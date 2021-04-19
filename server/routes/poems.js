@@ -10,7 +10,7 @@ router.get("/", function (req, res) {
   var queryTotal = "SELECT COUNT(id) AS total FROM poem";
   var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
-  var offset = (pageNumber - 1) * limit;
+  var offset = pageNumber * limit;
   var poems;
   var tags;
   var poets;
