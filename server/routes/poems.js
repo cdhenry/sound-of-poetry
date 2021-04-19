@@ -35,27 +35,27 @@ router.get("/", function (req, res) {
     var whereClause = "";
 
     if (poets) {
-      joinClause += " JOIN poet_poem pp ON p.id = pp.poem_id";
       whereClause += `WHERE pp.poet_id IN (${poets})`;
     }
     if (tags) {
       joinClause += " JOIN poem_tag pt ON p.id = pt.poem_id";
-      if (whereClause) whereClause += ` OR pt.tag_id IN (${tags})`;
+      if (whereClause) whereClause += ` AND pt.tag_id IN (${tags})`;
       else whereClause += `WHERE pt.tag_id IN (${tags})`;
     }
     if (words) {
       joinClause += " JOIN poem_wordnet pw ON p.id = pw.poem_id";
-      if (whereClause) whereClause += ` OR w.wordid IN (${words})`;
+      if (whereClause) whereClause += ` AND w.wordid IN (${words})`;
       else whereClause += `WHERE pw.word_id IN (${words})`;
     }
     if (poems) {
-      if (whereClause) whereClause += ` OR p.id IN (${poems})`;
+      if (whereClause) whereClause += ` AND p.id IN (${poems})`;
       else whereClause += `WHERE p.id IN (${poems})`;
     }
 
     var query = `
-      SELECT DISTINCT p.id, p.poem_string, p.title, p.audio_url, p.video_url
-      FROM poem p${joinClause}
+      SELECT DISTINCT p.id, po.name as poet_name, p.poem_string, p.title, p.audio_url, p.video_url
+      FROM poem p
+      JOIN poet_poem pp ON p.id = pp.poem_id JOIN poet po ON pp.poet_id = po.id${joinClause}
       ${whereClause}
       LIMIT ${limit}
       OFFSET ${offset};
@@ -72,10 +72,27 @@ router.get("/", function (req, res) {
 });
 
 router.get("/tags", function (req, res) {
+  var poemIds;
+
+  if (req.query.poemIds) poemIds = req.query.poemIds;
+
+  var selectClause = "SELECT t.id as value, t.name as label";
+  var joinClause = "";
+  var whereClause = "";
+
+  if (poemIds) {
+    selectClause = "SELECT t.id, t.name, pt.poem_id";
+    joinClause += "JOIN poem_tag pt ON t.id = pt.poem_id";
+    whereClause += `WHERE pt.poem_id IN (${poemIds})`;
+  }
+
   var query = `
-      SELECT id as value, name as label
-      FROM tag
+      ${selectClause}
+      FROM tag t
+      ${joinClause}
+      ${whereClause}
     `;
+
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {

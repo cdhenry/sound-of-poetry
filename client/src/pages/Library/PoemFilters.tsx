@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Select, { OptionsType } from 'react-select';
-import AsyncSelect from 'react-select/async';
+import React, { useCallback, useEffect, useState } from 'react'
+import Select, { OptionsType } from 'react-select'
+import AsyncSelect from 'react-select/async'
 
-import { ILibraryClassFilters } from '../../interfaces/filters';
-import { ISelectOption } from '../../interfaces/shared';
-import { PoemService, poemService } from '../../services/poem';
-import { PoetService, poetService } from '../../services/poet';
-import { WordService, wordService } from '../../services/word';
+import { ILibraryClassFilters } from '../../interfaces/filters'
+import { ISelectOption } from '../../interfaces/shared'
+import { PoemService, poemService } from '../../services/poem'
+import { PoetService, poetService } from '../../services/poet'
+import { WordService, wordService } from '../../services/word'
 
 export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Element {
     const defaultClassName =
@@ -20,7 +20,7 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
     const getTags = useCallback(async () => {
         try {
             setIsLoading(true)
-            const data = await _poemService.getTags()
+            const data = (await _poemService.getTags()) as ISelectOption[]
             setTagsOptions(data)
         } catch (e) {
             console.log(e)
@@ -82,7 +82,7 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
                     loadOptions={loadPoets}
                     onChange={onPoetChange}
                 />
-                <Select placeholder="Tags" options={tagOptions} onChange={onTagChange} isMulti />
+                <Select placeholder="Topics" options={tagOptions} onChange={onTagChange} isMulti />
                 <AsyncSelect
                     isMulti
                     placeholder="Words"

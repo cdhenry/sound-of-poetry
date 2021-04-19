@@ -3,5 +3,6 @@ export enum LibraryHeaderFilterEnum {
     Poets = 'Poets',
     Words = 'Words',
     Sounds = 'Sounds',
-    Images = 'Images'
+    Images = 'Images',
+    View = 'View'
 }

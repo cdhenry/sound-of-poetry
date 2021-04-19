@@ -1,10 +1,16 @@
-import React from 'react';
+import React from 'react'
 
-import { IInputProps, IShelfItem } from './atoms';
+import { IGridListItem, IInputProps, ITableListItem } from './atoms'
 
-export interface IShelf {
+export interface IGridList {
     context: string
-    items: IShelfItem[]
+    items: IGridListItem[]
+}
+
+export interface ITableList {
+    context: string
+    headers: string[]
+    items: ITableListItem[]
 }
 
 export interface ITextInputProps extends IInputProps {
