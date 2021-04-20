@@ -6,7 +6,7 @@ import { LibraryHeaderFilterEnum } from '../../enums/filters'
 import { HandwritingFontEnum } from '../../enums/fonts'
 import { IImage } from '../../interfaces/image'
 import { ILibraryListSwitch } from '../../interfaces/pages'
-import { IPoem } from '../../interfaces/poem'
+import { IPoemListItem } from '../../interfaces/poem'
 import { IPoet } from '../../interfaces/poet'
 import { ILibraryListItemType } from '../../interfaces/shared'
 import { ISound } from '../../interfaces/sound'
@@ -57,7 +57,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
                     handwritingEnumKey
                 }
             default:
-                item = item as IPoem
+                item = item as IPoemListItem
                 return {
                     id: item.id,
                     title: item.title,

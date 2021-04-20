@@ -6,7 +6,7 @@ import { LibraryHeaderFilterEnum } from '../../enums/filters'
 import { HandwritingFontEnum } from '../../enums/fonts'
 import { IImage } from '../../interfaces/image'
 import { ILibraryListSwitch } from '../../interfaces/pages'
-import { IPoem } from '../../interfaces/poem'
+import { IPoemListItem } from '../../interfaces/poem'
 import { IPoet } from '../../interfaces/poet'
 import { ILibraryListItemType } from '../../interfaces/shared'
 import { ISound } from '../../interfaces/sound'
@@ -15,8 +15,8 @@ import { IWord } from '../../interfaces/word'
 export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element {
     const { list, headerFilterType, getListItem } = props
 
-    const handleListItem = async (id: any, handwriting: never) => {
-        await getListItem(id, handwriting)
+    const handleListItem = async (item: ILibraryListItemType, handwriting: never) => {
+        await getListItem(item, handwriting)
     }
 
     const headers = () => {
@@ -67,8 +67,8 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
                     handwritingEnumKey
                 }
             default:
-                item = item as IPoem
-                const displayItem = { title: item.title, poetName: item.poet_name, tags: item.tags }
+                item = item as IPoemListItem
+                const displayItem = { id: item.id, title: item.title, poetName: item.poet_name, tags: item.tags }
                 return {
                     item: displayItem,
                     handleListItem,

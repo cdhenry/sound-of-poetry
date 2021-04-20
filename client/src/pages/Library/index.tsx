@@ -11,8 +11,8 @@ import GridListSwitch from './GridListSwitch'
 import LibraryHeaderFilters from './HeaderFilters'
 import ListItemSwitch from './ListItemSwitch'
 import TableListSwitch from './TableListSwitch'
-import { setListData } from './utils/setListData'
-import { setListItemData } from './utils/setListItemData'
+import { getListData } from './utils/getListData'
+import { getListItemData } from './utils/getListItemData'
 
 export default function Library(): JSX.Element {
     const [isLoading, setIsLoading] = useState(true)
@@ -56,7 +56,7 @@ export default function Library(): JSX.Element {
         ) => {
             try {
                 setIsLoading(true)
-                const data: any = await setListData(limit, pageNumber, headerFilter, selectedOptions)
+                const data: any = await getListData(limit, pageNumber, headerFilter, selectedOptions)
                 setTotal(data.total)
                 setList(data.items)
                 setIsDisplayListItem(false)
@@ -70,10 +70,10 @@ export default function Library(): JSX.Element {
     )
 
     const getListItem = useCallback(
-        async (id: any, handwriting: never, filter: LibraryHeaderFilterEnum = headerFilterType) => {
+        async (item: ILibraryListItemType, handwriting: never, filter: LibraryHeaderFilterEnum = headerFilterType) => {
             try {
                 setIsLoading(true)
-                const data: any = await setListItemData(id, filter)
+                const data = await getListItemData(item, filter)
                 setListItemHandwriting(handwriting)
                 setListItem(data)
                 setIsDisplayListItem(true)

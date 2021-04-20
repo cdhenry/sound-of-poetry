@@ -1,10 +1,11 @@
 import { LibraryHeaderFilterEnum } from '../enums/filters'
 import { IGetPoemsQuery } from './poem'
+import { ILibraryListItemType } from './shared'
 
 export interface ILibraryListSwitch {
     list: any
     headerFilterType: LibraryHeaderFilterEnum
-    getListItem: (id: any, handwriting: never, filter?: LibraryHeaderFilterEnum) => Promise<void>
+    getListItem: (item: ILibraryListItemType, handwriting: never, filter?: LibraryHeaderFilterEnum) => Promise<void>
 }
 
 export interface ILibraryListItemSwitch {

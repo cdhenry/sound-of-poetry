@@ -1,9 +1,17 @@
 export interface IPoem {
     id: number
+    poet_name: string
     poem_string: string
+    title: string
+    audio_url: string
+    video_url: string
+}
+
+export interface IPoemListItem {
+    id: number
     poet_name: string
     title: string
-    tags: string[]
+    tags?: string[]
     audio_url: string
     video_url: string
 }

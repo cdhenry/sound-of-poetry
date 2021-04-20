@@ -20,12 +20,16 @@ export default function ListItemSwitch(props: ILibraryListItemSwitch): JSX.Eleme
             const poem = listItem.poem as IPoem
             const poemLines = poem.poem_string.split(/\n/)
             const wordNetLemmas = listItem.wordNetList.map((word: any) => word.lemma)
+
             let poemContent: React.ReactNode[] = []
+
             poemLines.forEach((line: any) => {
                 const words = line.split(' ')
+
                 words.forEach((word: string) => {
                     const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
                     const cleanedWord = word.replace(regex, '').toLowerCase()
+
                     poemContent.push(
                         <>
                             <button
@@ -38,13 +42,19 @@ export default function ListItemSwitch(props: ILibraryListItemSwitch): JSX.Eleme
                         </>
                     )
                 })
+
                 poemContent.push(<br />)
             })
+
             return (
                 <Paper
                     height={TailwindHeightEnum.Screen90}
                     handwritingEnumKey={listItemHandwriting}
-                    header={<Header headerType={HeaderTypeEnum.HeaderWeb}>{poem.title}</Header>}
+                    header={
+                        <Header headerType={HeaderTypeEnum.HeaderWeb}>
+                            {poem.title} by {poem.poet_name}
+                        </Header>
+                    }
                 >
                     <>{poemContent}</>
                 </Paper>
