@@ -19,7 +19,7 @@ export interface IHeaderProps
     headerType: HeaderTypeEnum
 }
 
-export interface IGridListItem {
+export interface IGridListItemProps {
     id: any
     title: string
     handwritingEnumKey: never
@@ -27,13 +27,12 @@ export interface IGridListItem {
     cover?: React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
 }
 
-export interface ITableListItem {
-    item: any
-    handwritingEnumKey: never
-    handleListItem: (id: any, handwriting: never) => void
-}
+export type ITableListItemProps = React.DetailedHTMLProps<
+    React.TdHTMLAttributes<HTMLTableDataCellElement>,
+    HTMLTableDataCellElement
+>
 
-export interface IPaper {
+export interface IPaperProps {
     header?: React.ReactNode
     height?: TailwindHeightEnum
     handwritingEnumKey: never

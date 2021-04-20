@@ -1,17 +1,10 @@
 import React from 'react'
 
-import { IGridListItem, IInputProps, ITableListItem } from './atoms'
+import { IInputProps } from './atoms'
 
-export interface IGridList {
-    context: string
-    items: IGridListItem[]
-}
+export type ITableListRowProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>
 
-export interface ITableList {
-    context: string
-    headers: string[]
-    items: ITableListItem[]
-}
+export type IGridListRowProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
 export interface ITextInputProps extends IInputProps {
     label: React.ReactNode

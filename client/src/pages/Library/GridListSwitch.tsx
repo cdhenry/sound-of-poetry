@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { randomInteger } from '../../common/utils/randomInteger'
-import GridList from '../../components/molecules/GridList'
+import GridList from '../../components/organisms/GridList'
 import { LibraryHeaderFilterEnum } from '../../enums/filters'
 import { HandwritingFontEnum } from '../../enums/fonts'
 import { IImage } from '../../interfaces/image'
