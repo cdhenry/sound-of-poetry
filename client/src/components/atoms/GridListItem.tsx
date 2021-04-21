@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { HandwritingFontEnum } from '../../enums/fonts'
-import { IGridListItem } from '../../interfaces/atoms'
+import { IGridListItemProps } from '../../interfaces/atoms'
 
-export default function GridListItem(props: IGridListItem): JSX.Element {
+export default function GridListItem(props: IGridListItemProps): JSX.Element {
     const { title, handwritingEnumKey, handleGridItem } = props
     const border = ' border-2 border-warmGray-700 shadow-lg'
     const font = ` font-${HandwritingFontEnum[handwritingEnumKey as never]} text-2xl text-gray-800`

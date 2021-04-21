@@ -1,12 +1,14 @@
 import React from 'react'
 
 import { randomInteger } from '../../common/utils/randomInteger'
-import TableList from '../../components/molecules/TableList'
+import TableListItem from '../../components/atoms/TableListItem'
+import TableListRow from '../../components/molecules/TableListRow'
+import TableList from '../../components/organisms/TableList'
 import { LibraryHeaderFilterEnum } from '../../enums/filters'
 import { HandwritingFontEnum } from '../../enums/fonts'
 import { IImage } from '../../interfaces/image'
 import { ILibraryListSwitch } from '../../interfaces/pages'
-import { IPoem } from '../../interfaces/poem'
+import { IPoemListItem } from '../../interfaces/poem'
 import { IPoet } from '../../interfaces/poet'
 import { ILibraryListItemType } from '../../interfaces/shared'
 import { ISound } from '../../interfaces/sound'
@@ -15,67 +17,90 @@ import { IWord } from '../../interfaces/word'
 export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element {
     const { list, headerFilterType, getListItem } = props
 
-    const handleListItem = async (id: any, handwriting: never) => {
-        await getListItem(id, handwriting)
+    const handleListItem = async (item: ILibraryListItemType, handwriting: never) => {
+        await getListItem(item, handwriting)
     }
 
     const headers = () => {
         switch (headerFilterType) {
             case LibraryHeaderFilterEnum.Poets:
-                return ['Title', 'Author', 'Topics', 'Actions']
+                return ['Name', 'Lifespan', 'Actions']
             case LibraryHeaderFilterEnum.Words:
-                return ['Title', 'Author', 'Topics', 'Actions']
+                return ['Word', 'Part of Speech', 'Definition', 'Sample Use', 'Actions']
             case LibraryHeaderFilterEnum.Sounds:
-                return ['Title', 'Author', 'Topics', 'Actions']
+                return ['TYID', 'Start Seconds', 'End Seconds', 'Display Name', 'Actions']
             case LibraryHeaderFilterEnum.Images:
-                return ['Title', 'Author', 'Topics', 'Actions']
+                return ['Word', 'Part of Speech', 'Definition', 'Actions']
             default:
                 return ['Title', 'Author', 'Topics', 'Actions']
         }
     }
 
-    const items = list?.map((item: ILibraryListItemType) => {
+    const rows = list?.map((item: ILibraryListItemType) => {
         const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
         const handwritingEnumKey = handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never
+
         switch (headerFilterType) {
             case LibraryHeaderFilterEnum.Poets:
                 item = item as IPoet
-                return {
-                    item: item,
-                    handleListItem,
-                    handwritingEnumKey
-                }
+                return (
+                    <TableListRow>
+                        <TableListItem>{item.name}</TableListItem>
+                        <TableListItem>
+                            {item.yob} - {item.yod}
+                        </TableListItem>
+                        <TableListItem>Actions</TableListItem>
+                    </TableListRow>
+                )
             case LibraryHeaderFilterEnum.Words:
                 item = item as IWord
-                return {
-                    item,
-                    handleListItem,
-                    handwritingEnumKey
-                }
+                return (
+                    <TableListRow>
+                        <TableListItem>{item.lemma}</TableListItem>
+                        <TableListItem>{item.pos}</TableListItem>
+                        <TableListItem>{item.definition}</TableListItem>
+                        <TableListItem>{item.sampleset}</TableListItem>
+                        <TableListItem>Actions</TableListItem>
+                    </TableListRow>
+                )
             case LibraryHeaderFilterEnum.Sounds:
                 item = item as ISound
-                return {
-                    item,
-                    handleListItem,
-                    handwritingEnumKey
-                }
+                return (
+                    <TableListRow>
+                        <TableListItem>{item.ytid}</TableListItem>
+                        <TableListItem>{item.start_seconds}</TableListItem>
+                        <TableListItem>{item.end_seconds}</TableListItem>
+                        <TableListItem>{item.display_name}</TableListItem>
+                        <TableListItem>Actions</TableListItem>
+                    </TableListRow>
+                )
             case LibraryHeaderFilterEnum.Images:
                 item = item as IImage
-                return {
-                    item,
-                    handleListItem,
-                    handwritingEnumKey
-                }
+                return (
+                    <TableListRow>
+                        <TableListItem>{item.lemma}</TableListItem>
+                        <TableListItem>{item.pos}</TableListItem>
+                        <TableListItem>{item.definition}</TableListItem>
+                        <TableListItem>Actions</TableListItem>
+                    </TableListRow>
+                )
             default:
-                item = item as IPoem
-                const displayItem = { title: item.title, poetName: item.poet_name, tags: item.tags }
-                return {
-                    item: displayItem,
-                    handleListItem,
-                    handwritingEnumKey
+                item = item as IPoemListItem
+                const handleTitle = () => {
+                    handleListItem(item, handwritingEnumKey)
                 }
+                const handlePoet = () => {}
+                const handleTopic = () => {}
+                return (
+                    <TableListRow>
+                        <TableListItem onClick={handleTitle}>{item.title}</TableListItem>
+                        <TableListItem onClick={handlePoet}>{item.poet_name}</TableListItem>
+                        <TableListItem onClick={handleTopic}>{item.tags?.join(', ')}</TableListItem>
+                        <TableListItem>Actions</TableListItem>
+                    </TableListRow>
+                )
         }
     })
 
-    return <TableList context="LibraryTableList" headers={headers()} items={items} />
+    return <TableList headers={headers()}>{rows}</TableList>
 }
