@@ -4,7 +4,6 @@ import React from 'react';
 import { useD3 } from '../../common/utils/useD3';
 
 function MapChart({ data }) {
-    console.log(data)
     const ref = useD3((svg) => {
         const height = 500
         const width = 500
