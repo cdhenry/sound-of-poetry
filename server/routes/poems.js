@@ -11,12 +11,12 @@ router.get("/", function (req, res) {
   var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
-  var poems;
+  var poemId;
   var tags;
   var poets;
   var words;
 
-  if (req.query.titles) poems = req.query.titles;
+  if (req.query.poemId) poemId = req.query.poemId;
   if (req.query.tags) tags = req.query.tags;
   if (req.query.poets) poets = req.query.poets;
   if (req.query.words) words = req.query.words;
@@ -27,7 +27,6 @@ router.get("/", function (req, res) {
     if (err) {
       return err;
     } else {
-      console.log(rows, rows[0]);
       totalCount = rows[0].total;
     }
 
@@ -39,20 +38,26 @@ router.get("/", function (req, res) {
     }
 
     if (tags) {
-      joinClause += " JOIN poem_tag pt ON p.id = pt.poem_id";
-      if (whereClause) whereClause += ` AND pt.tag_id IN (${tags})`;
-      else whereClause += `WHERE pt.tag_id IN (${tags})`;
+      joinClause += `JOIN (SELECT pt.poem_id
+                      FROM poem_tag pt
+                      WHERE pt.tag_id IN (${tags})
+                      GROUP BY pt.poem_id
+                      HAVING COUNT(DISTINCT pt.tag_id) = ${tags.length})  
+                      x ON x.poem_id = p.id`;
     }
 
     if (words) {
-      joinClause += " JOIN poem_wordnet pw ON p.id = pw.poem_id";
-      if (whereClause) whereClause += ` AND w.wordid IN (${words})`;
-      else whereClause += `WHERE pw.word_id IN (${words})`;
+      joinClause += ` JOIN (SELECT pw.poem_id
+                      FROM poem_wordnet pw
+                      WHERE pw.word_id IN (${words})
+                      GROUP BY pw.poem_id
+                      HAVING COUNT(DISTINCT pw.word_id) = ${words.length})  
+                      y ON y.poem_id = p.id`;
     }
 
-    if (poems) {
-      if (whereClause) whereClause += ` AND p.id IN (${poems})`;
-      else whereClause += `WHERE p.id IN (${poems})`;
+    if (poemId) {
+      if (whereClause) whereClause += ` AND p.id = (${poemId})`;
+      else whereClause += `WHERE p.id = (${poemId})`;
     }
 
     var query = `
@@ -65,7 +70,7 @@ router.get("/", function (req, res) {
       LIMIT ${limit}
       OFFSET ${offset};
     `;
-
+    console.log(query);
     connection.query(query, function (err, rest) {
       if (err) {
         return err;

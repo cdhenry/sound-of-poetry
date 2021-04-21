@@ -30,7 +30,7 @@ export interface IPoemWord {
 }
 
 export interface IGetPoemsQuery {
-    titles?: number[]
+    poemId?: number
     poets?: number[]
     tags?: number[]
     words?: number[]

@@ -21,10 +21,9 @@ export const getListItemData = async (item: ILibraryListItemType, filter: Librar
     switch (filter) {
         case LibraryHeaderFilterEnum.Poems:
             item = item as IPoemListItem
-            console.log(item)
             const poem = await _poemService.getPoem(item.id)
             const wordNetList = await _poemService.getPoemWordNet(item.id)
-            return { wordNetList, poem }
+            return { wordNetList, poem: { ...item, ...poem } }
         case LibraryHeaderFilterEnum.Poets:
             return await _poetService.getPoet((item as IPoet).id)
         case LibraryHeaderFilterEnum.Words:
