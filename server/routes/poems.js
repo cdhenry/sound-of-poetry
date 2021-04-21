@@ -7,10 +7,11 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(id) AS total FROM poem";
   var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
+  var joinClause = "";
+  var whereClause = "";
   var poemId;
   var tags;
   var poets;
@@ -21,6 +22,42 @@ router.get("/", function (req, res) {
   if (req.query.poets) poets = req.query.poets;
   if (req.query.words) words = req.query.words;
 
+  if (poets) {
+    whereClause += `WHERE pp.poet_id IN (${poets})`;
+  }
+
+  if (tags) {
+    joinClause += `JOIN (SELECT pt.poem_id
+                    FROM poem_tag pt
+                    WHERE pt.tag_id IN (${tags})
+                    GROUP BY pt.poem_id
+                    HAVING COUNT(DISTINCT pt.tag_id) = ${tags.length})  
+                    x ON x.poem_id = p.id`;
+  }
+
+  if (words) {
+    joinClause += ` JOIN (SELECT pw.poem_id
+                    FROM poem_wordnet pw
+                    WHERE pw.word_id IN (${words})
+                    GROUP BY pw.poem_id
+                    HAVING COUNT(DISTINCT pw.word_id) = ${words.length})  
+                    y ON y.poem_id = p.id`;
+  }
+
+  if (poemId) {
+    if (whereClause) whereClause += ` AND p.id = (${poemId})`;
+    else whereClause += `WHERE p.id = (${poemId})`;
+  }
+
+  var queryTotal = `
+      SELECT COUNT(p.id) as total
+      FROM poem p
+      JOIN poet_poem pp ON p.id = pp.poem_id
+      JOIN poet po ON pp.poet_id = po.id
+      ${joinClause}
+      ${whereClause}
+    `;
+
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -28,36 +65,6 @@ router.get("/", function (req, res) {
       return err;
     } else {
       totalCount = rows[0].total;
-    }
-
-    var joinClause = "";
-    var whereClause = "";
-
-    if (poets) {
-      whereClause += `WHERE pp.poet_id IN (${poets})`;
-    }
-
-    if (tags) {
-      joinClause += `JOIN (SELECT pt.poem_id
-                      FROM poem_tag pt
-                      WHERE pt.tag_id IN (${tags})
-                      GROUP BY pt.poem_id
-                      HAVING COUNT(DISTINCT pt.tag_id) = ${tags.length})  
-                      x ON x.poem_id = p.id`;
-    }
-
-    if (words) {
-      joinClause += ` JOIN (SELECT pw.poem_id
-                      FROM poem_wordnet pw
-                      WHERE pw.word_id IN (${words})
-                      GROUP BY pw.poem_id
-                      HAVING COUNT(DISTINCT pw.word_id) = ${words.length})  
-                      y ON y.poem_id = p.id`;
-    }
-
-    if (poemId) {
-      if (whereClause) whereClause += ` AND p.id = (${poemId})`;
-      else whereClause += `WHERE p.id = (${poemId})`;
     }
 
     var query = `
@@ -68,9 +75,9 @@ router.get("/", function (req, res) {
       ${joinClause}
       ${whereClause}
       LIMIT ${limit}
-      OFFSET ${offset};
+      OFFSET ${offset}
     `;
-    console.log(query);
+
     connection.query(query, function (err, rest) {
       if (err) {
         return err;
