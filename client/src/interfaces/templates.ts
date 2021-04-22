@@ -6,11 +6,16 @@ export interface IPaginateTemplate {
 }
 
 export interface ILibraryTemplate {
-    header: React.ReactNode
+    header?: React.ReactNode
+    content: React.ReactNode
+}
+
+export interface IHomeTemplate {
+    header?: React.ReactNode
     content: React.ReactNode
 }
 
 export interface IMapTemplate {
-    header: React.ReactNode
+    header?: React.ReactNode
     content: React.ReactNode
 }
