@@ -1,20 +1,9 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-  faAngleDoubleRight,
-  faBook,
-  faHome,
-  faMapMarkerAlt,
-  faMicrophone,
-  faPen,
-  faTimes
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import Icon from '../components/atoms/Icon';
+import { IconTypeEnum } from '../enums/iconType';
 import { RoutesEnum } from '../enums/routes';
-
-library.add(faBook, faHome, faMicrophone, faPen, faMapMarkerAlt, faAngleDoubleRight, faTimes)
 
 export default function Navigation(): JSX.Element {
     const defaultClassName =
@@ -27,27 +16,27 @@ export default function Navigation(): JSX.Element {
     return isNavVisible ? (
         <section className={defaultClassName}>
             <Link to={RoutesEnum.Home} className={linkClassName}>
-                <FontAwesomeIcon icon={faHome} size="lg" />
+                <Icon iconType={IconTypeEnum.Home} size="lg" />
             </Link>
             <Link to={RoutesEnum.Library} className={linkClassName}>
-                <FontAwesomeIcon icon={faBook} size="lg" />
+                <Icon iconType={IconTypeEnum.Book} size="lg" />
             </Link>
             <Link to={RoutesEnum.Theater} className={linkClassName}>
-                <FontAwesomeIcon icon={faMicrophone} size="lg" />
+                <Icon iconType={IconTypeEnum.Microphone} size="lg" />
             </Link>
             <Link to={RoutesEnum.Studio} className={linkClassName}>
-                <FontAwesomeIcon icon={faPen} size="lg" />
+                <Icon iconType={IconTypeEnum.Pen} size="lg" />
             </Link>
             <Link to={RoutesEnum.Map} className={linkClassName}>
-                <FontAwesomeIcon icon={faMapMarkerAlt} size="lg" />
+                <Icon iconType={IconTypeEnum.Map} size="lg" />
             </Link>
             <button className="absolute right-2.5 top-0" onClick={handleNavToggle}>
-                <FontAwesomeIcon icon={faTimes} size="xs" />
+                <Icon iconType={IconTypeEnum.Times} size="xs" />
             </button>
         </section>
     ) : (
         <button onClick={handleNavToggle}>
-            <FontAwesomeIcon icon={faAngleDoubleRight} />
+            <Icon iconType={IconTypeEnum.AngleDoubleRight} />
         </button>
     )
 }

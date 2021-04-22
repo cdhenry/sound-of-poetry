@@ -1,7 +1,9 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleDoubleLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
+
+import Icon from '../components/atoms/Icon';
+import { IconTypeEnum } from '../enums/iconType';
 
 library.add(faTimes)
 
@@ -14,13 +16,13 @@ export default function Drawer(): JSX.Element {
     return isAsideVisible ? (
         <section className={defaultClassName}>
             <button className="absolute right-2.5 top-0" onClick={handleAsideToggle}>
-                <FontAwesomeIcon icon={faTimes} size="xs" />
+                <Icon iconType={IconTypeEnum.Times} size="xs" />
             </button>
             <section className="flex flex-col justify-center items-center">Drawer</section>
         </section>
     ) : (
         <button onClick={handleAsideToggle}>
-            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+            <Icon iconType={IconTypeEnum.AngleDoubleLeft} />
         </button>
     )
 }
