@@ -1,18 +1,21 @@
-import React from 'react'
+import React from 'react';
 
-import { randomInteger } from '../../common/utils/randomInteger'
-import TableListItem from '../../components/atoms/TableListItem'
-import TableListRow from '../../components/molecules/TableListRow'
-import TableList from '../../components/organisms/TableList'
-import { LibraryHeaderFilterEnum } from '../../enums/filters'
-import { HandwritingFontEnum } from '../../enums/fonts'
-import { IImage } from '../../interfaces/image'
-import { ILibraryListSwitch } from '../../interfaces/pages'
-import { IPoemListItem } from '../../interfaces/poem'
-import { IPoet } from '../../interfaces/poet'
-import { ILibraryListItemType } from '../../interfaces/shared'
-import { ISound } from '../../interfaces/sound'
-import { IWord } from '../../interfaces/word'
+import { randomInteger } from '../../common/utils/randomInteger';
+import Button from '../../components/atoms/Button';
+import Icon from '../../components/atoms/Icon';
+import TableListItem from '../../components/atoms/TableListItem';
+import TableListRow from '../../components/molecules/TableListRow';
+import TableList from '../../components/organisms/TableList';
+import { LibraryHeaderFilterEnum } from '../../enums/filters';
+import { HandwritingFontEnum } from '../../enums/fonts';
+import { IconTypeEnum } from '../../enums/iconType';
+import { IImage } from '../../interfaces/image';
+import { ILibraryListSwitch } from '../../interfaces/pages';
+import { IPoemListItem } from '../../interfaces/poem';
+import { IPoet } from '../../interfaces/poet';
+import { ILibraryListItemType } from '../../interfaces/shared';
+import { ISound } from '../../interfaces/sound';
+import { IWord } from '../../interfaces/word';
 
 export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element {
     const { list, headerFilterType, getListItem } = props
@@ -32,8 +35,10 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
                 return ['TYID', 'Start Seconds', 'End Seconds', 'Display Name', 'Actions']
             case LibraryHeaderFilterEnum.Images:
                 return ['Word', 'Part of Speech', 'Definition', 'Actions']
+            case LibraryHeaderFilterEnum.Poems:
+                return ['Title', 'Author', 'Topics', 'Related Media']
             default:
-                return ['Title', 'Author', 'Topics', 'Actions']
+                return []
         }
     }
 
@@ -85,21 +90,40 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
                         <TableListItem>Actions</TableListItem>
                     </TableListRow>
                 )
-            default:
+            case LibraryHeaderFilterEnum.Poems:
                 item = item as IPoemListItem
-                const handleTitle = () => {
+                const handleRowClick = () => {
                     handleListItem(item, handwritingEnumKey)
                 }
-                const handlePoet = () => {}
-                const handleTopic = () => {}
+                const handleAudio = () => {}
+                const handleVideo = () => {}
                 return (
-                    <TableListRow key={`Poems${context}Row${index}`}>
-                        <TableListItem onClick={handleTitle}>{item.title}</TableListItem>
-                        <TableListItem onClick={handlePoet}>{item.poet_name}</TableListItem>
-                        <TableListItem onClick={handleTopic}>{item.tags?.join(', ')}</TableListItem>
-                        <TableListItem>Actions</TableListItem>
+                    <TableListRow
+                        key={`Poems${context}Row${index}`}
+                        className="cursor-pointer"
+                        onClick={handleRowClick}
+                    >
+                        <TableListItem handwritingEnumKey={handwritingEnumKey}>{item.title}</TableListItem>
+                        <TableListItem>{item.poet_name}</TableListItem>
+                        <TableListItem>{item.tags?.join(', ')}</TableListItem>
+                        <TableListItem>
+                            <div className="flex space-x-2">
+                                {item.audio_url && (
+                                    <Button onClick={handleAudio}>
+                                        <Icon iconType={IconTypeEnum.Audio} />
+                                    </Button>
+                                )}
+                                {item.video_url && (
+                                    <Button onClick={handleVideo}>
+                                        <Icon iconType={IconTypeEnum.Video} />
+                                    </Button>
+                                )}
+                            </div>
+                        </TableListItem>
                     </TableListRow>
                 )
+            default:
+                return <></>
         }
     })
 

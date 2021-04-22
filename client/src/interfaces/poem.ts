@@ -1,3 +1,5 @@
+import { PoemOrderByEnum } from '../enums/orderBy';
+
 export interface IPoem {
     id: number
     poet_name: string
@@ -34,6 +36,9 @@ export interface IGetPoemsQuery {
     poets?: number[]
     tags?: number[]
     words?: number[]
+    hasAudio?: boolean
+    hasVideo?: boolean
+    orderBy?: PoemOrderByEnum
 }
 
 export interface IGetTitlesParams {

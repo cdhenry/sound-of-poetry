@@ -1,18 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { LibraryHeaderFilterEnum } from '../../enums/filters'
-import { IGetPoemsQuery } from '../../interfaces/poem'
-import { ILibraryListItemType } from '../../interfaces/shared'
-import LibraryTemplate from '../../templates/Library'
-import PaginateTemplate from '../../templates/Paginate'
-import Loading from '../Loading'
-import ClassFilterSwitch from './ClassFilterSwitch'
-import GridListSwitch from './GridListSwitch'
-import LibraryHeaderFilters from './HeaderFilters'
-import ListItemSwitch from './ListItemSwitch'
-import TableListSwitch from './TableListSwitch'
-import { getListData } from './utils/getListData'
-import { getListItemData } from './utils/getListItemData'
+import Button from '../../components/atoms/Button';
+import { LibraryHeaderFilterEnum } from '../../enums/filters';
+import { IGetPoemsQuery } from '../../interfaces/poem';
+import { ILibraryListItemType } from '../../interfaces/shared';
+import LibraryTemplate from '../../templates/Library';
+import PaginateTemplate from '../../templates/Paginate';
+import Loading from '../Loading';
+import ClassFilterSwitch from './ClassFilterSwitch';
+import GridListSwitch from './GridListSwitch';
+import LibraryHeaderFilters from './HeaderFilters';
+import ListItemSwitch from './ListItemSwitch';
+import TableListSwitch from './TableListSwitch';
+import { getListData } from './utils/getListData';
+import { getListItemData } from './utils/getListItemData';
 
 export default function Library(): JSX.Element {
     const [isLoading, setIsLoading] = useState(true)
@@ -97,9 +98,7 @@ export default function Library(): JSX.Element {
                     <LibraryHeaderFilters handleFilterChange={handleHeaderFilterChange} />
                 ) : (
                     <div className="flex justify-center">
-                        <button className="p-2 border-gray-500 border-2 rounded bg-indigo-100" onClick={handleBack}>
-                            Back
-                        </button>
+                        <Button onClick={handleBack}>Back</Button>
                     </div>
                 )
             }

@@ -15,8 +15,12 @@
         background: linear-gradient(240deg, rgba(150, 50, 50, 0.3), rgba(0, 0, 200, 0));
     }
 
-    .toggle-input:checked {
+    .toggle-input-blue:checked {
         background-color: #3b82f6;
+    }
+
+    .toggle-input-green:checked {
+        background-color: #22c55e;
     }
 
     .toggle-input:checked ~ span:last-child {
