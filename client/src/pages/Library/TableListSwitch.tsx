@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { randomInteger } from '../../common/utils/randomInteger';
 import Button from '../../components/atoms/Button';
+import Card from '../../components/atoms/Card';
 import Icon from '../../components/atoms/Icon';
 import TableListItem from '../../components/atoms/TableListItem';
 import TableListRow from '../../components/molecules/TableListRow';
 import TableList from '../../components/organisms/TableList';
+import { CardTypeEnum } from '../../enums/cardType';
 import { LibraryHeaderFilterEnum } from '../../enums/filters';
 import { HandwritingFontEnum } from '../../enums/fonts';
 import { IconTypeEnum } from '../../enums/iconType';
+import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind';
 import { IImage } from '../../interfaces/image';
 import { ILibraryListSwitch } from '../../interfaces/pages';
 import { IPoemListItem } from '../../interfaces/poem';
@@ -16,15 +19,19 @@ import { IPoet } from '../../interfaces/poet';
 import { ILibraryListItemType } from '../../interfaces/shared';
 import { ISound } from '../../interfaces/sound';
 import { IWord } from '../../interfaces/word';
+import ModalTemplate from '../../templates/Modal';
 
 export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element {
     const { list, headerFilterType, getListItem } = props
     const context = 'TableListSwitch'
-
+    const [isModalActive, setIsModalActive] = useState(false)
+    const [modal, setModal] = useState(<></>)
     const handleListItem = async (item: ILibraryListItemType, handwriting: never) => {
         await getListItem(item, handwriting)
     }
-
+    const toggleIsModalActive = () => {
+        setIsModalActive(!isModalActive)
+    }
     const headers = () => {
         switch (headerFilterType) {
             case LibraryHeaderFilterEnum.Poets:
@@ -91,29 +98,39 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
                     </TableListRow>
                 )
             case LibraryHeaderFilterEnum.Poems:
-                item = item as IPoemListItem
-                const handleRowClick = () => {
+                const { title, poet_name, tags, audio_url, video_url } = item as IPoemListItem
+                const handleTitle = () => {
                     handleListItem(item, handwritingEnumKey)
                 }
-                const handleAudio = () => {}
-                const handleVideo = () => {}
+                const handleAudio = async () => {
+                    console.log(audio_url)
+                    setModal(<embed src={audio_url}></embed>)
+                    toggleIsModalActive()
+                }
+                const handleVideo = () => {
+                    console.log(video_url)
+                    setModal(<embed src={video_url}></embed>)
+                    toggleIsModalActive()
+                }
                 return (
-                    <TableListRow
-                        key={`Poems${context}Row${index}`}
-                        className="cursor-pointer"
-                        onClick={handleRowClick}
-                    >
-                        <TableListItem handwritingEnumKey={handwritingEnumKey}>{item.title}</TableListItem>
-                        <TableListItem>{item.poet_name}</TableListItem>
-                        <TableListItem>{item.tags?.join(', ')}</TableListItem>
+                    <TableListRow key={`Poems${context}Row${index}`}>
+                        <TableListItem
+                            handwritingEnumKey={handwritingEnumKey}
+                            className="cursor-pointer"
+                            onClick={handleTitle}
+                        >
+                            {title}
+                        </TableListItem>
+                        <TableListItem>{poet_name}</TableListItem>
+                        <TableListItem>{tags?.join(', ')}</TableListItem>
                         <TableListItem>
                             <div className="flex space-x-2">
-                                {item.audio_url && (
+                                {audio_url && (
                                     <Button onClick={handleAudio}>
                                         <Icon iconType={IconTypeEnum.Audio} />
                                     </Button>
                                 )}
-                                {item.video_url && (
+                                {video_url && (
                                     <Button onClick={handleVideo}>
                                         <Icon iconType={IconTypeEnum.Video} />
                                     </Button>
@@ -128,8 +145,16 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
     })
 
     return (
-        <TableList context={context} headers={headers()}>
-            {rows}
-        </TableList>
+        <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
+            {isModalActive ? (
+                <Card cardType={CardTypeEnum.Modal} height={TailwindHeightEnum.Auto} width={TailwindWidthEnum.Auto}>
+                    {modal}
+                </Card>
+            ) : (
+                <TableList context={context} headers={headers()}>
+                    {rows}
+                </TableList>
+            )}
+        </ModalTemplate>
     )
 }
