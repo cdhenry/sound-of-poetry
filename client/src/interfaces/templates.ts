@@ -19,3 +19,9 @@ export interface IMapTemplate {
     header?: React.ReactNode
     content: React.ReactNode
 }
+
+export interface IModalProps {
+    isActive: boolean
+    closeModal: () => void
+    children: React.ReactNode
+}

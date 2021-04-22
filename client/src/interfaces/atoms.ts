@@ -9,9 +9,10 @@ import {
 } from '@fortawesome/fontawesome-svg-core';
 import React, { CSSProperties } from 'react';
 
+import { CardTypeEnum } from '../enums/cardType';
 import { HeaderTypeEnum } from '../enums/headerType';
 import { IconTypeEnum } from '../enums/iconType';
-import { TailwindHeightEnum } from '../enums/tailwind';
+import { TailwindHeightEnum, TailwindWidthEnum } from '../enums/tailwind';
 
 export type IInputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 
@@ -67,9 +68,11 @@ export interface ITableListItemProps
     handwritingEnumKey?: never
 }
 
-export interface IPaperProps {
+export interface ICardProps {
     header?: React.ReactNode
-    height?: TailwindHeightEnum
-    handwritingEnumKey: never
-    children: React.ReactNode
+    height: TailwindHeightEnum
+    width: TailwindWidthEnum
+    handwritingEnumKey?: never
+    cardType: CardTypeEnum
+    children?: React.ReactNode
 }
