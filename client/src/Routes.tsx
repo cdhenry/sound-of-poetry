@@ -1,8 +1,8 @@
-import React, { lazy, LazyExoticComponent, Suspense } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { lazy, LazyExoticComponent, Suspense } from 'react'
+import { Route, Switch } from 'react-router-dom'
 
-import { RoutesEnum } from './enums/routes';
-import Loading from './pages/Loading';
+import { RoutesEnum } from './enums/routes'
+import Loading from './pages/Loading'
 
 interface RouteConfig {
     exact: boolean

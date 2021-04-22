@@ -16,6 +16,7 @@ import { IWord } from '../../interfaces/word'
 
 export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element {
     const { list, headerFilterType, getListItem } = props
+    const context = 'TableListSwitch'
 
     const handleListItem = async (item: ILibraryListItemType, handwriting: never) => {
         await getListItem(item, handwriting)
@@ -36,7 +37,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
         }
     }
 
-    const rows = list?.map((item: ILibraryListItemType) => {
+    const rows = list?.map((item: ILibraryListItemType, index: number) => {
         const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
         const handwritingEnumKey = handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never
 
@@ -44,7 +45,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
             case LibraryHeaderFilterEnum.Poets:
                 item = item as IPoet
                 return (
-                    <TableListRow>
+                    <TableListRow key={`Poets${context}Row${index}`}>
                         <TableListItem>{item.name}</TableListItem>
                         <TableListItem>
                             {item.yob} - {item.yod}
@@ -55,7 +56,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
             case LibraryHeaderFilterEnum.Words:
                 item = item as IWord
                 return (
-                    <TableListRow>
+                    <TableListRow key={`Words${context}Row${index}`}>
                         <TableListItem>{item.lemma}</TableListItem>
                         <TableListItem>{item.pos}</TableListItem>
                         <TableListItem>{item.definition}</TableListItem>
@@ -66,7 +67,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
             case LibraryHeaderFilterEnum.Sounds:
                 item = item as ISound
                 return (
-                    <TableListRow>
+                    <TableListRow key={`Sounds${context}Row${index}`}>
                         <TableListItem>{item.ytid}</TableListItem>
                         <TableListItem>{item.start_seconds}</TableListItem>
                         <TableListItem>{item.end_seconds}</TableListItem>
@@ -77,7 +78,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
             case LibraryHeaderFilterEnum.Images:
                 item = item as IImage
                 return (
-                    <TableListRow>
+                    <TableListRow key={`Images${context}Row${index}`}>
                         <TableListItem>{item.lemma}</TableListItem>
                         <TableListItem>{item.pos}</TableListItem>
                         <TableListItem>{item.definition}</TableListItem>
@@ -92,7 +93,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
                 const handlePoet = () => {}
                 const handleTopic = () => {}
                 return (
-                    <TableListRow>
+                    <TableListRow key={`Poems${context}Row${index}`}>
                         <TableListItem onClick={handleTitle}>{item.title}</TableListItem>
                         <TableListItem onClick={handlePoet}>{item.poet_name}</TableListItem>
                         <TableListItem onClick={handleTopic}>{item.tags?.join(', ')}</TableListItem>
@@ -102,5 +103,9 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
         }
     })
 
-    return <TableList headers={headers()}>{rows}</TableList>
+    return (
+        <TableList context={context} headers={headers()}>
+            {rows}
+        </TableList>
+    )
 }

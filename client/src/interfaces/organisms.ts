@@ -11,6 +11,7 @@ export interface IGridListProps {
 
 export interface ITableListProps
     extends React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement> {
+    context: string
     headers: string[]
     children: React.ReactNode
 }

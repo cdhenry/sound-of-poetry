@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import Select, { OptionsType } from 'react-select'
+import Select, { OptionsType, OptionTypeBase } from 'react-select'
 import AsyncSelect from 'react-select/async'
 
 import { ILibraryClassFilters } from '../../interfaces/filters'
@@ -41,8 +41,8 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
         if (lemma.length > 2) _wordService.getLemmas({ lemma }).then((data) => callback(data))
     }
 
-    const onTitleChange = (titles: OptionsType<any>) => {
-        props.handleFilterChange({ titles: titles.map((item) => item.value) })
+    const onTitleChange = (selectOption: OptionTypeBase | null) => {
+        props.handleFilterChange({ poemId: selectOption?.value as number })
     }
 
     const onPoetChange = (poets: OptionsType<any>) => {
@@ -69,8 +69,8 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
         <section className={defaultClassName}>
             <>
                 <AsyncSelect
-                    isMulti
                     placeholder="Titles"
+                    isClearable={true}
                     noOptionsMessage={noOptionsMessage}
                     loadOptions={loadTitles}
                     onChange={onTitleChange}
