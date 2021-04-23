@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Select, { OptionsType, OptionTypeBase } from 'react-select';
-import AsyncSelect from 'react-select/async';
+import React, { useCallback, useEffect, useState } from 'react'
+import Select, { OptionsType, OptionTypeBase } from 'react-select'
+import AsyncSelect from 'react-select/async'
 
-import ToggleInput from '../../components/atoms/ToggleInput';
-import { PoemOrderByEnum } from '../../enums/orderBy';
-import { ILibraryClassFilters } from '../../interfaces/filters';
-import { ISelectOption } from '../../interfaces/shared';
-import { PoemService, poemService } from '../../services/poem';
-import { PoetService, poetService } from '../../services/poet';
-import { WordService, wordService } from '../../services/word';
+import ToggleInput from '../../components/atoms/ToggleInput'
+import { PoemOrderByEnum } from '../../enums/orderBy'
+import { ILibraryClassFilters } from '../../interfaces/filters'
+import { ISelectOption } from '../../interfaces/shared'
+import { PoemService, poemService } from '../../services/poem'
+import { PoetService, poetService } from '../../services/poet'
+import { WordService, wordService } from '../../services/word'
 
 export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Element {
     const filterRowClassName = 'grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2 p-2 '
@@ -72,13 +72,13 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
     }
 
     const onAudioToggle = () => {
+        props.handleFilterChange({ hasAudio: !hasAudio })
         setHasAudio(!hasAudio)
-        props.handleFilterChange({ hasAudio: hasAudio })
     }
 
     const onVideoToggle = () => {
+        props.handleFilterChange({ hasVideo: !hasVideo })
         setHasVideo(!hasVideo)
-        props.handleFilterChange({ hasVideo: hasVideo })
     }
 
     const noOptionsMessage = () => 'Type to populate options'

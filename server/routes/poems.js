@@ -16,11 +16,15 @@ router.get("/", function (req, res) {
   var tags;
   var poets;
   var words;
+  var audio;
+  var video;
 
   if (req.query.poemId) poemId = req.query.poemId;
   if (req.query.tags) tags = req.query.tags;
   if (req.query.poets) poets = req.query.poets;
   if (req.query.words) words = req.query.words;
+  if (req.query.hasAudio) audio = req.query.hasAudio === "true";
+  if (req.query.hasVideo) video = req.query.hasVideo === "true";
 
   if (poets) {
     whereClause += `WHERE pp.poet_id IN (${poets})`;
@@ -47,6 +51,16 @@ router.get("/", function (req, res) {
   if (poemId) {
     if (whereClause) whereClause += ` AND p.id = (${poemId})`;
     else whereClause += `WHERE p.id = (${poemId})`;
+  }
+
+  if (audio) {
+    if (whereClause) whereClause += ` AND p.audio_url IS NOT NULL`;
+    else whereClause += `WHERE p.audio_url IS NOT NULL`;
+  }
+
+  if (video) {
+    if (whereClause) whereClause += ` AND p.video_url IS NOT NULL`;
+    else whereClause += `WHERE p.video_url IS NOT NULL`;
   }
 
   var queryTotal = `
