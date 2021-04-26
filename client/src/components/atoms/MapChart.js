@@ -55,6 +55,15 @@ function MapChart({data}) {
             .style("visibility", "visible");
     }
 
+    // const reset = () => {
+    //     states.transition().style("fill", null);
+    //     svg.transition().duration(750).call(
+    //         zoom.transform,
+    //         d3.zoomIdentity,
+    //         d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+    //     );
+    // }
+
     // const handleRegionMouseLeave = () => {
     //     select(".regionText")
     //         .remove()
@@ -77,6 +86,7 @@ function MapChart({data}) {
                     regions.map((d, i) => (
                         <path
                             key={ `path-${ i }` }
+                            cursor={"pointer"}
                             d={ geoPath()(d) }
                             className="region"
                             fill={ `${ d.color }` }
