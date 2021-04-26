@@ -13,6 +13,8 @@ import { IPoet } from '../../interfaces/poet'
 import { ILibraryListItemType } from '../../interfaces/shared'
 import { ISound } from '../../interfaces/sound'
 import { IWord } from '../../interfaces/word'
+import { IFreqWord } from '../../interfaces/word'
+
 
 export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element {
     const { list, headerFilterType, getListItem } = props
@@ -27,7 +29,8 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
             case LibraryHeaderFilterEnum.Poets:
                 return ['Name', 'Lifespan', 'Actions']
             case LibraryHeaderFilterEnum.Words:
-                return ['Word', 'Part of Speech', 'Definition', 'Sample Use', 'Actions']
+                // return ['Word', 'Part of Speech', 'Definition', 'Sample Use', 'Actions']
+                return ['Word', 'Occurrence']
             case LibraryHeaderFilterEnum.Sounds:
                 return ['TYID', 'Start Seconds', 'End Seconds', 'Display Name', 'Actions']
             case LibraryHeaderFilterEnum.Images:
@@ -37,7 +40,7 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
         }
     }
 
-    const rows = list?.map((item: ILibraryListItemType, index: number) => {
+    const rows = list?.map((item: any, index: number) => {
         const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
         const handwritingEnumKey = handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never
 
@@ -54,16 +57,19 @@ export default function TableListSwitch(props: ILibraryListSwitch): JSX.Element 
                     </TableListRow>
                 )
             case LibraryHeaderFilterEnum.Words:
-                item = item as IWord
+                item = item as IFreqWord
                 return (
                     <TableListRow key={`Words${context}Row${index}`}>
                         <TableListItem>{item.lemma}</TableListItem>
-                        <TableListItem>{item.pos}</TableListItem>
+                        {/* <TableListItem>{item.pos}</TableListItem>
                         <TableListItem>{item.definition}</TableListItem>
-                        <TableListItem>{item.sampleset}</TableListItem>
-                        <TableListItem>Actions</TableListItem>
+                        <TableListItem>{item.sampleset}</TableListItem> */}
+                        <TableListItem>{item.use_count}</TableListItem>
+                        {/* <TableListItem>Actions</TableListItem> */}
                     </TableListRow>
+                    
                 )
+
             case LibraryHeaderFilterEnum.Sounds:
                 item = item as ISound
                 return (

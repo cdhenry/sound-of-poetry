@@ -52,35 +52,20 @@ router.get("/lemmas", function (req, res) {
   });
 });
 
-router.get("/:word", function (req, res) {
-  var id = req.params.word;
-  var query = `
-    SELECT word
-    FROM word
-    WHERE id = ${id};
-  `;
-  connection.query(query, function (err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows[0]);
-    }
-  });
-});
-
 // frequently used words to display on the page
 router.get("/frequent", function (req, res) {
   var query = `
-    SELECT w.lemma 
+    SELECT w.lemma, pw.use_count
     FROM poem_wordnet pw
-    INNER JOIN words w ON pw.word_id = w. wordid
-    WHERE length(w.lemma) >4
-    ORDER BY use_count DESC 
+    INNER JOIN words w ON pw.word_id = w.wordid
+    WHERE length(w.lemma) >4 and length(w.lemma) <20
+    ORDER BY pw.use_count DESC 
     LIMIT 20
   `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
-      res.json(rows);
+      res.json({ total: rows.length, items: rows });
     }
   });
 });
@@ -88,7 +73,7 @@ router.get("/frequent", function (req, res) {
 // poem words with image  
 router.get("/hasimage", function (req, res) {
   var query = `
-    SELECT lemma 
+    SELECT lemma, image_url
     FROM poem_wordnet p
     INNER JOIN wordsXsensesXsynsets w ON p.word_id=w.wordid
     INNER JOIN google_images_synsets g ON w.synsetid=g.synsetid
@@ -105,11 +90,12 @@ router.get("/hasimage", function (req, res) {
 // poem words with youtube  
 router.get("/hasyoutube", function (req, res) {
   var query = `
-    SELECT lemma
+    SELECT lemma, ys.ytid, ys.start_seconds
     FROM poem_wordnet p 
     INNER JOIN wordsXsensesXsynsets w ON p.word_id=w.wordid
     INNER JOIN media_class_wordnet m ON m.word_id=p.word_id
     INNER JOIN ytid_mid y ON m.m_id=y.m_id
+    INNER JOIN youtube_sound ys on ys.ytid=y.ytid
   `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
@@ -133,6 +119,21 @@ router.get("/:lemma", function (req, res) {
     if (err) console.log(err);
     else {
       res.json(rows);
+    }
+  });
+});
+
+router.get("/:word", function (req, res) {
+  var id = req.params.word;
+  var query = `
+    SELECT *
+    FROM words
+    WHERE id = ${id};
+  `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows[0]);
     }
   });
 });

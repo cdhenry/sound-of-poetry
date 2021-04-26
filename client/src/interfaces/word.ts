@@ -18,3 +18,19 @@ export interface IWord {
 export interface IGetLemmas {
     lemma: string
 }
+
+export interface IFreqWord {
+    lemma: string
+    use_count: number
+}
+
+export interface IVideoWord {
+    lemma: string
+    ytid: string
+    start_seconds: number
+}
+
+export interface IImageWord {
+    lemma: string
+    ytimage_urlid: string
+}

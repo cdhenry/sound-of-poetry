@@ -19,7 +19,8 @@ export const getListData = async (
     const _soundService: SoundService = soundService
     const _imageService: ImageService = imageService
 
-    let data: IPaginatedList<ILibraryListItemType>
+    // let data: IPaginatedList<ILibraryListItemType>
+    let data: IPaginatedList<any>
 
     switch (headerFilter) {
         case LibraryHeaderFilterEnum.Poems:
@@ -41,7 +42,8 @@ export const getListData = async (
             data = await _poetService.getPoets({ limit, pageNumber })
             return data
         case LibraryHeaderFilterEnum.Words:
-            data = await _wordService.getWords({ limit, pageNumber })
+            // data = await _wordService.getWords({ limit, pageNumber })
+            data = await _wordService.getFreqWord()
             return data
         case LibraryHeaderFilterEnum.Sounds:
             data = await _soundService.getSounds({ limit, pageNumber })
