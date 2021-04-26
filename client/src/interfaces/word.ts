@@ -18,3 +18,32 @@ export interface IWord {
 export interface IGetLemmas {
     lemma: string
 }
+
+export interface IGetWordStats {
+    id: number
+    isWordnet: boolean
+}
+
+export interface IWordStats {
+    synonyms: {
+        lemma: string
+        wordid: number
+    }[]
+    senses: {
+        lemma: string
+        definition: string
+    }[]
+    totalUseCount: number
+    mostSinglePoemUses: {
+        poemId: number
+        poemTitle: string
+        useCount: number
+    }
+    mostUsesByAuthor: {
+        poetId: number
+        poetName: string
+        useCount: number
+    }
+    sounds: any
+    images: any
+}

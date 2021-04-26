@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { LibraryHeaderFilterEnum } from '../../enums/filters'
-import { ILibraryClassFilterSwitch } from '../../interfaces/pages'
+import { ILibraryClassFilterSwitch } from '../../interfaces/library'
 import LibraryPoemFilters from './PoemFilters'
 import LibraryPoetFilters from './PoetFilters'
 import LibraryWordFilters from './WordFilters'

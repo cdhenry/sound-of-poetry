@@ -1,0 +1,80 @@
+import React, { useState } from 'react'
+import { Link, Route, Switch, useRouteMatch } from 'react-router-dom'
+
+import Button from '../../../components/atoms/Button'
+import Card from '../../../components/atoms/Card'
+import Icon from '../../../components/atoms/Icon'
+import TableListItem from '../../../components/atoms/TableListItem'
+import TableListRow from '../../../components/molecules/TableListRow'
+import { CardTypeEnum } from '../../../enums/cardType'
+import { IconTypeEnum } from '../../../enums/iconType'
+import { TailwindHeightEnum, TailwindWidthEnum } from '../../../enums/tailwind'
+import { ILibraryPoemTableRowProps } from '../../../interfaces/library'
+import ModalTemplate from '../../../templates/Modal'
+import Poem from './Poem'
+
+export default function LibraryPoemTableRow(props: ILibraryPoemTableRowProps): JSX.Element {
+    const { item, handwritingEnumKey, context } = props
+    const { url } = useRouteMatch()
+    const [isModalActive, setIsModalActive] = useState(false)
+    const [modal, setModal] = useState(<></>)
+
+    const toggleIsModalActive = () => {
+        setIsModalActive(!isModalActive)
+    }
+
+    const handleTitle = () => {
+        console.log('handleTitle')
+    }
+
+    const handleAudio = async () => {
+        setModal(<embed src={item.audio_url}></embed>)
+        toggleIsModalActive()
+    }
+
+    const handleVideo = () => {
+        setModal(<embed src={item.video_url}></embed>)
+        toggleIsModalActive()
+    }
+
+    return (
+        <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
+            {isModalActive ? (
+                <Card cardType={CardTypeEnum.Modal} height={TailwindHeightEnum.Auto} width={TailwindWidthEnum.Auto}>
+                    {modal}
+                </Card>
+            ) : (
+                <TableListRow key={context}>
+                    <TableListItem
+                        handwritingEnumKey={handwritingEnumKey}
+                        className="cursor-pointer"
+                        onClick={handleTitle}
+                    >
+                        <Link to={`${url}/poem/${item.title}`}>{item.title}</Link>{' '}
+                        <Switch>
+                            <Route path={`${url}/word/:id`}>
+                                <Poem url={url} id={item.id} handwritingEnumKey={handwritingEnumKey} />
+                            </Route>
+                        </Switch>
+                    </TableListItem>
+                    <TableListItem>{item.poet_name}</TableListItem>
+                    <TableListItem>{item.tags?.join(', ')}</TableListItem>
+                    <TableListItem>
+                        <div className="flex space-x-2">
+                            {item.audio_url && (
+                                <Button onClick={handleAudio}>
+                                    <Icon iconType={IconTypeEnum.Audio} />
+                                </Button>
+                            )}
+                            {item.video_url && (
+                                <Button onClick={handleVideo}>
+                                    <Icon iconType={IconTypeEnum.Video} />
+                                </Button>
+                            )}
+                        </div>
+                    </TableListItem>
+                </TableListRow>
+            )}
+        </ModalTemplate>
+    )
+}
