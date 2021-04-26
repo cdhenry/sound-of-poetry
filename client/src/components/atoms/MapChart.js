@@ -5,6 +5,9 @@ import React, { useState, useEffect } from 'react';
 
 
 function MapChart({data}) {
+    const svgWidth = 800;
+    const svgHeight = 450;
+
     const [regions, setRegions] = useState([])
 
     useEffect(() => {
@@ -23,9 +26,11 @@ function MapChart({data}) {
 
     const color = scaleQuantize([1, 100], schemeGreens[9]);
     const recordColors = new Map();
+
     data.forEach(record => {
         recordColors.set(record.region, [record.count_poet, color(record.count_poet)]);
     });
+
     regions.forEach(region => {
         if (recordColors.has(region.id)) {
             region.color = recordColors.get(region.id)[1];
@@ -55,29 +60,10 @@ function MapChart({data}) {
             .style("visibility", "visible");
     }
 
-    // const reset = () => {
-    //     states.transition().style("fill", null);
-    //     svg.transition().duration(750).call(
-    //         zoom.transform,
-    //         d3.zoomIdentity,
-    //         d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
-    //     );
-    // }
-
-    // const handleRegionMouseLeave = () => {
-    //     select(".regionText")
-    //         .remove()
-    //
-    //     select(".tooltip")
-    //         .transition()
-    //         .duration(900)
-    //         .style("visibility", "hidden");
-    // }
-
     return (
         <svg
-            width={ 800 }
-            height={ 450 }
+            width={ svgWidth }
+            height={ svgHeight }
             viewBox="0 0 800 450"
             onClick={ () => handleOuterClick() }
         >
