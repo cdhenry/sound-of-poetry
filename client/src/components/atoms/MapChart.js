@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { geoPath, scaleQuantize, schemeGreens, select } from 'd3';
+import { geoPath, scaleQuantize, schemeGreens, select, selectAll } from 'd3';
 import { feature } from 'topojson-client';
 import React, { useState, useEffect } from 'react';
 
@@ -30,9 +30,15 @@ function MapChart({data}) {
         if (recordColors.has(region.id)) {
             region.color = recordColors.get(region.id)[1];
         } else {
-            region.color = "#FFFFFF";
+            recordColors.set(region.id, [0, "#FFFFFF"]);
+            region.color = "#FFFFFF"
         }
     })
+
+    const handleOuterClick = () => {
+        selectAll("text")
+            .style("visibility", "hidden");
+    }
 
     const handleRegionClick = (i) => {
         select("text")
@@ -60,7 +66,12 @@ function MapChart({data}) {
     // }
 
     return (
-        <svg width={ 800 } height={ 450 } viewBox="0 0 800 450">
+        <svg
+            width={ 800 }
+            height={ 450 }
+            viewBox="0 0 800 450"
+            onClick={ () => handleOuterClick() }
+        >
             <g className="map">
                 {
                     regions.map((d, i) => (
@@ -85,7 +96,6 @@ function MapChart({data}) {
                         width={200}
                         height={50}
                         fill={"#CCCCCC"}
-                        visibility={"hidden"}
                     />
                 }
             </g>
