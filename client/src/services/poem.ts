@@ -1,6 +1,14 @@
 import axios from 'axios'
 
-import { IGetPoemsQuery, IGetTagsParams, IGetTitlesParams, IPoem, IPoemTag, IPoemWord } from '../interfaces/poem'
+import {
+    IGetPoemsQuery,
+    IGetTagsParams,
+    IGetTitlesParams,
+    IPoem,
+    IPoemListItem,
+    IPoemTag,
+    IPoemWord
+} from '../interfaces/poem'
 import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
 
 export class PoemService {
@@ -9,7 +17,7 @@ export class PoemService {
     public async getPoems(params: IPaginatedParams, query?: IGetPoemsQuery) {
         params = { ...params, ...query }
         const response = await axios.get(`${this._baseUrl}`, { params })
-        return response.data as IPaginatedList<IPoem>
+        return response.data as IPaginatedList<IPoemListItem>
     }
 
     public async getTitles(params: IGetTitlesParams) {

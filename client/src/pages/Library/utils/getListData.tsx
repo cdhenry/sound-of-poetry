@@ -1,13 +1,13 @@
 import { LibraryHeaderFilterEnum } from '../../../enums/filters'
-import { IGetPoemsQuery, IPoem, IPoemTag } from '../../../interfaces/poem'
-import { ILibraryListItemType } from '../../../interfaces/shared'
+import { IGetPoemsQuery, IPoemListItem, IPoemTag } from '../../../interfaces/poem'
+import { ILibraryListItemType, IPaginatedList } from '../../../interfaces/shared'
 import { ImageService, imageService } from '../../../services/image'
 import { PoemService, poemService } from '../../../services/poem'
 import { PoetService, poetService } from '../../../services/poet'
 import { SoundService, soundService } from '../../../services/sound'
 import { WordService, wordService } from '../../../services/word'
 
-export const setListData = async (
+export const getListData = async (
     limit: number,
     pageNumber: number,
     headerFilter: LibraryHeaderFilterEnum,
@@ -19,20 +19,20 @@ export const setListData = async (
     const _soundService: SoundService = soundService
     const _imageService: ImageService = imageService
 
-    let data: { total: number; items: ILibraryListItemType[] }
+    let data: IPaginatedList<ILibraryListItemType>
 
     switch (headerFilter) {
         case LibraryHeaderFilterEnum.Poems:
             data = await _poemService.getPoems({ limit, pageNumber }, selectedOptions)
 
             const tags = (await _poemService.getTags({
-                poemIds: data.items.map((item) => (item as IPoem).id)
+                poemIds: data.items.map((item) => (item as IPoemListItem).id)
             })) as IPoemTag[]
 
             data.items.forEach(
                 (item) =>
-                    ((item as IPoem).tags = tags
-                        .filter((tag) => tag.poem_id === (item as IPoem).id)
+                    ((item as IPoemListItem).tags = tags
+                        .filter((tag) => tag.poem_id === (item as IPoemListItem).id)
                         .map((tag) => tag.name))
             )
 

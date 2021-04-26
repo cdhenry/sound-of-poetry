@@ -1,5 +1,5 @@
 import { IImage } from './image'
-import { IPoem } from './poem'
+import { IPoemListItem } from './poem'
 import { IPoet } from './poet'
 import { ISound } from './sound'
 import { IWord } from './word'
@@ -19,4 +19,4 @@ export interface ISelectOption {
     label: string
 }
 
-export type ILibraryListItemType = IPoem | IPoet | IWord | ISound | IImage
+export type ILibraryListItemType = IPoemListItem | IPoet | IWord | ISound | IImage
