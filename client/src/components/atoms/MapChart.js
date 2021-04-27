@@ -1,84 +1,100 @@
-import * as d3 from 'd3';
-import React from 'react';
+import axios from 'axios';
+import { geoPath, scaleQuantize, schemeGreens, select, selectAll } from 'd3';
+import { feature } from 'topojson-client';
+import React, { useState, useEffect } from 'react';
 
-import { useD3 } from '../../common/utils/useD3';
 
-function MapChart({ data }) {
-    console.log(data)
-    const ref = useD3((svg) => {
-        const height = 500
-        const width = 500
-        const margin = { top: 20, right: 30, bottom: 30, left: 40 }
+function MapChart({data}) {
+    const svgWidth = 800;
+    const svgHeight = 450;
 
-        const x = d3
-            .scaleBand()
-            .domain(data.map((d) => d.region))
-            .rangeRound([margin.left, width - margin.right])
-            .padding(0.1)
+    const [regions, setRegions] = useState([])
 
-        const y1 = d3
-            .scaleLinear()
-            .domain([0, d3.max(data, (d) => d.count_poet)])
-            .rangeRound([height - margin.bottom, margin.top])
+    useEffect(() => {
+        if (regions.length === 0) {
+            axios.get("poet_regions_topo.json")
+                .then(topoFile => {
+                    if (topoFile.status !== 200) {
+                        console.log(`There was a problem: ${topoFile.status}`)
+                        return
+                    }
+                    const mapData = topoFile.data;
+                    setRegions(feature(mapData, mapData.objects.regions).features)
+                });
+        }
+    }, [regions, setRegions])
 
-        const xAxis = (g) =>
-            g
-                .attr('transform', `translate(0,${height - margin.bottom})`)
-                .call(d3.axisBottom(x).tickValues(data.region).tickSizeOuter(0))
+    const color = scaleQuantize([1, 100], schemeGreens[9]);
+    const recordColors = new Map();
 
-        const y1Axis = (g) =>
-            g
-                .attr('transform', `translate(${margin.left},0)`)
-                .style('color', 'steelblue')
-                .call(d3.axisLeft(y1).ticks(null, 's'))
-                .call((g) => g.select('.domain').remove())
-                .call((g) =>
-                    g
-                        .append('text')
-                        .attr('x', -margin.left)
-                        .attr('y', 10)
-                        .attr('fill', 'currentColor')
-                        .attr('text-anchor', 'start')
-                        .text(data.y1)
-                )
+    data.forEach(record => {
+        recordColors.set(record.region, [record.count_poet, color(record.count_poet)]);
+    });
 
-        svg.select('.x-axis')
-            .call(xAxis)
-            .selectAll('text')
-            .style('text-anchor', 'end')
-            .attr('dx', '-.8em')
-            .attr('dy', '.15em')
-            .attr('transform', function (d) {
-                return 'rotate(-65)'
-            })
-
-        svg.select('.y-axis').call(y1Axis)
-
-        svg.select('.plot-area')
-            .attr('fill', 'steelblue')
-            .selectAll('.bar')
-            .data(data)
-            .join('rect')
-            .attr('class', 'bar')
-            .attr('x', (d) => x(d.region))
-            .attr('width', x.bandwidth())
-            .attr('y', (d) => y1(d.count_poet))
-            .attr('height', (d) => y1(0) - y1(d.count_poet))
+    regions.forEach(region => {
+        if (recordColors.has(region.id)) {
+            region.color = recordColors.get(region.id)[1];
+        } else {
+            recordColors.set(region.id, [0, "#FFFFFF"]);
+            region.color = "#FFFFFF"
+        }
     })
+
+    const handleOuterClick = () => {
+        selectAll("text")
+            .style("visibility", "hidden");
+    }
+
+    const handleRegionClick = (i) => {
+        select("text")
+            .attr("class","regionText")
+            .attr("x", 10)
+            .attr("y", 10)
+            .attr("dy", "0.35em")
+            .attr("width", 180)
+            .attr("height", 35)
+            .attr("fill", "#000000")
+            .text(regions[i].id + ": " + recordColors.get(regions[i].id)[0])
+            .transition()
+            .duration(900)
+            .style("visibility", "visible");
+    }
 
     return (
         <svg
-            ref={ref}
-            style={{
-                height: 500,
-                width: '100%',
-                marginRight: '0px',
-                marginLeft: '0px'
-            }}
+            width={ svgWidth }
+            height={ svgHeight }
+            viewBox="0 0 800 450"
+            onClick={ () => handleOuterClick() }
         >
-            <g className="plot-area" />
-            <g className="x-axis" />
-            <g className="y-axis" />
+            <g className="map">
+                {
+                    regions.map((d, i) => (
+                        <path
+                            key={ `path-${ i }` }
+                            cursor={"pointer"}
+                            d={ geoPath()(d) }
+                            className="region"
+                            fill={ `${ d.color }` }
+                            stroke="#FFFFFF"
+                            strokeWidth={ 0.5 }
+                            onClick={ () => handleRegionClick(i) }
+                        />
+                    ))
+                }
+            </g>
+            <g className = "text">
+                {
+                    <text
+                        className={"tooltip"}
+                        x={0}
+                        y={0}
+                        width={200}
+                        height={50}
+                        fill={"#CCCCCC"}
+                    />
+                }
+            </g>
         </svg>
     )
 }
