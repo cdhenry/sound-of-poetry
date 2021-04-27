@@ -1,7 +1,4 @@
 import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
-<<<<<<< HEAD
-import { IGetLemmas, IGetWordStats, IWord, IWordStats } from '../interfaces/word'
-=======
 import {
     IGetLemmas,
     IGetWordStats,
@@ -12,7 +9,6 @@ import {
     IWordStats,
     IWordSynonym
 } from '../interfaces/word'
->>>>>>> main
 import API from './api'
 
 export class WordService {
@@ -33,8 +29,6 @@ export class WordService {
         return response.data as IWord
     }
 
-<<<<<<< HEAD
-=======
     public async getWordSynonyms(id: number) {
         const response = await API.get(`${this._baseUrl}${id}/synonyms`)
         return response.data as IWordSynonym[]
@@ -45,13 +39,10 @@ export class WordService {
         return response.data as IWordDict[]
     }
 
->>>>>>> main
     public async getWordStats(params: IGetWordStats) {
         const response = await API.get(`${this._baseUrl}${params.id}/stats`, { params })
         return response.data as IWordStats
     }
-<<<<<<< HEAD
-=======
 
     public async getWordSounds(id: number) {
         const response = await API.get(`${this._baseUrl}${id}/sounds`)
@@ -62,7 +53,6 @@ export class WordService {
         const response = await API.get(`${this._baseUrl}${id}/images`)
         return response.data as IWordImage[]
     }
->>>>>>> main
 }
 
 export const wordService = new WordService()
