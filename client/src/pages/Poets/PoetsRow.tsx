@@ -9,10 +9,10 @@ import TableListRow from '../../components/molecules/TableListRow'
 import { CardTypeEnum } from '../../enums/cardType'
 import { IconTypeEnum } from '../../enums/iconType'
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { IPoemTableRowProps } from '../../interfaces/poem'
+import { IPoetTableRowProps } from '../../interfaces/poet'
 import ModalTemplate from '../../templates/Modal'
 
-export default function PoetsRow(props: IPoemTableRowProps): JSX.Element {
+export default function PoetsRow(props: IPoetTableRowProps): JSX.Element {
     const { item } = props
     const { url } = useRouteMatch()
     const [isModalActive, setIsModalActive] = useState(false)
@@ -22,15 +22,15 @@ export default function PoetsRow(props: IPoemTableRowProps): JSX.Element {
         setIsModalActive(!isModalActive)
     }
 
-    const handleAudio = async () => {
-        setModal(<embed src={item.audio_url}></embed>)
-        toggleIsModalActive()
-    }
+    // const handleAudio = async () => {
+    //     setModal(<embed src={item.audio_url}></embed>)
+    //     toggleIsModalActive()
+    // }
 
-    const handleVideo = () => {
-        setModal(<embed src={item.video_url}></embed>)
-        toggleIsModalActive()
-    }
+    // const handleVideo = () => {
+    //     setModal(<embed src={item.video_url}></embed>)
+    //     toggleIsModalActive()
+    // }
 
     return (
         <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
@@ -41,28 +41,37 @@ export default function PoetsRow(props: IPoemTableRowProps): JSX.Element {
             ) : (
                 <TableListRow>
                     <TableListItem className="cursor-pointer">
-                        <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>
-                            {item.title}
+                        <Link to={{ pathname: `${url}/${item.id}`, state: { poetName: item.name } }}>
+                            {item.name}
                         </Link>
                     </TableListItem>
-                    <TableListItem>{item.poet_name}</TableListItem>
-                    <TableListItem>{item.tags?.join(', ')}</TableListItem>
-                    <TableListItem>
-                        <div className="flex space-x-2">
-                            {item.audio_url && (
-                                <Button onClick={handleAudio}>
-                                    <Icon iconType={IconTypeEnum.Audio} />
-                                </Button>
-                            )}
-                            {item.video_url && (
-                                <Button onClick={handleVideo}>
-                                    <Icon iconType={IconTypeEnum.Video} />
-                                </Button>
-                            )}
-                        </div>
-                    </TableListItem>
+                    <TableListItem>{item.yob}</TableListItem>
+                    <TableListItem>{item.yod}</TableListItem>
                 </TableListRow>
             )}
         </ModalTemplate>
     )
 }
+
+
+{/* <TableListItem className="cursor-pointer">
+                        <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>
+                            {item.title}
+                        </Link>
+                    </TableListItem> */}
+
+                    // <TableListItem>{item.tags?.join(', ')}</TableListItem>
+                    // <TableListItem>
+                    //     <div className="flex space-x-2">
+                    //         {item.audio_url && (
+                    //             <Button onClick={handleAudio}>
+                    //                 <Icon iconType={IconTypeEnum.Audio} />
+                    //             </Button>
+                    //         )}
+                    //         {item.video_url && (
+                    //             <Button onClick={handleVideo}>
+                    //                 <Icon iconType={IconTypeEnum.Video} />
+                    //             </Button>
+                    //         )}
+                    //     </div>
+                    // </TableListItem>
