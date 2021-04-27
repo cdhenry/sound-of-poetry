@@ -32,34 +32,21 @@ export default function Poet(): JSX.Element {
 
             const poetData = await _poetService.getPoet(parseInt(id))
             //const wordNetData = await _poetService.getPoemWordNet(parseInt(id))
-            const poetLines = poetData.bio.split(/\n/)
+            const poetLines = poetData.bio.trim().split(/\n/)
             const content = [] as React.ReactNode[]
-            poetLines.forEach((line: any) => {
-                content.push(<p className={'whitespace-pre word-wrap:break-word'}>{line} </p>)
-                
-                // const words = line.split(' ')
+            poetLines.forEach((line: any) => {                
+                const words = line.split(' ')
 
-                // words.forEach((word: string, index: number) => {
-                //     //const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
-                //     content.push(<span className={'whitespace-pre hover:text-shadow-lg hover:text-rose-500'}>{word} </span>)
-                //     //const cleanedWord = word.replace(regex, '').toLowerCase()
-                //     //const wordNetWord = wordNetData.find((item: any) => item.lemma === cleanedWord)
-
-                //     // content.push(
-                //     //     wordNetWord?.word_id ? (
-                //     //         <Link
-                //     //             className={'whitespace-pre hover:text-shadow-lg hover:text-cyan-500'}
-                //     //             to={`${RoutesEnum.Words}/${wordNetWord?.word_id}`}
-                //     //         >
-                //     //             {word}{' '}
-                //     //         </Link>
-                //     //     ) : (
-                //     //         <span className={'whitespace-pre hover:text-shadow-lg hover:text-rose-500'}>{word} </span>
-                //     //     )
-                //     // )
-                // })
-
-                // content.push(<br />)
+                var counter = 0;
+                words.forEach((word: string, index: number) => {
+                    content.push(<span className={'whitespace-pre'}>{word} </span>)
+                    counter++  
+                    if (counter === 9){
+                        content.push(<span className={'whitespace-pre hover:text-shadow-lg hover:text-rose-500'}>{"\n"} </span>)
+                        counter = 0;
+                    }
+                })
+                content.push(<br />)
             })
 
             setPoet(poetData)
