@@ -124,6 +124,52 @@ router.get("/", function (req, res) {
   });
 });
 
+router.get("/regions", function (req, res) {
+  var joinClause = "";
+  var whereClause = "";
+  var words;
+  var tags;
+
+  if (req.query.words) words = req.query.words;
+  if (req.query.tags) tags = req.query.tags;
+
+  if (tags) {
+    joinClause += `JOIN poem_tag pg on pm.id = pg.poem_id `;
+    if (whereClause.includes('WHERE')) {
+      whereClause += `AND pg.tag_id IN (${tags})`
+    } else {
+      whereClause += `WHERE pg.tag_id IN (${tags})`
+    }
+  }
+
+  if (words) {
+    joinClause += `JOIN poem_wordnet pw on pm.id = pw.poem_id `;
+    if (whereClause.includes('WHERE')) {
+      whereClause += `AND pw.word_id IN (${words})`
+    } else {
+      whereClause += `WHERE pw.word_id IN (${words})`
+    }
+  }
+
+  let query = `SELECT r.name AS region, COUNT(DISTINCT pm.id) AS result 
+      FROM poem pm JOIN poet_poem pp on pm.id = pp.poem_id 
+      JOIN poet pt on pt.id = pp.poet_id 
+      JOIN isfrom i ON pt.id = i.poet_id 
+      JOIN region r ON i.region_id = r.id 
+      ${joinClause} 
+      ${whereClause} 
+      GROUP BY 1;`;
+
+  connection.query(query, function (err, rows) {
+    if (err){
+      console.log(err);
+    }
+    else {
+      res.json(rows);
+    }
+  });
+});
+
 router.get("/tags", function (req, res) {
   var poemIds;
 
@@ -228,29 +274,6 @@ router.get("/:poem/media", function (req, res) {
     `;
   connection.query(query, function (err, rows) {
     if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-});
-
-router.get("/words/:word/regions", function (req, res) {
-  var word = req.params.word;
-  var query = `
-      SELECT r.name AS region, sum(pw.use_count) AS result
-      FROM poem pm
-      JOIN poet_poem pp on pm.id = pp.poem_id
-      JOIN poet pt on pt.id = pp.poet_id
-      JOIN isfrom i ON pt.id = i.poet_id
-      JOIN region r ON i.region_id = r.id
-      JOIN poem_wordnet pw on pm.id = pw.poem_id
-      WHERE pw.word_id= ${word}
-      GROUP BY 1;    
-    `;
-  connection.query(query, function (err, rows) {
-    if (err){
-      console.log(err);
-    }
     else {
       res.json(rows);
     }

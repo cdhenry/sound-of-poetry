@@ -4,8 +4,8 @@ export interface IMap {
 }
 
 export interface IGetRegionsQuery {
-    tags?: any
-    words?: any
+    tags?: number[]
+    words?: number[]
 }
 
 export interface IMapFiltersProps {

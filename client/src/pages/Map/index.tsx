@@ -31,7 +31,7 @@ export default function Map(): JSX.Element {
     const getRegions = useCallback(async (selectedOptions?: IGetRegionsQuery) => {
         try {
             setIsLoading(true)
-            let data = await _poemService.getCountPoemsWithWordByRegion(selectedOptions?.words as string)
+            let data = await _poemService.getRegions(selectedOptions)
             setData(data)
         } catch (e) {
             console.log(e)
