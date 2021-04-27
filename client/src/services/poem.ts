@@ -9,6 +9,7 @@ import {
 } from '../interfaces/poem'
 import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
 import API from './api'
+import {IMap} from "../interfaces/map";
 
 export class PoemService {
     private _baseUrl: string = 'poems/'
@@ -42,6 +43,11 @@ export class PoemService {
     public async getPoemNonWordNet(id: number) {
         const response = await API.get(`${this._baseUrl}${id}/words/nonwordnet`)
         return response.data as IPoemWord[]
+    }
+
+    public async getCountPoemsWithWordByRegion(word: string) {
+        const response = await API.get(`${this._baseUrl}words/${word}/regions`)
+        return response.data as IMap[]
     }
 }
 

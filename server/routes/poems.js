@@ -146,7 +146,7 @@ router.get("/tags", function (req, res) {
       ${whereClause}
     `;
 
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -161,7 +161,7 @@ router.get("/titles", function (req, res) {
       FROM poem
       WHERE title LIKE '%${title}%'
     `;
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -178,7 +178,7 @@ router.get("/:poem", function (req, res) {
     JOIN poet t on pp.poet_id = t.id
     WHERE p.id = ${id};
   `;
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {
       res.json(rows[0]);
@@ -194,7 +194,7 @@ router.get("/:poem/words/wordnet", function (req, res) {
       JOIN words w ON pw.word_id = w.wordid
       WHERE pw.poem_id = ${id};
     `;
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -210,7 +210,7 @@ router.get("/:poem/words/nonwordnet", function (req, res) {
       JOIN non_wordnet nw ON pnw.word_id = nw.wordid
       WHERE pnw.poem_id = ${id};
     `;
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -226,8 +226,23 @@ router.get("/:poem/media", function (req, res) {
       JOIN words w ON pw.word_id = w.wordid
       WHERE pw.poem_id = ${id};
     `;
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/words/:word/regions", function (req, res) {
+  var word = req.params.word;
+  var query = `
+      SELECT 1;    
+    `
+  connection.query(query, function (err, rows) {
+    if (err){
+      console.log(err);
+    }
     else {
       res.json(rows);
     }
