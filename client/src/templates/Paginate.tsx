@@ -1,7 +1,7 @@
-import React from 'react'
-import ReactPaginate from 'react-paginate'
+import React from 'react';
+import ReactPaginate from 'react-paginate';
 
-import { IPaginateTemplate } from '../interfaces/templates'
+import { IPaginateTemplate } from '../interfaces/templates';
 
 export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element {
     const { total, limit, children } = props
@@ -13,7 +13,7 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
     return (
         <section className="flex items-center flex-col p-2 ">
             <div className="flex-none flex justify-between mb-2 w-11/12">
-                <div>Total: {total}</div>
+                {total > 0 && <div>Total: {total}</div>}
                 <ReactPaginate
                     previousLabel={'<'}
                     nextLabel={'>'}

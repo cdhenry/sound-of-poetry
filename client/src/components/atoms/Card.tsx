@@ -26,7 +26,7 @@ export default function Card(props: ICardProps): JSX.Element {
 
     const font = handwritingEnumKey
         ? `font-${HandwritingFontEnum[handwritingEnumKey as never]} text-2xl text-gray-800`
-        : 'text-2xl text-gray-800'
+        : 'text-lg text-gray-800'
     const defaultClassName = `${height} ${width} overflow-y-auto m-2 p-7 shadow-lg ${background} ${border} ${font}`
 
     return (

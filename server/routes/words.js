@@ -67,4 +67,74 @@ router.get("/:word", function (req, res) {
   });
 });
 
+router.get("/:word/sounds", function (req, res) {
+  var id = req.params.word;
+  var query = `
+      SELECT ym.ytid, mc.display_name
+      FROM ytid_mid ym 
+      JOIN media_class mc on ym.m_id = mc.m_id 
+      JOIN media_class_wordnet mcw ON mcw.m_id = ym.m_id
+      WHERE word_id = ${id}
+      LIMIT 5
+    `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/:word/images", function (req, res) {
+  var id = req.params.word;
+  var query = `
+      SELECT w.lemma, iis.image_url, w.definition
+      FROM wordsXsensesXsynsets w 
+      JOIN images_synsets iis ON w.synsetid = iis.synsetid
+      WHERE w.wordid = ${id}
+      LIMIT 5
+    `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/:word/synonyms", function (req, res) {
+  var id = req.params.word;
+  var query = `
+      SELECT w.lemma
+      FROM words w 
+      LEFT JOIN senses s ON s.wordid = w.wordid
+      LEFT JOIN senses s2 ON s2.synsetid = s.synsetid
+      LEFT JOIN words w2 ON w2.wordid = s2.wordid
+      WHERE w.wordid <> ${id} 
+      AND w2.wordid = ${id}
+      GROUP BY w.lemma
+    `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/:word/dict", function (req, res) {
+  var id = req.params.word;
+  var query = `
+      SELECT *
+      FROM dict d
+      WHERE d.wordid = ${id}       
+    `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
 module.exports = router;

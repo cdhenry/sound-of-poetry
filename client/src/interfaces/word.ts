@@ -21,7 +21,7 @@ export interface IGetLemmas {
 
 export interface IGetWordStats {
     id: number
-    isWordnet: boolean
+    isWordNet: boolean
 }
 
 export interface IWordStats {
@@ -44,6 +44,38 @@ export interface IWordStats {
         poetName: string
         useCount: number
     }
-    sounds: any
-    images: any
+}
+
+export interface IWordSound {
+    ytid: string
+    display_name: string
+}
+
+export interface IWordImage {
+    lemma: string
+    image_url: string
+    definition: string
+}
+
+export interface IWordSynonym {
+    wordid: number
+    lemma: string
+    definition: string
+}
+
+export interface IWordDict {
+    synsetid: number
+    wordid: number
+    casedwordid: number
+    lemma: string
+    senseid: number
+    sensenum: number
+    lexid: number
+    tagcount: number
+    sensekey: string
+    cased: string
+    pos: string
+    lexdomainid: number
+    definition: string
+    sampleset: string
 }

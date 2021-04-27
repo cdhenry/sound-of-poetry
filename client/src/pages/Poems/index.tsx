@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { IGetPoemsQuery, IPoemListItem, IPoemTag } from '../../interfaces/poem'
-import { PoemService, poemService } from '../../services/poem'
-import PaginateTemplate from '../../templates/Paginate'
-import Loading from '../Loading'
-import PoemFilters from './Filters'
-import PoemsList from './PoemsList'
+import { IGetPoemsQuery, IPoemListItem, IPoemTag } from '../../interfaces/poem';
+import { PoemService, poemService } from '../../services/poem';
+import PaginateTemplate from '../../templates/Paginate';
+import Loading from '../Loading';
+import PoemFilters from './Filters';
+import PoemsList from './PoemsList';
 
 export default function Poems(): JSX.Element {
     const _poemService: PoemService = poemService
