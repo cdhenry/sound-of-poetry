@@ -4,15 +4,16 @@ import AsyncSelect from 'react-select/async'
 
 import ToggleInput from '../../components/atoms/ToggleInput'
 import { PoemOrderByEnum } from '../../enums/orderBy'
-import { ILibraryClassFilters } from '../../interfaces/filters'
+import { IPoemFiltersProps } from '../../interfaces/poem'
 import { ISelectOption } from '../../interfaces/shared'
 import { PoemService, poemService } from '../../services/poem'
 import { PoetService, poetService } from '../../services/poet'
 import { WordService, wordService } from '../../services/word'
+import Loading from '../Loading'
 
-export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Element {
-    const filterRowClassName = 'grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2 p-2 '
-    const parentClassName = 'flex flex-col border-gray-500 border-2 rounded bg-indigo-100'
+export default function WordFilters(props: IPoemFiltersProps): JSX.Element {
+    const defaultClassName =
+        'grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2 p-2 border-gray-500 border-2 rounded bg-indigo-100 w-11/12'
     const _poemService: PoemService = poemService
     const _poetService: PoetService = poetService
     const _wordService: WordService = wordService
@@ -88,39 +89,35 @@ export default function LibraryPoemFilters(props: ILibraryClassFilters): JSX.Ele
     }, [getTags])
 
     return isLoading ? (
-        <div className="flex justify-center">Loading...</div>
+        <Loading />
     ) : (
-        <section className={parentClassName}>
-            <div className={filterRowClassName}>
-                <AsyncSelect
-                    placeholder="Titles"
-                    isClearable={true}
-                    noOptionsMessage={noOptionsMessage}
-                    loadOptions={loadTitles}
-                    onChange={onTitleChange}
-                />
-                <AsyncSelect
-                    isMulti
-                    placeholder="Poets"
-                    noOptionsMessage={noOptionsMessage}
-                    loadOptions={loadPoets}
-                    onChange={onPoetChange}
-                />
-                <Select placeholder="Topics" options={tagOptions} onChange={onTagChange} isMulti />
-                <AsyncSelect
-                    isMulti
-                    placeholder="Words"
-                    noOptionsMessage={noOptionsMessage}
-                    loadOptions={loadWords}
-                    onChange={onWordChange}
-                />
-            </div>
-            <div className={filterRowClassName}>
-                <Select placeholder="Order by" options={orderByOptions} onChange={onOrderByChange} />
-                <div></div> {/* div for grid spacing */}
-                <ToggleInput label="Related Audio" isOnOff={true} onClick={onAudioToggle} />
-                <ToggleInput label="Related Video" isOnOff={true} onClick={onVideoToggle} />
-            </div>
+        <section className={defaultClassName}>
+            <AsyncSelect
+                placeholder="Titles"
+                isClearable={true}
+                noOptionsMessage={noOptionsMessage}
+                loadOptions={loadTitles}
+                onChange={onTitleChange}
+            />
+            <AsyncSelect
+                isMulti
+                placeholder="Poets"
+                noOptionsMessage={noOptionsMessage}
+                loadOptions={loadPoets}
+                onChange={onPoetChange}
+            />
+            <Select placeholder="Topics" options={tagOptions} onChange={onTagChange} isMulti />
+            <AsyncSelect
+                isMulti
+                placeholder="Words"
+                noOptionsMessage={noOptionsMessage}
+                loadOptions={loadWords}
+                onChange={onWordChange}
+            />
+            <Select placeholder="Order by" options={orderByOptions} onChange={onOrderByChange} />
+            <div></div> {/* div for grid spacing */}
+            <ToggleInput label="Related Audio" isOnOff={true} onClick={onAudioToggle} />
+            <ToggleInput label="Related Video" isOnOff={true} onClick={onVideoToggle} />
         </section>
     )
 }

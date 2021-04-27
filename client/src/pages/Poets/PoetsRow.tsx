@@ -1,30 +1,25 @@
 import React, { useState } from 'react'
-import { Link, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Link, useRouteMatch } from 'react-router-dom'
 
-import Button from '../../../components/atoms/Button'
-import Card from '../../../components/atoms/Card'
-import Icon from '../../../components/atoms/Icon'
-import TableListItem from '../../../components/atoms/TableListItem'
-import TableListRow from '../../../components/molecules/TableListRow'
-import { CardTypeEnum } from '../../../enums/cardType'
-import { IconTypeEnum } from '../../../enums/iconType'
-import { TailwindHeightEnum, TailwindWidthEnum } from '../../../enums/tailwind'
-import { ILibraryPoemTableRowProps } from '../../../interfaces/library'
-import ModalTemplate from '../../../templates/Modal'
-import Poem from './Poem'
+import Button from '../../components/atoms/Button'
+import Card from '../../components/atoms/Card'
+import Icon from '../../components/atoms/Icon'
+import TableListItem from '../../components/atoms/TableListItem'
+import TableListRow from '../../components/molecules/TableListRow'
+import { CardTypeEnum } from '../../enums/cardType'
+import { IconTypeEnum } from '../../enums/iconType'
+import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
+import { ILibraryPoemTableRowProps } from '../../interfaces/library'
+import ModalTemplate from '../../templates/Modal'
 
-export default function LibraryPoemTableRow(props: ILibraryPoemTableRowProps): JSX.Element {
-    const { item, handwritingEnumKey, context } = props
+export default function PoetsRow(props: ILibraryPoemTableRowProps): JSX.Element {
+    const { item } = props
     const { url } = useRouteMatch()
     const [isModalActive, setIsModalActive] = useState(false)
     const [modal, setModal] = useState(<></>)
 
     const toggleIsModalActive = () => {
         setIsModalActive(!isModalActive)
-    }
-
-    const handleTitle = () => {
-        console.log('handleTitle')
     }
 
     const handleAudio = async () => {
@@ -44,18 +39,11 @@ export default function LibraryPoemTableRow(props: ILibraryPoemTableRowProps): J
                     {modal}
                 </Card>
             ) : (
-                <TableListRow key={context}>
-                    <TableListItem
-                        handwritingEnumKey={handwritingEnumKey}
-                        className="cursor-pointer"
-                        onClick={handleTitle}
-                    >
-                        <Link to={`${url}/poem/${item.title}`}>{item.title}</Link>{' '}
-                        <Switch>
-                            <Route path={`${url}/word/:id`}>
-                                <Poem url={url} id={item.id} handwritingEnumKey={handwritingEnumKey} />
-                            </Route>
-                        </Switch>
+                <TableListRow>
+                    <TableListItem className="cursor-pointer">
+                        <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>
+                            {item.title}
+                        </Link>
                     </TableListItem>
                     <TableListItem>{item.poet_name}</TableListItem>
                     <TableListItem>{item.tags?.join(', ')}</TableListItem>

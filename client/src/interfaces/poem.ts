@@ -1,4 +1,4 @@
-import { PoemOrderByEnum } from '../enums/orderBy';
+import { PoemOrderByEnum } from '../enums/orderBy'
 
 export interface IPoem {
     id: number
@@ -47,4 +47,8 @@ export interface IGetTitlesParams {
 
 export interface IGetTagsParams {
     poemIds: number[]
+}
+
+export interface IPoemFiltersProps {
+    handleFilterChange: (selectedOptions: IGetPoemsQuery) => void
 }

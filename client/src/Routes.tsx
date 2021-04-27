@@ -1,33 +1,44 @@
-import React, { lazy, Suspense } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
-import { RoutesEnum } from './enums/routes';
-import Loading from './pages/Loading';
+import { RoutesEnum } from './enums/routes'
+import Loading from './pages/Loading'
 
-const Home = lazy(() => import('./pages/Home'))
+const Poems = lazy(() => import('./pages/Poems'))
+const Poem = lazy(() => import('./pages/Poems/Poem'))
+const Poets = lazy(() => import('./pages/Poets'))
+const Poet = lazy(() => import('./pages/Poets/Poet'))
+const Words = lazy(() => import('./pages/Words'))
+const Word = lazy(() => import('./pages/Words/Word'))
 const Map = lazy(() => import('./pages/Map'))
-const Library = lazy(() => import('./pages/Library'))
-const Studio = lazy(() => import('./pages/Studio'))
-const Theater = lazy(() => import('./pages/Theater'))
 
 export default function Routes(): JSX.Element {
     return (
         <Suspense fallback={<Loading />}>
             <Switch>
-                <Route path="/" exact={true}>
-                    <Home />
+                <Route exact path="/">
+                    <Redirect to={RoutesEnum.Poems} />
                 </Route>
-                <Route path={RoutesEnum.Map} exact={true}>
+                <Route exact path={RoutesEnum.Poems}>
+                    <Poems />
+                </Route>
+                <Route path={`${RoutesEnum.Poems}/:id`}>
+                    <Poem />
+                </Route>
+                <Route exact path={RoutesEnum.Poets}>
+                    <Poets />
+                </Route>
+                <Route path={`${RoutesEnum.Poets}/:id`}>
+                    <Poet />
+                </Route>
+                <Route exact path={RoutesEnum.Words}>
+                    <Words />
+                </Route>
+                <Route path={`${RoutesEnum.Words}/:id`}>
+                    <Word />
+                </Route>
+                <Route exact path={RoutesEnum.Map}>
                     <Map />
-                </Route>
-                <Route path={RoutesEnum.Library} exact={true}>
-                    <Library />
-                </Route>
-                <Route path={RoutesEnum.Studio} exact={true}>
-                    <Studio />
-                </Route>
-                <Route path={RoutesEnum.Theater} exact={true}>
-                    <Theater />
                 </Route>
             </Switch>
         </Suspense>

@@ -20,3 +20,7 @@ export interface ISelectOption {
 }
 
 export type ILibraryListItemType = IPoemListItem | IPoet | IWord | ISound | IImage
+
+export interface IParams {
+    id: string
+}

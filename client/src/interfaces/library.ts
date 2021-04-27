@@ -26,12 +26,9 @@ export interface ILibraryWordProps {
 
 export interface ILibraryPoemProps {
     url: string
-    id: number
     handwritingEnumKey: never
 }
 
 export interface ILibraryPoemTableRowProps {
-    handwritingEnumKey: never
     item: IPoemListItem
-    context: string
 }

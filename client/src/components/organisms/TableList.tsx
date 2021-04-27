@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import { ITableListProps } from '../../interfaces/organisms';
-import TableListRow from '../molecules/TableListRow';
+import { ITableListProps } from '../../interfaces/organisms'
+import TableListRow from '../molecules/TableListRow'
 
 export default function TableList(props: ITableListProps): JSX.Element {
     return (
-        <table className="w-full">
+        <table>
             <thead>
                 <TableListRow>
                     {props.headers.map((header, index) => (

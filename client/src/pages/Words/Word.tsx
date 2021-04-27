@@ -5,11 +5,9 @@ import Header from '../../components/atoms/Header'
 import { CardTypeEnum } from '../../enums/cardType'
 import { HeaderTypeEnum } from '../../enums/headerType'
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { ILibraryWordProps } from '../../interfaces/library'
 import { WordService, wordService } from '../../services/word'
 
-export default function LibraryWord(props: ILibraryWordProps): JSX.Element {
-    const { word, isWordnet } = props
+export default function Word(): JSX.Element {
     const _wordService: WordService = wordService
 
     return (
@@ -17,9 +15,9 @@ export default function LibraryWord(props: ILibraryWordProps): JSX.Element {
             height={TailwindHeightEnum.Screen90}
             width={TailwindWidthEnum.OneHalf}
             cardType={CardTypeEnum.Paper}
-            header={<Header headerType={HeaderTypeEnum.HeaderWeb}>{word}</Header>}
+            header={<Header headerType={HeaderTypeEnum.HeaderWeb}>{}</Header>}
         >
-            <>{word}</>
+            <>Test</>
         </Card>
     )
 }
