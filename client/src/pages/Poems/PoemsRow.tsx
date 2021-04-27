@@ -13,56 +13,36 @@ import { IPoemTableRowProps } from '../../interfaces/poem'
 import ModalTemplate from '../../templates/Modal'
 
 export default function PoemsRow(props: IPoemTableRowProps): JSX.Element {
-    const { item } = props
+    const { item, handleAudio } = props
     const { url } = useRouteMatch()
-    const [isModalActive, setIsModalActive] = useState(false)
-    const [modal, setModal] = useState(<></>)
 
-    const toggleIsModalActive = () => {
-        setIsModalActive(!isModalActive)
-    }
-
-    const handleAudio = async () => {
-        setModal(<embed src={item.audio_url}></embed>)
-        toggleIsModalActive()
-    }
-
-    const handleVideo = () => {
-        setModal(<embed src={item.video_url}></embed>)
-        toggleIsModalActive()
+    const onClick = async () => {
+        handleAudio(item.audio_url)
     }
 
     return (
-        <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
-            {isModalActive ? (
-                <Card cardType={CardTypeEnum.Modal} height={TailwindHeightEnum.Auto} width={TailwindWidthEnum.Auto}>
-                    {modal}
-                </Card>
-            ) : (
-                <TableListRow>
-                    <TableListItem className="cursor-pointer">
-                        <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>
-                            {item.title}
-                        </Link>
-                    </TableListItem>
-                    <TableListItem>{item.poet_name}</TableListItem>
-                    <TableListItem>{item.tags?.join(', ')}</TableListItem>
-                    <TableListItem>
-                        <div className="flex space-x-2">
-                            {item.audio_url && (
-                                <Button onClick={handleAudio}>
-                                    <Icon iconType={IconTypeEnum.Audio} />
-                                </Button>
-                            )}
-                            {item.video_url && (
-                                <Button onClick={handleVideo}>
-                                    <Icon iconType={IconTypeEnum.Video} />
-                                </Button>
-                            )}
-                        </div>
-                    </TableListItem>
-                </TableListRow>
-            )}
-        </ModalTemplate>
+        <TableListRow>
+            <TableListItem className="cursor-pointer">
+                <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>{item.title}</Link>
+            </TableListItem>
+            <TableListItem>{item.poet_name}</TableListItem>
+            <TableListItem>{item.tags?.join(', ')}</TableListItem>
+            <TableListItem>
+                <div className="flex space-x-2">
+                    {item.audio_url && (
+                        <Button onClick={onClick}>
+                            <Icon iconType={IconTypeEnum.Audio} />
+                        </Button>
+                    )}
+                    {item.video_url && (
+                        <Button>
+                            <a href={item.video_url} target="_blank" rel="noreferrer">
+                                <Icon iconType={IconTypeEnum.Video} />
+                            </a>
+                        </Button>
+                    )}
+                </div>
+            </TableListItem>
+        </TableListRow>
     )
 }

@@ -55,4 +55,5 @@ export interface IPoemFiltersProps {
 
 export interface IPoemTableRowProps {
     item: IPoemListItem
+    handleAudio: (item: string) => void
 }
