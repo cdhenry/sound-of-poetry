@@ -237,8 +237,16 @@ router.get("/:poem/media", function (req, res) {
 router.get("/words/:word/regions", function (req, res) {
   var word = req.params.word;
   var query = `
-      SELECT 1;    
-    `
+      SELECT r.name AS region, sum(pw.use_count) AS result
+      FROM poem pm
+      JOIN poet_poem pp on pm.id = pp.poem_id
+      JOIN poet pt on pt.id = pp.poet_id
+      JOIN isfrom i ON pt.id = i.poet_id
+      JOIN region r ON i.region_id = r.id
+      JOIN poem_wordnet pw on pm.id = pw.poem_id
+      WHERE pw.word_id= ${word}
+      GROUP BY 1;    
+    `;
   connection.query(query, function (err, rows) {
     if (err){
       console.log(err);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { geoPath, scaleQuantize, schemeGreens, select, selectAll } from 'd3';
+import { geoPath, max, scaleLinear, select, selectAll } from 'd3';
 import { feature } from 'topojson-client';
 import React, { useState, useEffect } from 'react';
 
@@ -24,11 +24,12 @@ function MapChart({data}) {
         }
     }, [regions, setRegions])
 
-    const color = scaleQuantize([1, 100], schemeGreens[9]);
+    const domainMax = max(data, d => { return d.result; })
+    const color = scaleLinear().domain([1, domainMax]).range(["white", "green"])
     const recordColors = new Map();
 
     data.forEach(record => {
-        recordColors.set(record.region, [record.count_poet, color(record.count_poet)]);
+        recordColors.set(record.region, [record.result, color(record.result)]);
     });
 
     regions.forEach(region => {
@@ -46,8 +47,7 @@ function MapChart({data}) {
     }
 
     const handleRegionClick = (i) => {
-        select("text")
-            .attr("class","regionText")
+        let textBox = select("text")
             .attr("x", 10)
             .attr("y", 10)
             .attr("dy", "0.35em")
@@ -58,6 +58,15 @@ function MapChart({data}) {
             .transition()
             .duration(900)
             .style("visibility", "visible");
+
+        select("map")
+            .append("rect")
+            .attr("x", 10)
+            .attr("y", 10)
+            .attr("width", textBox.attr("width") + 20)
+            .attr("height", textBox.attr("height") + 10)
+            .attr("rx", 15)
+            .attr("fill", "#BBBBBB")
     }
 
     return (
