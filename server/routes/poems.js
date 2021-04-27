@@ -12,15 +12,26 @@ router.get("/", function (req, res) {
   var offset = pageNumber * limit;
   var joinClause = "";
   var whereClause = "";
+  var orderByClause = "";
+  var orderByTitle = "1";
+  var orderByAuthor = "2";
+  var orderByMostSounds = "3";
+  var orderByMostImages = "4";
   var poemId;
   var tags;
   var poets;
   var words;
+  var audio;
+  var video;
+  var orderBy;
 
   if (req.query.poemId) poemId = req.query.poemId;
   if (req.query.tags) tags = req.query.tags;
   if (req.query.poets) poets = req.query.poets;
   if (req.query.words) words = req.query.words;
+  if (req.query.hasAudio) audio = req.query.hasAudio === "true";
+  if (req.query.hasVideo) video = req.query.hasVideo === "true";
+  if (req.query.orderBy) orderBy = req.query.orderBy;
 
   if (poets) {
     whereClause += `WHERE pp.poet_id IN (${poets})`;
@@ -49,6 +60,29 @@ router.get("/", function (req, res) {
     else whereClause += `WHERE p.id = (${poemId})`;
   }
 
+  if (audio) {
+    if (whereClause) whereClause += ` AND p.audio_url IS NOT NULL`;
+    else whereClause += `WHERE p.audio_url IS NOT NULL`;
+  }
+
+  if (video) {
+    if (whereClause) whereClause += ` AND p.video_url IS NOT NULL`;
+    else whereClause += `WHERE p.video_url IS NOT NULL`;
+  }
+
+  switch (orderBy) {
+    case orderByTitle:
+      orderByClause = "ORDER BY p.title";
+      break;
+    case orderByAuthor:
+      orderByClause = "ORDER BY po.name";
+      break;
+    case orderByMostSounds:
+      break;
+    case orderByMostImages:
+      break;
+  }
+
   var queryTotal = `
       SELECT COUNT(p.id) as total
       FROM poem p
@@ -56,6 +90,7 @@ router.get("/", function (req, res) {
       JOIN poet po ON pp.poet_id = po.id
       ${joinClause}
       ${whereClause}
+      ${orderByClause}
     `;
 
   connection.query(queryTotal, function (err, rows) {
@@ -74,6 +109,7 @@ router.get("/", function (req, res) {
       JOIN poet po ON pp.poet_id = po.id
       ${joinClause}
       ${whereClause}
+      ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset}
     `;
@@ -136,9 +172,11 @@ router.get("/titles", function (req, res) {
 router.get("/:poem", function (req, res) {
   var id = req.params.poem;
   var query = `
-    SELECT *
-    FROM poem
-    WHERE id = ${id};
+    SELECT p.id, t.name as poet_name, p.poem_string, p.title, p.audio_url, p.video_url
+    FROM poem p
+    JOIN poet_poem pp on pp.poem_id = p.id
+    JOIN poet t on pp.poet_id = t.id
+    WHERE p.id = ${id};
   `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);

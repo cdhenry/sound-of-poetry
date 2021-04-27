@@ -19,3 +19,37 @@ export enum TailwindHeightEnum {
     Screen90 = 'h-screen-90',
     Screen = 'h-screen'
 }
+
+export enum TailwindWidthEnum {
+    Auto = 'w-auto',
+    OneHalf = 'w-1/2',
+    OneThird = 'w-1/3',
+    TwoThirds = 'w-2/3',
+    OneFourths = 'w-1/4',
+    TwoFourths = 'w-2/4',
+    ThreeFourths = 'w-3/4',
+    OneFifths = 'w-1/5',
+    TwoFifths = 'w-2/5',
+    ThreeFifths = 'w-3/5',
+    FourFifths = 'w-4/5',
+    OneSixths = 'w-1/6',
+    TwoSixths = 'w-2/6',
+    ThreeSixths = 'w-3/6',
+    FourSixths = 'w-4/6',
+    FiveSixths = 'w-5/6',
+    OneTwelfths = 'w-1/12',
+    TwoTwelfths = 'w-2/12',
+    ThreeTwelfths = 'w-3/12',
+    FourTwelfths = 'w-4/12',
+    FiveTwelfths = 'w-5/12',
+    SixTwelfths = 'w-6/12',
+    SevenTwelfths = 'w-7/12',
+    EightTwelfths = 'w-8/12',
+    NineTwelfths = 'w-9/12',
+    TenTwelfths = 'w-10/12',
+    ElevenTwelfths = 'w-11/12',
+    Full = 'w-full',
+    Screen = 'w-screen',
+    Min = 'w-min',
+    Max = 'w-max'
+}

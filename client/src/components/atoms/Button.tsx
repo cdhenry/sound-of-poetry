@@ -4,7 +4,7 @@ export default function Button(
     props: React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 ): JSX.Element {
     const defaultClassName =
-        'font-label flex flex-row items-center py-2.5 px-3.5 rounded-lg bg-white text-blue border-2 border-blue-500 hover:bg-blue-900 hover:text-white active:bg-blue-900 active:text-white'
+        'font-label flex flex-row items-center p-2 rounded-lg bg-indigo-100 border-2 border-gray-500 hover:bg-blue-500 hover:text-white'
 
     return (
         <button {...props} className={defaultClassName}>

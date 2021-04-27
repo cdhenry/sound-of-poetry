@@ -5,12 +5,13 @@ export interface IPaginateTemplate {
     children: React.ReactNode
 }
 
-export interface ILibraryTemplate {
-    header: React.ReactNode
+export interface IMapTemplate {
+    header?: React.ReactNode
     content: React.ReactNode
 }
 
-export interface IMapTemplate {
-    header: React.ReactNode
-    content: React.ReactNode
+export interface IModalProps {
+    isActive: boolean
+    closeModal: () => void
+    children: React.ReactNode
 }
