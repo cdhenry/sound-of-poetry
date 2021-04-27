@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+=======
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+>>>>>>> main
 
 import { randomInteger } from '../../common/utils/randomInteger'
 import Card from '../../components/atoms/Card'
@@ -7,15 +12,23 @@ import Header from '../../components/atoms/Header'
 import { CardTypeEnum } from '../../enums/cardType'
 import { HandwritingFontEnum } from '../../enums/fonts'
 import { HeaderTypeEnum } from '../../enums/headerType'
+<<<<<<< HEAD
 import { RoutesEnum } from '../../enums/routes'
+=======
+>>>>>>> main
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
 import { IPoem } from '../../interfaces/poem'
 import { IParams } from '../../interfaces/shared'
 import { PoemService, poemService } from '../../services/poem'
+<<<<<<< HEAD
+=======
+import { WordService, wordService } from '../../services/word'
+>>>>>>> main
 import Loading from '../Loading'
 
 export default function Poem(): JSX.Element {
     const _poemService: PoemService = poemService
+<<<<<<< HEAD
 
     const { id } = useParams<IParams>()
 
@@ -26,6 +39,23 @@ export default function Poem(): JSX.Element {
     const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
     const handwritingEnumKey = handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never
 
+=======
+    const _wordService: WordService = wordService
+
+    const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
+    const handwritingEnumKey = useRef(handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never)
+    const { id } = useParams<IParams>()
+
+    const [isLoading, setIsLoading] = useState(true)
+    const [isWordInfoLoading, setIsWordInfoLoading] = useState(false)
+    const [poem, setPoem] = useState({} as IPoem)
+    const [wordSounds, setWordSounds] = useState([] as React.ReactNode[])
+    const [wordImages, setWordImages] = useState([] as React.ReactNode[])
+    const [wordSynonyms, setWordSynonyms] = useState([] as React.ReactNode[])
+    const [wordDict, setWordDict] = useState([] as React.ReactNode[])
+    const [poemContent, setPoemContent] = useState([] as React.ReactNode[])
+
+>>>>>>> main
     const getPoem = useCallback(async () => {
         try {
             setIsLoading(true)
@@ -34,7 +64,11 @@ export default function Poem(): JSX.Element {
             const wordNetData = await _poemService.getPoemWordNet(parseInt(id))
             const poemLines = poemData.poem_string.split(/\n/)
             const content = [] as React.ReactNode[]
+<<<<<<< HEAD
             poemLines.forEach((line: any) => {
+=======
+            poemLines.forEach((line, i) => {
+>>>>>>> main
                 const words = line.split(' ')
 
                 words.forEach((word: string, index: number) => {
@@ -42,6 +76,7 @@ export default function Poem(): JSX.Element {
                     const cleanedWord = word.replace(regex, '').toLowerCase()
                     const wordNetWord = wordNetData.find((item: any) => item.lemma === cleanedWord)
 
+<<<<<<< HEAD
                     content.push(
                         wordNetWord?.word_id ? (
                             <Link
@@ -52,6 +87,78 @@ export default function Poem(): JSX.Element {
                             </Link>
                         ) : (
                             <span className={'whitespace-pre hover:text-shadow-lg hover:text-rose-500'}>{word} </span>
+=======
+                    const handleWordNet = async () => {
+                        const id = wordNetWord?.word_id as number
+                        setIsWordInfoLoading(true)
+                        const wordSoundList = await _wordService.getWordSounds(id)
+                        const wordImageList = await _wordService.getWordImages(id)
+                        const wordSynonymList = await _wordService.getWordSynonyms(id)
+                        const wordDictList = await _wordService.getWordDict(id)
+                        // const wordStats = await _wordService.getWordStats({ id, isWordNet: true })
+
+                        setWordDict([
+                            <div>
+                                <strong>{wordNetWord?.lemma}</strong>
+                            </div>,
+                            <ul>
+                                {wordDictList.map((item, idx) => (
+                                    <li>+ {item.definition}</li>
+                                ))}
+                            </ul>
+                        ])
+
+                        setWordSynonyms(wordSynonymList.map((item, idx) => <span>{item.lemma} | </span>))
+
+                        setWordSounds(
+                            wordSoundList.map((wordSound, idx) => (
+                                <iframe
+                                    key={`PoemWordSound${i}${idx}`}
+                                    title={wordSound.ytid}
+                                    src={`https://www.youtube.com/embed/${wordSound.ytid}`}
+                                ></iframe>
+                            ))
+                        )
+
+                        setWordImages(
+                            wordImageList.map((wordImage, idx) => (
+                                <img
+                                    key={`PoemWordImage${i}${idx}`}
+                                    alt={wordImage.definition}
+                                    onError={(e) => {
+                                        var target = e.target as HTMLImageElement
+                                        target.onerror = null
+                                        target.style.display = 'none'
+                                    }}
+                                    src={wordImage.image_url}
+                                ></img>
+                            ))
+                        )
+
+                        // const wordStats = _wordService.getWordStats({
+                        //     id,
+                        //     isWordNet: true
+                        // })
+                        setIsWordInfoLoading(false)
+                    }
+
+                    content.push(
+                        wordNetWord?.word_id ? (
+                            <button
+                                key={`PoemWord${i}${index}`}
+                                className={'whitespace-pre hover:text-shadow-lg hover:text-cyan-500'}
+                                onClick={handleWordNet}
+                            >
+                                {word}{' '}
+                            </button>
+                        ) : (
+                            <span
+                                key={`PoemWord${i}${index}`}
+                                className={'whitespace-pre hover:text-shadow-lg hover:text-rose-500'}
+                            >
+                                {word}{' '}
+                            </span>
+>>>>>>> main
                         )
                     )
                 })
@@ -75,6 +182,7 @@ export default function Poem(): JSX.Element {
     return isLoading ? (
         <Loading />
     ) : (
+<<<<<<< HEAD
         <Card
             height={TailwindHeightEnum.Screen90}
             width={TailwindWidthEnum.OneHalf}
@@ -88,5 +196,49 @@ export default function Poem(): JSX.Element {
         >
             <>{poemContent}</>
         </Card>
+=======
+        <section className="grid grid-cols-2 w-11/12">
+            <Card
+                height={TailwindHeightEnum.Screen90}
+                width={TailwindWidthEnum.Auto}
+                cardType={CardTypeEnum.Paper}
+                handwritingEnumKey={handwritingEnumKey.current}
+                header={
+                    <Header headerType={HeaderTypeEnum.HeaderWeb}>
+                        {poem.title} by {poem.poet_name}
+                    </Header>
+                }
+            >
+                <>{poemContent}</>
+            </Card>
+            <Card
+                height={TailwindHeightEnum.Screen90}
+                width={TailwindWidthEnum.Auto}
+                cardType={CardTypeEnum.SeeThrough}
+            >
+                {!wordDict.length && <div>Click a word to see information about the word</div>}
+                {isWordInfoLoading ? (
+                    <div>Loading...</div>
+                ) : (
+                    <>
+                        {!!wordDict.length && <div>{wordDict}</div>}
+                        {!!wordSynonyms.length && (
+                            <div>
+                                <strong>Synonyms</strong>
+                            </div>
+                        )}
+                        {!!wordSynonyms.length && <div>| {wordSynonyms}</div>}
+                        {(!!wordSounds.length || !!wordImages.length) && (
+                            <div>
+                                <strong>Media</strong>
+                            </div>
+                        )}
+                        <div className="grid grid-cols-2 gap-2">{wordSounds}</div>
+                        <div className="grid grid-cols-2 gap-2">{wordImages}</div>
+                    </>
+                )}
+            </Card>
+        </section>
+>>>>>>> main
     )
 }
