@@ -28,7 +28,7 @@ export default function Poems(): JSX.Element {
         try {
             setIsLoading(true)
             const data = await _poemService.getPoems({ limit, pageNumber }, selectedOptions)
-
+            console.log(data)
             const tags = (await _poemService.getTags({
                 poemIds: data.items.map((item) => (item as IPoemListItem).id)
             })) as IPoemTag[]

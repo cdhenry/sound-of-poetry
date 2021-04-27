@@ -57,7 +57,7 @@ export default function Poem(): JSX.Element {
                         // const wordStats = await _wordService.getWordStats({ id, isWordNet: true })
 
                         setWordDict([
-                            <div>
+                            <div className="flex items-center justify-center mb-4">
                                 <strong>{wordNetWord?.lemma}</strong>
                             </div>,
                             <ul>
@@ -74,7 +74,7 @@ export default function Poem(): JSX.Element {
                                 <iframe
                                     key={`PoemWordSound${i}${idx}`}
                                     title={wordSound.ytid}
-                                    src={`https://www.youtube.com/embed/${wordSound.ytid}`}
+                                    src={`https://www.youtube.com/embed/${wordSound.ytid}?start=${wordSound.start_seconds}`}
                                 ></iframe>
                             ))
                         )
@@ -83,13 +83,13 @@ export default function Poem(): JSX.Element {
                             wordImageList.map((wordImage, idx) => (
                                 <img
                                     key={`PoemWordImage${i}${idx}`}
-                                    alt={wordImage.definition}
+                                    alt={`${wordImage.title} by ${wordImage.author}`}
                                     onError={(e) => {
                                         var target = e.target as HTMLImageElement
                                         target.onerror = null
                                         target.style.display = 'none'
                                     }}
-                                    src={wordImage.image_url}
+                                    src={wordImage.original_url}
                                 ></img>
                             ))
                         )
@@ -147,9 +147,11 @@ export default function Poem(): JSX.Element {
                 cardType={CardTypeEnum.Paper}
                 handwritingEnumKey={handwritingEnumKey.current}
                 header={
-                    <Header headerType={HeaderTypeEnum.HeaderWeb}>
-                        {poem.title} by {poem.poet_name}
-                    </Header>
+                    <div>
+                        <Header headerType={HeaderTypeEnum.HeaderWeb}>
+                            {poem.title} by {poem.poet_name}
+                        </Header>
+                    </div>
                 }
             >
                 <>{poemContent}</>
@@ -159,26 +161,30 @@ export default function Poem(): JSX.Element {
                 width={TailwindWidthEnum.Auto}
                 cardType={CardTypeEnum.SeeThrough}
             >
-                {!wordDict.length && <div>Click a word to see information about the word</div>}
+                {!wordDict.length && (
+                    <div className="flex items-center justify-center">
+                        Click a word to see information about the word
+                    </div>
+                )}
                 {isWordInfoLoading ? (
-                    <div>Loading...</div>
+                    <div className="flex items-center justify-center">Loading...</div>
                 ) : (
-                    <>
+                    <div className="grid grid-flow-row auto-rows-min gap-4">
                         {!!wordDict.length && <div>{wordDict}</div>}
                         {!!wordSynonyms.length && (
                             <div>
-                                <strong>Synonyms</strong>
+                                <strong>Word Associations</strong>
                             </div>
                         )}
                         {!!wordSynonyms.length && <div>| {wordSynonyms}</div>}
                         {(!!wordSounds.length || !!wordImages.length) && (
                             <div>
-                                <strong>Media</strong>
+                                <strong>Sensual Associations</strong>
                             </div>
                         )}
                         <div className="grid grid-cols-2 gap-2">{wordSounds}</div>
                         <div className="grid grid-cols-2 gap-2">{wordImages}</div>
-                    </>
+                    </div>
                 )}
             </Card>
         </section>
