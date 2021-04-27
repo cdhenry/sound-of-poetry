@@ -18,7 +18,7 @@ export default function Card(props: ICardProps): JSX.Element {
             border = 'border-2 border-gray-800 rounded'
             break
         case CardTypeEnum.SeeThrough:
-            background = 'bg-blueGray-200 opacity-50'
+            background = 'bg-blueGray-200 bg-opacity-50'
             border = 'border-2 border-gray-800 rounded'
             break
         default:
