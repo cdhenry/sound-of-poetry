@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { randomInteger } from '../../common/utils/randomInteger';
-import Card from '../../components/atoms/Card';
-import Header from '../../components/atoms/Header';
-import { CardTypeEnum } from '../../enums/cardType';
-import { HandwritingFontEnum } from '../../enums/fonts';
-import { HeaderTypeEnum } from '../../enums/headerType';
-import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind';
-import { IPoem } from '../../interfaces/poem';
-import { IParams } from '../../interfaces/shared';
-import { PoemService, poemService } from '../../services/poem';
-import { WordService, wordService } from '../../services/word';
-import Loading from '../Loading';
+import { randomInteger } from '../../common/utils/randomInteger'
+import Card from '../../components/atoms/Card'
+import Header from '../../components/atoms/Header'
+import { CardTypeEnum } from '../../enums/cardType'
+import { HandwritingFontEnum } from '../../enums/fonts'
+import { HeaderTypeEnum } from '../../enums/headerType'
+import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
+import { IPoem } from '../../interfaces/poem'
+import { IParams } from '../../interfaces/shared'
+import { PoemService, poemService } from '../../services/poem'
+import { WordService, wordService } from '../../services/word'
+import Loading from '../Loading'
 
 export default function Poem(): JSX.Element {
     const _poemService: PoemService = poemService

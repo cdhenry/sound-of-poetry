@@ -1,15 +1,15 @@
-import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared';
+import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
 import {
-  IGetLemmas,
-  IGetWordStats,
-  IWord,
-  IWordDict,
-  IWordImage,
-  IWordSound,
-  IWordStats,
-  IWordSynonym
-} from '../interfaces/word';
-import API from './api';
+    IGetLemmas,
+    IGetWordStats,
+    IWord,
+    IWordDict,
+    IWordImage,
+    IWordSound,
+    IWordStats,
+    IWordSynonym
+} from '../interfaces/word'
+import API from './api'
 
 export class WordService {
     private _baseUrl: string = 'words/'

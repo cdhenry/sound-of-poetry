@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import { CardTypeEnum } from '../../enums/cardType';
-import { HandwritingFontEnum } from '../../enums/fonts';
-import { ICardProps } from '../../interfaces/atoms';
+import { CardTypeEnum } from '../../enums/cardType'
+import { HandwritingFontEnum } from '../../enums/fonts'
+import { ICardProps } from '../../interfaces/atoms'
 
 export default function Card(props: ICardProps): JSX.Element {
     const { header, handwritingEnumKey, height, width, children } = props
