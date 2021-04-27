@@ -52,3 +52,7 @@ export interface IGetTagsParams {
 export interface IPoemFiltersProps {
     handleFilterChange: (selectedOptions: IGetPoemsQuery) => void
 }
+
+export interface IPoemTableRowProps {
+    item: IPoemListItem
+}

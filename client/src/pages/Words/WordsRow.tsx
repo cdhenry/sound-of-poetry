@@ -9,10 +9,10 @@ import TableListRow from '../../components/molecules/TableListRow'
 import { CardTypeEnum } from '../../enums/cardType'
 import { IconTypeEnum } from '../../enums/iconType'
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { ILibraryPoemTableRowProps } from '../../interfaces/library'
+import { IPoemTableRowProps } from '../../interfaces/poem'
 import ModalTemplate from '../../templates/Modal'
 
-export default function WordsRow(props: ILibraryPoemTableRowProps): JSX.Element {
+export default function WordsRow(props: IPoemTableRowProps): JSX.Element {
     const { item } = props
     const { url } = useRouteMatch()
     const [isModalActive, setIsModalActive] = useState(false)
