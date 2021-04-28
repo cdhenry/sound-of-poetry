@@ -42,7 +42,7 @@ router.get("/lemmas", function (req, res) {
   var query = `
     SELECT wordid as value, lemma as label
     FROM words
-    WHERE lemma LIKE '%${lemma}%'
+    WHERE lemma LIKE "${lemma}%"
   `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
