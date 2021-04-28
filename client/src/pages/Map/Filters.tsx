@@ -10,7 +10,7 @@ import {wordService, WordService} from "../../services/word";
 
 export default function MapFilters(props: IMapFiltersProps): JSX.Element {
     const defaultClassName =
-        'grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2 p-2 border-gray-500 border-2 rounded bg-indigo-100 w-11/12';
+        'grid grid-cols-1 md:grid-cols-2 content-center gap-2 p-2 border-gray-500 border-2 rounded bg-indigo-100 w-11/12';
     const _poemService: PoemService = poemService;
     const _wordService: WordService = wordService;
     const [tagOptions, setTagsOptions] = useState([] as ISelectOption[]);

@@ -5,8 +5,8 @@ import React, { useState, useEffect } from 'react';
 
 
 function MapChart({data}) {
-    const svgWidth = 800;
-    const svgHeight = 450;
+    const svgWidth = 1000;
+    const svgHeight = 500;
 
     const [regions, setRegions] = useState([])
 
@@ -43,68 +43,79 @@ function MapChart({data}) {
 
     const handleOuterClick = () => {
         selectAll("text")
-            .style("visibility", "hidden");
+            .remove();
+
+        selectAll("rect")
+            .remove();
     }
 
     const handleRegionClick = (i) => {
-        let textBox = select("text")
+        let mapBoxW = select(".mapBox").attr("width")
+        let mapBoxH = select(".mapBox").attr("height")
+
+        selectAll("text").remove()
+        selectAll("rect").remove()
+
+        select("g.statPanel")
+            .append("rect")
             .attr("x", 10)
-            .attr("y", 10)
-            .attr("dy", "0.35em")
-            .attr("width", 180)
+            .attr("y", mapBoxH - 40)
+            .attr("width", mapBoxW - 100)
             .attr("height", 35)
+            .attr("rx", 5)
+            .style("fill", "#DDDDDD")
+            .style("visibility", "visible")
+
+        select("g.statPanel")
+            .append("text")
+            .attr("class", "statText")
+            .attr("x", 10)
+            .attr("y", mapBoxH - 40)
+            .attr("width", mapBoxW - 100)
+            .attr("height", 35)
+            .attr("dy", 25)
+            .attr("dx", 350)
             .attr("fill", "#000000")
             .text(regions[i].id + ": " + recordColors.get(regions[i].id)[0])
             .transition()
             .duration(900)
-            .style("visibility", "visible");
+            .style("visibility", "visible")
 
-        select("map")
-            .append("rect")
-            .attr("x", 10)
-            .attr("y", 10)
-            .attr("width", textBox.attr("width") + 20)
-            .attr("height", textBox.attr("height") + 10)
-            .attr("rx", 15)
-            .attr("fill", "#BBBBBB")
     }
 
     return (
-        <svg
-            width={ svgWidth }
-            height={ svgHeight }
-            viewBox="0 0 800 450"
-            onClick={ () => handleOuterClick() }
-        >
-            <g className="map">
-                {
-                    regions.map((d, i) => (
-                        <path
-                            key={ `path-${ i }` }
-                            cursor={"pointer"}
-                            d={ geoPath()(d) }
-                            className="region"
-                            fill={ `${ d.color }` }
-                            stroke="#FFFFFF"
-                            strokeWidth={ 0.5 }
-                            onClick={ () => handleRegionClick(i) }
+        <section>
+            <svg
+                    width={ svgWidth }
+                    height={ svgHeight }
+                    className={"mapBox"}
+                    // onClick={ () => handleOuterClick() }
+                >
+                    <g className="map">
+                        {
+                            regions.map((d, i) => (
+                                <path
+                                    key={ `path-${ i }` }
+                                    cursor={"pointer"}
+                                    d={ geoPath()(d) }
+                                    className="region"
+                                    fill={ `${ d.color }` }
+                                    stroke="#FFFFFF"
+                                    strokeWidth={ 0.5 }
+                                    onClick={ () => handleRegionClick(i) }
+                                />
+                            ))
+                        }
+                    </g>
+                    <g
+                        className="statPanel"
+                    >
+                        <rect
+                            className="statPanelBg"
                         />
-                    ))
-                }
-            </g>
-            <g className = "text">
-                {
-                    <text
-                        className={"tooltip"}
-                        x={0}
-                        y={0}
-                        width={200}
-                        height={50}
-                        fill={"#CCCCCC"}
-                    />
-                }
-            </g>
-        </svg>
+                    </g>
+            </svg>
+        </section>
     )
 }
 
