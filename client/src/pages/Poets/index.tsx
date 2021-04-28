@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { IGetPoetsQuery, IPoetListItem } from '../../interfaces/poet' //, IPoemTag 
-//import { IGetPoemsQuery, IPoemListItem } from '../../interfaces/poem' //, IPoemTag 
-import { PoetService, poetService } from '../../services/poet'
-import PaginateTemplate from '../../templates/Paginate'
-import Loading from '../Loading'
-import PoetFilters from './Filters'
-import PoetsList from './PoetsList'
+import { IGetPoetsQuery, IPoetListItem } from '../../interfaces/poet';
+import { PoetService, poetService } from '../../services/poet';
+import PaginateTemplate from '../../templates/Paginate';
+import Loading from '../Loading';
+import PoetFilters from './Filters';
+import PoetsList from './PoetsList';
 
+//import { IGetPoemsQuery, IPoemListItem } from '../../interfaces/poem' //, IPoemTag
 export default function Poets(): JSX.Element {
     const _poetService: PoetService = poetService
     const [isLoading, setIsLoading] = useState(true)
@@ -28,7 +28,7 @@ export default function Poets(): JSX.Element {
     const getList = useCallback(async (pageNumber: number = 0, selectedOptions?: IGetPoetsQuery) => {
         try {
             setIsLoading(true)
-            const data = await _poetService.getPoets({ limit, pageNumber })
+            const data = await _poetService.getPoets({ limit, pageNumber }, selectedOptions)
 
             // const tags = (await _poetService.getTags({
             //     poemIds: data.items.map((item) => (item as IPoetListItem).id)

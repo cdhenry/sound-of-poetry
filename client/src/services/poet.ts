@@ -1,11 +1,12 @@
-import { IGetPoetNames, IPoet, IGetNamesParams, IPoetTag } from '../interfaces/poet'
-import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
-import API from './api'
+import { IGetNamesParams, IGetPoetNames, IGetPoetsQuery, IPoet, IPoetTag } from '../interfaces/poet';
+import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared';
+import API from './api';
 
 export class PoetService {
     private _baseUrl: string = 'poets/'
 
-    public async getPoets(params: IPaginatedParams) {
+    public async getPoets(params: IPaginatedParams, query?: IGetPoetsQuery) {
+        params = { ...params, ...query }
         let response = await API.get(`${this._baseUrl}`, { params })
         return response.data as IPaginatedList<IPoet>
     }
