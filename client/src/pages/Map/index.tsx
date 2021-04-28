@@ -16,18 +16,6 @@ export default function Map(): JSX.Element {
     const [data, setData] = useState([] as IMap[])
     const [getRegionsQuery, setGetRegionsQuery] = useState({} as IGetRegionsQuery)
 
-    const getMapData = useCallback(async () => {
-        try {
-            setIsLoading(true)
-            let data = await _mapService.getCountPoetsByRegion()
-            setData(data)
-        } catch (e) {
-            setError(e)
-        } finally {
-            setIsLoading(false)
-        }
-    }, [_mapService])
-
     const getRegions = useCallback(async (selectedOptions?: IGetRegionsQuery) => {
         try {
             setIsLoading(true)
@@ -46,8 +34,8 @@ export default function Map(): JSX.Element {
     }
 
     useEffect(() => {
-        if (!data.length) getMapData()
-    }, [getMapData, data.length])
+        if (!data.length) getRegions()
+    }, [getRegions, data.length])
 
     return (
         <MapTemplate
