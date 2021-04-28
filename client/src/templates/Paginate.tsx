@@ -11,12 +11,12 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
     }
 
     return (
-        <section className="flex items-center flex-col p-2 ">
+        <section className="flex items-center flex-col p-2 w-full">
             <div className="flex-none flex justify-between mb-2 w-11/12">
                 {total > 0 && <div>Total: {total}</div>}
                 <ReactPaginate
-                    previousLabel={'<'}
-                    nextLabel={'>'}
+                    previousLabel={total > 0 ? '<' : ''}
+                    nextLabel={total > 0 ? '>' : ''}
                     breakLabel={'...'}
                     pageCount={Math.ceil(total / limit)}
                     onPageChange={onChange}

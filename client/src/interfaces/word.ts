@@ -41,13 +41,15 @@ export interface IWordStats {
 
 export interface IWordSound {
     ytid: string
+    start_seconds: number
     display_name: string
 }
 
 export interface IWordImage {
     lemma: string
-    image_url: string
-    definition: string
+    original_url: string
+    title: string
+    author: string
 }
 
 export interface IWordSynonym {
