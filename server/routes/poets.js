@@ -44,7 +44,7 @@ router.get("/", function (req, res) {
 
 router.get("/regions", function (req, res) {
   var query = `
-    SELECT r.name AS region, count(p.id) AS count_poet
+    SELECT r.name AS region, count(p.id) AS result
     FROM poet p
     JOIN isfrom i ON p.id = i.poet_id
     JOIN region r ON i.region_id = r.id
@@ -65,7 +65,7 @@ router.get("/names", function (req, res) {
       FROM poet
       WHERE name LIKE '%${name}%'
     `;
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {
       res.json(rows);
@@ -80,7 +80,7 @@ router.get("/:poet", function (req, res) {
     FROM poet
     WHERE id = ${id};
   `;
-  connection.query(query, function (err, rows, fields) {
+  connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {
       res.json(rows[0]);
