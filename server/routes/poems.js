@@ -94,7 +94,6 @@ router.get("/", function (req, res) {
       JOIN poet po ON pp.poet_id = po.id
       ${joinClause}
       ${whereClause}
-      ${orderByClause}
     `;
 
   connection.query(queryTotal, function (err, rows) {
@@ -165,10 +164,9 @@ router.get("/regions", function (req, res) {
       GROUP BY 1;`;
 
   connection.query(query, function (err, rows) {
-    if (err){
+    if (err) {
       console.log(err);
-    }
-    else {
+    } else {
       res.json(rows);
     }
   });
