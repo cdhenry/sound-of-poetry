@@ -4,12 +4,13 @@ import {
     IGetTitlesParams,
     IPoem,
     IPoemListItem,
+    IPoemStat,
     IPoemTag,
     IPoemWord
 } from '../interfaces/poem'
 import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
 import API from './api'
-import {IGetRegionsQuery, IMap} from "../interfaces/map";
+import { IGetRegionsQuery, IMap } from '../interfaces/map'
 
 export class PoemService {
     private _baseUrl: string = 'poems/'
@@ -49,6 +50,11 @@ export class PoemService {
         const params = { ...query }
         const response = await API.get(`${this._baseUrl}regions`, { params })
         return response.data as IMap[]
+    }
+
+    public async getPoemStats(id: number) {
+        const response = await API.get(`${this._baseUrl}${id}/stats`)
+        return response.data as IPoemStat[]
     }
 }
 
