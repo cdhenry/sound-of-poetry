@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import Icon from '../components/atoms/Icon';
-import { IconTypeEnum } from '../enums/iconType';
-import { IModalProps } from '../interfaces/templates';
+import Icon from '../components/atoms/Icon'
+import { IconTypeEnum } from '../enums/iconType'
+import { IModalProps } from '../interfaces/templates'
 
 function ModalTemplate(props: IModalProps): JSX.Element {
     return props.isActive ? (

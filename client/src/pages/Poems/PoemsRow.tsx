@@ -22,7 +22,7 @@ export default function PoemsRow(props: IPoemTableRowProps): JSX.Element {
                 <Link to={`${url}/${item.id}`}>{item.title}</Link>
             </TableListItem>
             <TableListItem className="w-1/6">{item.poet_name}</TableListItem>
-            <TableListItem>{item.tags?.join(', ')}</TableListItem>
+            <TableListItem className="w-1/2">{item.tags?.join(', ')}</TableListItem>
             <TableListItem className="w-1/12">
                 <div className="flex space-x-2">
                     {item.audio_url && (
