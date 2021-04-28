@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-
+import { useParams } from 'react-router-dom'
 import { randomInteger } from '../../common/utils/randomInteger'
 import Button from '../../components/atoms/Button'
 import Card from '../../components/atoms/Card'
@@ -106,7 +105,6 @@ export default function Poem(): JSX.Element {
             setPoemStats(poemStatsData)
             poemLines.forEach((line, i) => {
                 const words = line.split(' ')
-
                 words.forEach((word: string, index: number) => {
                     const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
                     const cleanedWord = word.replace(regex, '').toLowerCase()
