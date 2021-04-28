@@ -9,7 +9,7 @@ import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
 import { IPoetTableRowProps } from '../../interfaces/poet'
 import ModalTemplate from '../../templates/Modal'
 
-export default function PoetsRow(props: IPoetTableRowProps): JSX.Element {
+export default function PoetsRow(props: any): JSX.Element {
     const { item } = props
     const { url } = useRouteMatch()
     const [isModalActive, setIsModalActive] = useState(false)
