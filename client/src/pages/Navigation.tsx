@@ -15,9 +15,6 @@ export default function Navigation(): JSX.Element {
             <Link to={RoutesEnum.Poets} className={linkClassName}>
                 Poets
             </Link>
-            <Link to={RoutesEnum.Words} className={linkClassName}>
-                Words
-            </Link>
             <Link to={RoutesEnum.Map} className={linkClassName}>
                 Map
             </Link>
