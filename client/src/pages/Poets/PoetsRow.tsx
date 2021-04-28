@@ -20,7 +20,7 @@ export default function PoetsRow(props: any): JSX.Element {
     }
 
     const linkRedirect = () => {
-        window.location.href = item.url;
+        //window.location.href = item.url;
     }
 
     return (
@@ -38,8 +38,8 @@ export default function PoetsRow(props: any): JSX.Element {
                     </TableListItem>
                     <TableListItem>{item.yob}</TableListItem>
                     <TableListItem>{item.yod}</TableListItem>
-                    <TableListItem className="cursor-pointer">
-                        <Link to={{ pathname: `${item.url}`}} onClick={linkRedirect}>
+                    <TableListItem className="cursor-pointer" >
+                        <Link to={{ pathname: `${item.url}`}} target="_blank" >
                             {item.url}
                         </Link>    
                     </TableListItem>
