@@ -19,6 +19,10 @@ export default function PoetsRow(props: IPoetTableRowProps): JSX.Element {
         setIsModalActive(!isModalActive)
     }
 
+    const linkRedirect = () => {
+        window.location.href = item.url;
+    }
+
     return (
         <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
             {isModalActive ? (
@@ -34,6 +38,11 @@ export default function PoetsRow(props: IPoetTableRowProps): JSX.Element {
                     </TableListItem>
                     <TableListItem>{item.yob}</TableListItem>
                     <TableListItem>{item.yod}</TableListItem>
+                    <TableListItem className="cursor-pointer">
+                        <Link to={{ pathname: `${item.url}`}} onClick={linkRedirect}>
+                            {item.url}
+                        </Link>    
+                    </TableListItem>
                 </TableListRow>
             )}
         </ModalTemplate>

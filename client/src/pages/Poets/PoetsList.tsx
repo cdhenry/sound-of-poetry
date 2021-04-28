@@ -5,7 +5,7 @@ import { IPoetListItem } from '../../interfaces/poet'
 import PoetsRow from './PoetsRow'
 
 export default function PoetsList(props: { list: IPoetListItem[] }): JSX.Element {
-    const tableHeaders = ['Author', 'Year of Birth', 'Year of Death']
+    const tableHeaders = ['Author', 'Year of Birth', 'Year of Death', 'Url']
 
     return (
         <TableList context="PoetsTableList" headers={tableHeaders}>
