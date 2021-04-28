@@ -95,8 +95,9 @@ export default function Poem(): JSX.Element {
             const wordNetData = await _poemService.getPoemWordNet(parseInt(id))
             const poemLines = poemData.poem_string.split(/\n/)
             const content = [] as React.ReactNode[]
-            console.log(poemStatsData)
+
             setPoemStats(poemStatsData)
+
             poemLines.forEach((line, i) => {
                 const words = line.split(' ')
                 words.forEach((word: string, index: number) => {
