@@ -7,15 +7,18 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(distinct w.wordid) AS total FROM poem_wordnet pw INNER JOIN words w ON w.wordid=pw.word_id INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid";
+  var queryTotal =
+    "SELECT COUNT(distinct w.wordid) AS total FROM poem_wordnet pw INNER JOIN words w ON w.wordid=pw.word_id INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid";
   var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
-  var orderByAZ = "1"
-  var orderByZA = "2"
-  var orderByOccr = "3"
-  var orderByUse = "4"
-  
+  var orderByClause = "";
+  var orderByAZ = "1";
+  var orderByZA = "2";
+  var orderByOccr = "3";
+  var orderByUse = "4";
+  var orderBy;
+
   if (req.query.orderBy) orderBy = req.query.orderBy;
 
   switch (orderBy) {
@@ -25,9 +28,11 @@ router.get("/", function (req, res) {
     case orderByZA:
       orderByClause = "ORDER BY id DESC";
       break;
-    case orderByOccr: "ORDER BY occurrence DESC"
+    case orderByOccr:
+      "ORDER BY occurrence DESC";
       break;
-    case orderByUse:  "ORDER BY num_poems DESC"
+    case orderByUse:
+      "ORDER BY num_poems DESC";
       break;
   }
 
