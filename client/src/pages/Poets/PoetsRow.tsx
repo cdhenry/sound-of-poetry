@@ -19,10 +19,6 @@ export default function PoetsRow(props: any): JSX.Element {
         setIsModalActive(!isModalActive)
     }
 
-    const linkRedirect = () => {
-        //window.location.href = item.url;
-    }
-
     return (
         <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
             {isModalActive ? (
