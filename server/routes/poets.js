@@ -11,6 +11,21 @@ router.get("/", function (req, res) {
   var limit = req.query.limit || null;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
+  var whereClause = "";
+  var poets;
+
+  if (req.query.poets) poets = req.query.poets;
+
+  if (poets) {
+    whereClause += `WHERE id IN (${poets})`;
+  }
+
+  var queryTotal = `
+      SELECT COUNT(p.id) as total
+      FROM poet p
+      ${whereClause}
+    `;
+
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -24,12 +39,14 @@ router.get("/", function (req, res) {
       ? `
       SELECT *
       FROM poet
+      ${whereClause}
       LIMIT ${limit}
       OFFSET ${offset};
     `
       : `
       SELECT *
       FROM poet;
+      ${whereClause}
     `;
 
     connection.query(query, function (err, rest) {

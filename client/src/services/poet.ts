@@ -11,7 +11,8 @@ export class PoetService {
         return response.data as IPaginatedList<IPoet>
     }
 
-    public async getPoetNames(params: IGetPoetNames) {
+    public async getPoetNames(params: IGetPoetNames, query?: IGetPoetsQuery) {
+        params = { ...params, ...query }
         let response = await API.get(`${this._baseUrl}names`, { params })
         return response.data as ISelectOption[]
     }
