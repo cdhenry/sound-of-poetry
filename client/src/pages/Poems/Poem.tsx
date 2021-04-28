@@ -40,7 +40,6 @@ export default function Poem(): JSX.Element {
                 const wordImageList = await _wordService.getWordImages(id)
                 const wordSynonymList = await _wordService.getWordSynonyms(id)
                 const wordDictList = await _wordService.getWordDict(id)
-                // const wordStats = await _wordService.getWordStats({ id, isWordNet: true })
 
                 setWordDict([
                     <div key={'PoemWordTitle'} className="flex items-center justify-center mb-4">
@@ -79,11 +78,6 @@ export default function Poem(): JSX.Element {
                         ></img>
                     ))
                 )
-
-                // const wordStats = _wordService.getWordStats({
-                //     id,
-                //     isWordNet: true
-                // })
             } catch (e) {
             } finally {
                 setIsWordInfoLoading(false)
