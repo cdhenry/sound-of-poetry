@@ -1,18 +1,11 @@
+import { WordOrderByEnum } from "../enums/orderBy";
+
 export interface IWord {
-    synsetid: number
-    wordid: number
-    casedwordid: number
+    id: number
     lemma: string
-    senseid: number
-    sensenum: number
-    lexid: number
-    tagcount: number
-    sensekey: string
-    cased: string
-    pos: string
-    lexdomainid: number
     definition: string
-    sampleset: string
+    occurrence: number
+    num_poems: number
 }
 
 export interface IGetLemmas {
@@ -78,4 +71,25 @@ export interface IWordDict {
     lexdomainid: number
     definition: string
     sampleset: string
+}
+
+export interface IGetWordsQuery {
+    id?: number
+    lemma?: string
+    definition?: string
+    occurrence?: number
+    num_poems?: number
+    orderBy?: WordOrderByEnum
+}
+
+export interface IWordTableRowProps {
+    item: IWord
+}
+
+export interface IWordTableListProps {
+    list: IWord[]
+}
+
+export interface IWordFiltersProps {
+    handleFilterChange: (selectedOptions: IGetWordsQuery) => void
 }

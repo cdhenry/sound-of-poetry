@@ -7,10 +7,30 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(wordid) AS total FROM dict";
+  var queryTotal = "SELECT COUNT(distinct w.wordid) AS total FROM poem_wordnet pw INNER JOIN words w ON w.wordid=pw.word_id INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid";
   var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
+  var orderByAZ = "1"
+  var orderByZA = "2"
+  var orderByOccr = "3"
+  var orderByUse = "4"
+  
+  if (req.query.orderBy) orderBy = req.query.orderBy;
+
+  switch (orderBy) {
+    case orderByAZ:
+      orderByClause = "ORDER BY id ASC";
+      break;
+    case orderByZA:
+      orderByClause = "ORDER BY id DESC";
+      break;
+    case orderByOccr: "ORDER BY occurrence DESC"
+      break;
+    case orderByUse:  "ORDER BY num_poems DESC"
+      break;
+  }
+
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -21,8 +41,12 @@ router.get("/", function (req, res) {
     }
 
     var query = `
-      SELECT *
-      FROM dict
+      SELECT w.wordid AS id, w.lemma AS lemma, wx.definition AS definition, sum(use_count) AS occurrence, count(poem_id) AS num_poems 
+      FROM poem_wordnet pw 
+      INNER JOIN words w ON w.wordid=pw.word_id
+      INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid
+      GROUP BY w.wordid
+      ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset};
     `;

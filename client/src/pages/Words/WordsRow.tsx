@@ -11,8 +11,10 @@ import { IconTypeEnum } from '../../enums/iconType'
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
 import { IPoemTableRowProps } from '../../interfaces/poem'
 import ModalTemplate from '../../templates/Modal'
+import { IWordTableRowProps, IWord } from '../../interfaces/word'
 
-export default function WordsRow(props: IPoemTableRowProps): JSX.Element {
+
+export default function WordsRow(props: IWordTableRowProps): JSX.Element {
     const { item } = props
     const { url } = useRouteMatch()
     const [isModalActive, setIsModalActive] = useState(false)
@@ -22,15 +24,15 @@ export default function WordsRow(props: IPoemTableRowProps): JSX.Element {
         setIsModalActive(!isModalActive)
     }
 
-    const handleAudio = async () => {
-        setModal(<embed src={item.audio_url}></embed>)
-        toggleIsModalActive()
-    }
+    // const handleAudio = async () => {
+    //     setModal(<embed src={item.audio_url}></embed>)
+    //     toggleIsModalActive()
+    // }
 
-    const handleVideo = () => {
-        setModal(<embed src={item.video_url}></embed>)
-        toggleIsModalActive()
-    }
+    // const handleVideo = () => {
+    //     setModal(<embed src={item.video_url}></embed>)
+    //     toggleIsModalActive()
+    // }
 
     return (
         <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
@@ -41,13 +43,16 @@ export default function WordsRow(props: IPoemTableRowProps): JSX.Element {
             ) : (
                 <TableListRow>
                     <TableListItem className="cursor-pointer">
-                        <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>
-                            {item.title}
+                        <Link to={{ pathname: `${url}/${item.id}`, state: { wordName: item.definition } }}>    
+                            {item.lemma}
                         </Link>
                     </TableListItem>
-                    <TableListItem>{item.poet_name}</TableListItem>
-                    <TableListItem>{item.tags?.join(', ')}</TableListItem>
-                    <TableListItem>
+                    {/* <TableListItem>{item.poet_name}</TableListItem>
+                    <TableListItem>{item.tags?.join(', ')}</TableListItem> */}
+                    <TableListItem>{item.definition}</TableListItem>
+                    <TableListItem>{item.occurrence}</TableListItem>
+                    <TableListItem>{item.num_poems}</TableListItem>
+                    {/* <TableListItem>
                         <div className="flex space-x-2">
                             {item.audio_url && (
                                 <Button onClick={handleAudio}>
@@ -60,7 +65,7 @@ export default function WordsRow(props: IPoemTableRowProps): JSX.Element {
                                 </Button>
                             )}
                         </div>
-                    </TableListItem>
+                    </TableListItem> */}
                 </TableListRow>
             )}
         </ModalTemplate>

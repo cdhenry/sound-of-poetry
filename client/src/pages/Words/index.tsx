@@ -1,44 +1,37 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { IGetPoemsQuery, IPoemListItem, IPoemTag } from '../../interfaces/poem'
+import { IGetWordsQuery, IWord } from '../../interfaces/word'
 import { PoemService, poemService } from '../../services/poem'
+import { wordService, WordService } from '../../services/word'
 import PaginateTemplate from '../../templates/Paginate'
 import Loading from '../Loading'
+import WordFilters from './Filters'
 import PoemFilters from './Filters'
 import PoemsList from './WordsList'
+import WordsList from './WordsList'
 
 export default function Words(): JSX.Element {
-    const _poemService: PoemService = poemService
+    const _wordService: WordService = wordService
     const [isLoading, setIsLoading] = useState(true)
-    const [list, setList] = useState([] as IPoemListItem[])
+    const [list, setList] = useState([] as IWord[])
     const [total, setTotal] = useState(0)
-    const [getPoemQuery, setGetPoemQuery] = useState({} as IGetPoemsQuery)
+    const [getPoemQuery, setGetPoemQuery] = useState({} as IGetWordsQuery)
     const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
         await getList(pageNumber)
     }
 
-    const handleFilterChange = async (selectedOptions: IGetPoemsQuery) => {
+    const handleFilterChange = async (selectedOptions: IGetWordsQuery) => {
         setGetPoemQuery({ ...getPoemQuery, ...selectedOptions })
         await getList(0, { ...getPoemQuery, ...selectedOptions })
     }
 
-    const getList = useCallback(async (pageNumber: number = 0, selectedOptions?: IGetPoemsQuery) => {
+    const getList = useCallback(async (pageNumber: number = 0, selectedOptions?: IGetWordsQuery) => {
         try {
             setIsLoading(true)
-            const data = await _poemService.getPoems({ limit, pageNumber }, selectedOptions)
-
-            const tags = (await _poemService.getTags({
-                poemIds: data.items.map((item) => (item as IPoemListItem).id)
-            })) as IPoemTag[]
-
-            data.items.forEach(
-                (item) =>
-                    ((item as IPoemListItem).tags = tags
-                        .filter((tag) => tag.poem_id === (item as IPoemListItem).id)
-                        .map((tag) => tag.name))
-            )
+            const data = await _wordService.getWords({ limit, pageNumber }, selectedOptions)
 
             setTotal(data.total)
             setList(data.items)
@@ -51,13 +44,17 @@ export default function Words(): JSX.Element {
 
     useEffect(() => {
         getList()
-    }, [getList])
+    }, [])
 
     return (
         <>
-            <PoemFilters handleFilterChange={handleFilterChange} />
+            {/* <PoemFilters handleFilterChange={handleFilterChange} />
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
                 {isLoading ? <Loading /> : <PoemsList list={list} />}
+            </PaginateTemplate> */}
+            <WordFilters handleFilterChange={handleFilterChange} />
+            <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
+                {isLoading ? <Loading /> : <WordsList list={list} />}
             </PaginateTemplate>
             )
         </>

@@ -1,17 +1,22 @@
 import React from 'react'
 
 import TableList from '../../components/organisms/TableList'
-import { IPoemListItem } from '../../interfaces/poem'
-import PoemsRow from './WordsRow'
+// import { IPoemListItem } from '../../interfaces/poem'
+import { IWordTableRowProps, IWord, IWordTableListProps} from '../../interfaces/word'
 
-export default function WordsList(props: { list: IPoemListItem[] }): JSX.Element {
-    const tableHeaders = ['Title', 'Author', 'Topics', 'Related Media']
+// import PoemsRow from './WordsRow'
+import WordsRow from './WordsRow'
+// export default function WordsList(props: { list: IPoemListItem[] }): JSX.Element {
+    export default function WordsList(props: IWordTableListProps): JSX.Element {
+
+    const tableHeaders = ['Word', 'Definition', 'Occurence', 'Usage (number of poems)']
 
     return (
-        <TableList context="PoemsTableList" headers={tableHeaders}>
-            {props.list?.map((item, index) => {
-                return <PoemsRow key={`PoemsTableListRow${index}`} item={item} />
-            })}
-        </TableList>
+
+        <TableList context="WordsTableList" headers={tableHeaders}>
+        {props.list?.map((item, index) => {
+            return <WordsRow key={`WordsTableListRow${index}`} item={item} />
+        })}
+    </TableList>
     )
 }
