@@ -1,21 +1,21 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faAngleDoubleLeft,
-  faAngleDoubleRight,
-  faBook,
-  faFilm,
-  faHome,
-  faMapMarkerAlt,
-  faMicrophone,
-  faPen,
-  faTimes,
-  faVolumeUp
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+    faAngleDoubleLeft,
+    faAngleDoubleRight,
+    faBook,
+    faFilm,
+    faHome,
+    faMapMarkerAlt,
+    faMicrophone,
+    faPen,
+    faTimes,
+    faVolumeUp
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React from 'react'
 
-import { IconTypeEnum } from '../../enums/iconType';
-import { IIconProps } from '../../interfaces/atoms';
+import { IconTypeEnum } from '../../enums/iconType'
+import { IIconProps } from '../../interfaces/atoms'
 
 library.add(
     faBook,
@@ -35,9 +35,9 @@ function Icon(props: IIconProps): JSX.Element {
 
     switch (iconType) {
         case IconTypeEnum.Audio:
-            return <FontAwesomeIcon {...faProps} icon={faFilm} />
-        case IconTypeEnum.Video:
             return <FontAwesomeIcon {...faProps} icon={faVolumeUp} />
+        case IconTypeEnum.Video:
+            return <FontAwesomeIcon {...faProps} icon={faFilm} />
         case IconTypeEnum.Book:
             return <FontAwesomeIcon {...faProps} icon={faBook} />
         case IconTypeEnum.Home:

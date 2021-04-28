@@ -70,8 +70,9 @@ router.get("/:word", function (req, res) {
 router.get("/:word/sounds", function (req, res) {
   var id = req.params.word;
   var query = `
-      SELECT ym.ytid, mc.display_name
-      FROM ytid_mid ym 
+      SELECT ys.ytid, ys.start_seconds, mc.display_name
+      FROM youtube_sound ys
+      JOIN ytid_mid ym ON ys.ytid = ym.ytid
       JOIN media_class mc on ym.m_id = mc.m_id 
       JOIN media_class_wordnet mcw ON mcw.m_id = ym.m_id
       WHERE word_id = ${id}
@@ -88,11 +89,12 @@ router.get("/:word/sounds", function (req, res) {
 router.get("/:word/images", function (req, res) {
   var id = req.params.word;
   var query = `
-      SELECT w.lemma, iis.image_url, w.definition
+      SELECT DISTINCT gil.original_url, w.lemma, gil.title, gil.author
       FROM wordsXsensesXsynsets w 
-      JOIN images_synsets iis ON w.synsetid = iis.synsetid
+      JOIN google_images_synsets gis ON gis.synsetid = w.synsetid
+      JOIN google_mid_imageid_lean gmil ON gmil.m_id = gis.m_id
+      JOIN google_images_lean gil ON gil.image_id = gmil.image_id
       WHERE w.wordid = ${id}
-      LIMIT 5
     `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);

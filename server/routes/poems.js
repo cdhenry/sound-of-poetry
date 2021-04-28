@@ -78,8 +78,12 @@ router.get("/", function (req, res) {
       orderByClause = "ORDER BY po.name";
       break;
     case orderByMostSounds:
+      joinClause += " JOIN poem_media_count pmc ON pmc.poem_id = p.id";
+      orderByClause = "ORDER BY pmc.sound_count DESC";
       break;
     case orderByMostImages:
+      joinClause += " JOIN poem_media_count pmc ON pmc.poem_id = p.id";
+      orderByClause = "ORDER BY pmc.image_count DESC";
       break;
   }
 
@@ -90,7 +94,6 @@ router.get("/", function (req, res) {
       JOIN poet po ON pp.poet_id = po.id
       ${joinClause}
       ${whereClause}
-      ${orderByClause}
     `;
 
   connection.query(queryTotal, function (err, rows) {
@@ -161,10 +164,9 @@ router.get("/regions", function (req, res) {
       GROUP BY 1;`;
 
   connection.query(query, function (err, rows) {
-    if (err){
+    if (err) {
       console.log(err);
-    }
-    else {
+    } else {
       res.json(rows);
     }
   });
@@ -273,6 +275,25 @@ router.get("/:poem/media", function (req, res) {
       WHERE pw.poem_id = ${id};
     `;
   connection.query(query, function (err, rows) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/:poem/stats", function (req, res) {
+  var id = req.params.poem;
+  var query = `
+      SELECT w.wordid, w.lemma, pw.use_count, SUM(st.pos_score) - SUM(st.neg_score) as sentiment 
+      FROM poem_wordnet pw 
+      JOIN wordsXsensesXsynsets w on w.wordid = pw.word_id
+      JOIN sentiment st on st.synsetid = w.synsetid
+      WHERE pw.poem_id = ${id}
+      GROUP BY w.lemma
+      ORDER BY use_count DESC
+    `;
+  connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
