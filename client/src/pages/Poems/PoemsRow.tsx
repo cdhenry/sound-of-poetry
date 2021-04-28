@@ -1,16 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
 
 import Button from '../../components/atoms/Button'
-import Card from '../../components/atoms/Card'
 import Icon from '../../components/atoms/Icon'
 import TableListItem from '../../components/atoms/TableListItem'
 import TableListRow from '../../components/molecules/TableListRow'
-import { CardTypeEnum } from '../../enums/cardType'
 import { IconTypeEnum } from '../../enums/iconType'
-import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
 import { IPoemTableRowProps } from '../../interfaces/poem'
-import ModalTemplate from '../../templates/Modal'
 
 export default function PoemsRow(props: IPoemTableRowProps): JSX.Element {
     const { item, handleAudio } = props
@@ -22,12 +18,12 @@ export default function PoemsRow(props: IPoemTableRowProps): JSX.Element {
 
     return (
         <TableListRow>
-            <TableListItem className="cursor-pointer">
-                <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>{item.title}</Link>
+            <TableListItem className="cursor-pointer w-1/4">
+                <Link to={`${url}/${item.id}`}>{item.title}</Link>
             </TableListItem>
-            <TableListItem>{item.poet_name}</TableListItem>
+            <TableListItem className="w-1/6">{item.poet_name}</TableListItem>
             <TableListItem>{item.tags?.join(', ')}</TableListItem>
-            <TableListItem>
+            <TableListItem className="w-1/12">
                 <div className="flex space-x-2">
                     {item.audio_url && (
                         <Button onClick={onClick}>

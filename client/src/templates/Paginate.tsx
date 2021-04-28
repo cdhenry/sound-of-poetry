@@ -11,7 +11,7 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
     }
 
     return (
-        <section className="flex items-center flex-col p-2 ">
+        <section className="flex items-center flex-col p-2 w-full">
             <div className="flex-none flex justify-between mb-2 w-11/12">
                 {total > 0 && <div>Total: {total}</div>}
                 <ReactPaginate
@@ -28,7 +28,7 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
                     activeClassName={'underline'}
                 />
             </div>
-            <div className="flex-grow w-11/12">{children}</div>
+            <div className="flex-grow flex w-11/12">{children}</div>
         </section>
     )
 }

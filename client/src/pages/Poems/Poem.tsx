@@ -39,6 +39,7 @@ export default function Poem(): JSX.Element {
             const wordNetData = await _poemService.getPoemWordNet(parseInt(id))
             const poemLines = poemData.poem_string.split(/\n/)
             const content = [] as React.ReactNode[]
+
             poemLines.forEach((line, i) => {
                 const words = line.split(' ')
 
@@ -57,12 +58,12 @@ export default function Poem(): JSX.Element {
                         // const wordStats = await _wordService.getWordStats({ id, isWordNet: true })
 
                         setWordDict([
-                            <div className="flex items-center justify-center mb-4">
+                            <div key={'PoemWordTitle'} className="flex items-center justify-center mb-4">
                                 <strong>{wordNetWord?.lemma}</strong>
                             </div>,
                             <ul>
                                 {wordDictList.map((item, idx) => (
-                                    <li>+ {item.definition}</li>
+                                    <li key={`PoemWordDefinition${idx}`}>+ {item.definition}</li>
                                 ))}
                             </ul>
                         ])
@@ -131,7 +132,7 @@ export default function Poem(): JSX.Element {
         } finally {
             setIsLoading(false)
         }
-    }, [_poemService, id])
+    }, [_poemService, _wordService, id])
 
     useEffect(() => {
         getPoem()
