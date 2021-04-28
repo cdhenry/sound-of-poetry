@@ -129,7 +129,6 @@ router.get("/", function (req, res) {
 
 router.get("/regions", function (req, res) {
   var joinClause = "";
-  var whereClause = "";
   var words;
   var tags;
 
@@ -160,7 +159,6 @@ router.get("/regions", function (req, res) {
       JOIN isfrom i ON pt.id = i.poet_id 
       JOIN region r ON i.region_id = r.id 
       ${joinClause} 
-      ${whereClause} 
       GROUP BY 1;`;
 
   connection.query(query, function (err, rows) {
