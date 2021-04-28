@@ -7,7 +7,6 @@ import Loading from '../Loading';
 import PoetFilters from './Filters';
 import PoetsList from './PoetsList';
 
-//import { IGetPoemsQuery, IPoemListItem } from '../../interfaces/poem' //, IPoemTag
 export default function Poets(): JSX.Element {
     const _poetService: PoetService = poetService
     const [isLoading, setIsLoading] = useState(true)
@@ -29,17 +28,6 @@ export default function Poets(): JSX.Element {
         try {
             setIsLoading(true)
             const data = await _poetService.getPoets({ limit, pageNumber }, selectedOptions)
-
-            // const tags = (await _poetService.getTags({
-            //     poemIds: data.items.map((item) => (item as IPoetListItem).id)
-            // })) as IPoemTag[]
-
-            // data.items.forEach(
-            //     (item) =>
-            //         ((item as IPoetListItem).tags = tags
-            //             .filter((tag) => tag.poem_id === (item as IPoetListItem).id)
-            //             .map((tag) => tag.name))
-            // )
 
             setTotal(data.total)
             setList(data.items)
@@ -65,4 +53,3 @@ export default function Poets(): JSX.Element {
     )
 }
 
-//<PoemFilters handleFilterChange={handleFilterChange} />

@@ -31,14 +31,8 @@ export default function Poet(): JSX.Element {
             poetLines.forEach((line: any) => {                
                 const words = line.split(' ')
 
-                var counter = 0;
                 words.forEach((word: string, index: number) => {
-                    content.push(<span className={'whitespace-pre'}>{word} </span>)
-                    counter++  
-                    if (counter === 12){
-                        content.push(<span className={'whitespace-pre hover:text-shadow-lg hover:text-rose-500'}>{"\n"} </span>)
-                        counter = 0;
-                    }
+                    content.push(<span className={'whitespace-pre break-all'}>{word} </span>)
                 })
                 content.push(<br />)
             })
