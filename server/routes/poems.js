@@ -134,21 +134,21 @@ router.get("/regions", function (req, res) {
   if (req.query.tags) tags = req.query.tags;
 
   if (tags) {
-    joinClause += `JOIN poem_tag pg on pm.id = pg.poem_id `;
-    if (whereClause.includes('WHERE')) {
-      whereClause += `AND pg.tag_id IN (${tags}) `
-    } else {
-      whereClause += `WHERE pg.tag_id IN (${tags}) `
-    }
+    joinClause += `JOIN (SELECT pg.poem_id
+                    FROM poem_tag pg
+                    WHERE pg.tag_id IN (${tags})
+                    GROUP BY pg.poem_id
+                    HAVING COUNT(DISTINCT pg.tag_id) = ${tags.length}) x
+                    ON x.poem_id = pm.id `;
   }
 
   if (words) {
-    joinClause += `JOIN poem_wordnet pw on pm.id = pw.poem_id `;
-    if (whereClause.includes('WHERE')) {
-      whereClause += `AND pw.word_id IN (${words}) `
-    } else {
-      whereClause += `WHERE pw.word_id IN (${words}) `
-    }
+    joinClause += `JOIN (SELECT pw.poem_id
+                    FROM poem_wordnet pw
+                    WHERE pw.word_id IN (${words})
+                    GROUP BY pw.poem_id
+                    HAVING COUNT(DISTINCT pw.word_id) = ${words.length}) y
+                    on y.poem_id = pm.id `;
   }
 
   let query = `SELECT r.name AS region, COUNT(DISTINCT pm.id) AS result 
