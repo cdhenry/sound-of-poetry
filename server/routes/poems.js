@@ -136,18 +136,18 @@ router.get("/regions", function (req, res) {
   if (tags) {
     joinClause += `JOIN poem_tag pg on pm.id = pg.poem_id `;
     if (whereClause.includes('WHERE')) {
-      whereClause += `AND pg.tag_id IN (${tags})`
+      whereClause += `AND pg.tag_id IN (${tags}) `
     } else {
-      whereClause += `WHERE pg.tag_id IN (${tags})`
+      whereClause += `WHERE pg.tag_id IN (${tags}) `
     }
   }
 
   if (words) {
     joinClause += `JOIN poem_wordnet pw on pm.id = pw.poem_id `;
     if (whereClause.includes('WHERE')) {
-      whereClause += `AND pw.word_id IN (${words})`
+      whereClause += `AND pw.word_id IN (${words}) `
     } else {
-      whereClause += `WHERE pw.word_id IN (${words})`
+      whereClause += `WHERE pw.word_id IN (${words}) `
     }
   }
 
