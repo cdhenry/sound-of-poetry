@@ -31,11 +31,6 @@ export interface IGetPoetNames {
 export interface IGetPoetsQuery {
     id?: number
     poets?: number[]
-    //tags?: number[]
-    //words?: number[]
-    //hasAudio?: boolean
-    //hasVideo?: boolean
-    //orderBy?: PoemOrderByEnum
 }
 
 export interface IGetNamesParams {

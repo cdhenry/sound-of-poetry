@@ -5,9 +5,7 @@ import { randomInteger } from '../../common/utils/randomInteger'
 import Card from '../../components/atoms/Card'
 import Header from '../../components/atoms/Header'
 import { CardTypeEnum } from '../../enums/cardType'
-import { HandwritingFontEnum } from '../../enums/fonts'
 import { HeaderTypeEnum } from '../../enums/headerType'
-import { RoutesEnum } from '../../enums/routes'
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
 import { IPoet } from '../../interfaces/poet'
 import { IParams } from '../../interfaces/shared'
@@ -23,15 +21,11 @@ export default function Poet(): JSX.Element {
     const [poet, setPoet] = useState({} as IPoet)
     const [poetContent, setPoetContent] = useState([] as React.ReactNode[])
 
-    //const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
-    //const handwritingEnumKey = handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never
-
     const getPoem = useCallback(async () => {
         try {
             setIsLoading(true)
 
             const poetData = await _poetService.getPoet(parseInt(id))
-            //const wordNetData = await _poetService.getPoemWordNet(parseInt(id))
             const poetLines = poetData.bio.trim().split(/\n/)
             const content = [] as React.ReactNode[]
             poetLines.forEach((line: any) => {                
@@ -69,7 +63,6 @@ export default function Poet(): JSX.Element {
             height={TailwindHeightEnum.Screen90}
             width={TailwindWidthEnum.OneHalf}
             cardType={CardTypeEnum.Paper}
-            //handwritingEnumKey={handwritingEnumKey}
             header={
                 <Header headerType={HeaderTypeEnum.HeaderWeb}>
                     {poet.name}

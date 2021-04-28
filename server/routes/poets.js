@@ -12,12 +12,14 @@ router.get("/", function (req, res) {
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
   var whereClause = "";
+  var joinClause = "";
   var poets;
 
   if (req.query.poets) poets = req.query.poets;
+  if (req.query.title) title = req.query.title;
 
   if (poets) {
-    whereClause += `WHERE id IN (${poets})`;
+    whereClause += `WHERE p.id IN (${poets})`;
   }
 
   var queryTotal = `
@@ -38,14 +40,16 @@ router.get("/", function (req, res) {
     var query = limit
       ? `
       SELECT *
-      FROM poet
+      FROM poet p
+      ${joinClause}
       ${whereClause}
       LIMIT ${limit}
       OFFSET ${offset};
     `
       : `
       SELECT *
-      FROM poet;
+      FROM poet p;
+      ${joinClause}
       ${whereClause}
     `;
 
