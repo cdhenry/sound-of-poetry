@@ -1,14 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { IGetPoemsQuery, IPoemListItem, IPoemTag } from '../../interfaces/poem'
 import { IGetWordsQuery, IWord } from '../../interfaces/word'
-import { PoemService, poemService } from '../../services/poem'
 import { wordService, WordService } from '../../services/word'
 import PaginateTemplate from '../../templates/Paginate'
 import Loading from '../Loading'
 import WordFilters from './Filters'
-import PoemFilters from './Filters'
-import PoemsList from './WordsList'
 import WordsList from './WordsList'
 
 export default function Words(): JSX.Element {
@@ -28,19 +24,22 @@ export default function Words(): JSX.Element {
         await getList(0, { ...getPoemQuery, ...selectedOptions })
     }
 
-    const getList = useCallback(async (pageNumber: number = 0, selectedOptions?: IGetWordsQuery) => {
-        try {
-            setIsLoading(true)
-            const data = await _wordService.getWords({ limit, pageNumber }, selectedOptions)
+    const getList = useCallback(
+        async (pageNumber: number = 0, selectedOptions?: IGetWordsQuery) => {
+            try {
+                setIsLoading(true)
+                const data = await _wordService.getWords({ limit, pageNumber }, selectedOptions)
 
-            setTotal(data.total)
-            setList(data.items)
-        } catch (e) {
-            console.log(e)
-        } finally {
-            setIsLoading(false)
-        }
-    }, [])
+                setTotal(data.total)
+                setList(data.items)
+            } catch (e) {
+                console.log(e)
+            } finally {
+                setIsLoading(false)
+            }
+        },
+        [_wordService]
+    )
 
     useEffect(() => {
         getList()
@@ -48,10 +47,6 @@ export default function Words(): JSX.Element {
 
     return (
         <>
-            {/* <PoemFilters handleFilterChange={handleFilterChange} />
-            <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
-                {isLoading ? <Loading /> : <PoemsList list={list} />}
-            </PaginateTemplate> */}
             <WordFilters handleFilterChange={handleFilterChange} />
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
                 {isLoading ? <Loading /> : <WordsList list={list} />}
