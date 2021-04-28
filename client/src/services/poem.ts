@@ -4,6 +4,7 @@ import {
     IGetTitlesParams,
     IPoem,
     IPoemListItem,
+    IPoemStat,
     IPoemTag,
     IPoemWord
 } from '../interfaces/poem'
@@ -42,6 +43,11 @@ export class PoemService {
     public async getPoemNonWordNet(id: number) {
         const response = await API.get(`${this._baseUrl}${id}/words/nonwordnet`)
         return response.data as IPoemWord[]
+    }
+
+    public async getPoemStats(id: number) {
+        const response = await API.get(`${this._baseUrl}${id}/stats`)
+        return response.data as IPoemStat[]
     }
 }
 

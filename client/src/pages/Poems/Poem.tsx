@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import { randomInteger } from '../../common/utils/randomInteger'
+import Button from '../../components/atoms/Button'
 import Card from '../../components/atoms/Card'
 import Header from '../../components/atoms/Header'
 import { CardTypeEnum } from '../../enums/cardType'
 import { HandwritingFontEnum } from '../../enums/fonts'
 import { HeaderTypeEnum } from '../../enums/headerType'
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { IPoem } from '../../interfaces/poem'
+import { IPoem, IPoemStat } from '../../interfaces/poem'
 import { IParams } from '../../interfaces/shared'
 import { PoemService, poemService } from '../../services/poem'
 import { WordService, wordService } from '../../services/word'
@@ -25,21 +26,84 @@ export default function Poem(): JSX.Element {
     const [isLoading, setIsLoading] = useState(true)
     const [isWordInfoLoading, setIsWordInfoLoading] = useState(false)
     const [poem, setPoem] = useState({} as IPoem)
+    const [poemStats, setPoemStats] = useState([] as IPoemStat[])
     const [wordSounds, setWordSounds] = useState([] as React.ReactNode[])
     const [wordImages, setWordImages] = useState([] as React.ReactNode[])
     const [wordSynonyms, setWordSynonyms] = useState([] as React.ReactNode[])
     const [wordDict, setWordDict] = useState([] as React.ReactNode[])
     const [poemContent, setPoemContent] = useState([] as React.ReactNode[])
 
+    const getWordInfo = useCallback(
+        async (id: number, lemma: string, index: number) => {
+            try {
+                setIsWordInfoLoading(true)
+                const wordSoundList = await _wordService.getWordSounds(id)
+                const wordImageList = await _wordService.getWordImages(id)
+                const wordSynonymList = await _wordService.getWordSynonyms(id)
+                const wordDictList = await _wordService.getWordDict(id)
+                // const wordStats = await _wordService.getWordStats({ id, isWordNet: true })
+
+                setWordDict([
+                    <div key={'PoemWordTitle'} className="flex items-center justify-center mb-4">
+                        <strong>{lemma}</strong>
+                    </div>,
+                    <ul>
+                        {wordDictList.map((item, idx) => (
+                            <li key={`PoemWordDefinition${idx}`}>+ {item.definition}</li>
+                        ))}
+                    </ul>
+                ])
+
+                setWordSynonyms(wordSynonymList.map((item, idx) => <span>{item.lemma} | </span>))
+
+                setWordSounds(
+                    wordSoundList.map((wordSound, idx) => (
+                        <iframe
+                            key={`PoemWordSound${index}${idx}`}
+                            title={wordSound.ytid}
+                            src={`https://www.youtube.com/embed/${wordSound.ytid}?start=${wordSound.start_seconds}`}
+                        ></iframe>
+                    ))
+                )
+
+                setWordImages(
+                    wordImageList.map((wordImage, idx) => (
+                        <img
+                            key={`PoemWordImage${index}${idx}`}
+                            alt={`${wordImage.title} by ${wordImage.author}`}
+                            onError={(e) => {
+                                var target = e.target as HTMLImageElement
+                                target.onerror = null
+                                target.style.display = 'none'
+                            }}
+                            src={wordImage.original_url}
+                        ></img>
+                    ))
+                )
+
+                // const wordStats = _wordService.getWordStats({
+                //     id,
+                //     isWordNet: true
+                // })
+            } catch (e) {
+            } finally {
+                setIsWordInfoLoading(false)
+            }
+        },
+        [_wordService]
+    )
+
     const getPoem = useCallback(async () => {
         try {
             setIsLoading(true)
 
             const poemData = await _poemService.getPoem(parseInt(id))
+            const poemStatsData = await _poemService.getPoemStats(parseInt(id))
             const wordNetData = await _poemService.getPoemWordNet(parseInt(id))
             const poemLines = poemData.poem_string.split(/\n/)
             const content = [] as React.ReactNode[]
-
+            console.log(poemStatsData)
+            setPoemStats(poemStatsData)
             poemLines.forEach((line, i) => {
                 const words = line.split(' ')
 
@@ -49,57 +113,7 @@ export default function Poem(): JSX.Element {
                     const wordNetWord = wordNetData.find((item: any) => item.lemma === cleanedWord)
 
                     const handleWordNet = async () => {
-                        const id = wordNetWord?.word_id as number
-                        setIsWordInfoLoading(true)
-                        const wordSoundList = await _wordService.getWordSounds(id)
-                        const wordImageList = await _wordService.getWordImages(id)
-                        const wordSynonymList = await _wordService.getWordSynonyms(id)
-                        const wordDictList = await _wordService.getWordDict(id)
-                        // const wordStats = await _wordService.getWordStats({ id, isWordNet: true })
-
-                        setWordDict([
-                            <div key={'PoemWordTitle'} className="flex items-center justify-center mb-4">
-                                <strong>{wordNetWord?.lemma}</strong>
-                            </div>,
-                            <ul>
-                                {wordDictList.map((item, idx) => (
-                                    <li key={`PoemWordDefinition${idx}`}>+ {item.definition}</li>
-                                ))}
-                            </ul>
-                        ])
-
-                        setWordSynonyms(wordSynonymList.map((item, idx) => <span>{item.lemma} | </span>))
-
-                        setWordSounds(
-                            wordSoundList.map((wordSound, idx) => (
-                                <iframe
-                                    key={`PoemWordSound${i}${idx}`}
-                                    title={wordSound.ytid}
-                                    src={`https://www.youtube.com/embed/${wordSound.ytid}?start=${wordSound.start_seconds}`}
-                                ></iframe>
-                            ))
-                        )
-
-                        setWordImages(
-                            wordImageList.map((wordImage, idx) => (
-                                <img
-                                    key={`PoemWordImage${i}${idx}`}
-                                    alt={`${wordImage.title} by ${wordImage.author}`}
-                                    onError={(e) => {
-                                        var target = e.target as HTMLImageElement
-                                        target.onerror = null
-                                        target.style.display = 'none'
-                                    }}
-                                    src={wordImage.original_url}
-                                ></img>
-                            ))
-                        )
-
-                        // const wordStats = _wordService.getWordStats({
-                        //     id,
-                        //     isWordNet: true
-                        // })
-                        setIsWordInfoLoading(false)
+                        await getWordInfo(wordNetWord?.word_id as number, wordNetWord?.lemma as string, i)
                     }
 
                     content.push(
@@ -122,7 +136,7 @@ export default function Poem(): JSX.Element {
                     )
                 })
 
-                content.push(<br />)
+                content.push(<br key={`PoemLineBreak${i}`} />)
             })
 
             setPoem(poemData)
@@ -132,7 +146,7 @@ export default function Poem(): JSX.Element {
         } finally {
             setIsLoading(false)
         }
-    }, [_poemService, _wordService, id])
+    }, [_poemService, getWordInfo, id])
 
     useEffect(() => {
         getPoem()
@@ -162,16 +176,42 @@ export default function Poem(): JSX.Element {
                 width={TailwindWidthEnum.Auto}
                 cardType={CardTypeEnum.SeeThrough}
             >
-                {!wordDict.length && (
-                    <div className="flex items-center justify-center">
-                        Click a word to see information about the word
-                    </div>
-                )}
                 {isWordInfoLoading ? (
                     <div className="flex items-center justify-center">Loading...</div>
+                ) : !wordDict.length ? (
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                        <div>(Click a word to see information about the word)</div>
+                        <div>
+                            Overall Sentiment:
+                            <span className="ml-3">
+                                {!!poemStats.length &&
+                                    poemStats
+                                        .map((stat) => stat.sentiment * stat.use_count)
+                                        .reduce((previous, current) => previous + current)}
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="place-self-start">Word</div>
+                            <div className="place-self-end">Use Count</div>
+                            {poemStats.map((stat, index) => (
+                                <>
+                                    <div className="place-self-start">
+                                        <button
+                                            className={'whitespace-pre hover:text-shadow-lg hover:text-amber-700'}
+                                            onClick={() => getWordInfo(stat.wordid, stat.lemma, index)}
+                                        >
+                                            {stat.lemma}
+                                        </button>
+                                    </div>
+                                    <div className="place-self-end">{stat.use_count}</div>
+                                </>
+                            ))}
+                        </div>
+                    </div>
                 ) : (
                     <div className="grid grid-flow-row auto-rows-min gap-4">
-                        {!!wordDict.length && <div>{wordDict}</div>}
+                        <div>{wordDict}</div>
                         {!!wordSynonyms.length && (
                             <div>
                                 <strong>Word Associations</strong>
@@ -180,11 +220,15 @@ export default function Poem(): JSX.Element {
                         {!!wordSynonyms.length && <div>| {wordSynonyms}</div>}
                         {(!!wordSounds.length || !!wordImages.length) && (
                             <div>
-                                <strong>Sensual Associations</strong>
+                                <strong>Media</strong>
                             </div>
                         )}
                         <div className="grid grid-cols-2 gap-2">{wordSounds}</div>
                         <div className="grid grid-cols-2 gap-2">{wordImages}</div>
+
+                        <div className="flex justify-center">
+                            <Button onClick={() => setWordDict([])}>Back</Button>
+                        </div>
                     </div>
                 )}
             </Card>

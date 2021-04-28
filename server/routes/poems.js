@@ -238,4 +238,23 @@ router.get("/:poem/media", function (req, res) {
   });
 });
 
+router.get("/:poem/stats", function (req, res) {
+  var id = req.params.poem;
+  var query = `
+      SELECT w.wordid, w.lemma, pw.use_count, SUM(st.pos_score) - SUM(st.neg_score) as sentiment 
+      FROM poem_wordnet pw 
+      JOIN wordsXsensesXsynsets w on w.wordid = pw.word_id
+      JOIN sentiment st on st.synsetid = w.synsetid
+      WHERE pw.poem_id = ${id}
+      GROUP BY w.lemma
+      ORDER BY use_count DESC
+    `;
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
 module.exports = router;

@@ -57,3 +57,10 @@ export interface IPoemTableRowProps {
     item: IPoemListItem
     handleAudio: (item: string) => void
 }
+
+export interface IPoemStat {
+    wordid: number
+    lemma: string
+    use_count: number
+    sentiment: number
+}
