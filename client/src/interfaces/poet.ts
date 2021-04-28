@@ -8,6 +8,12 @@ export interface IPoet {
     url: string
 }
 
+export interface IPoetTag {
+    id: number
+    poem_id: number
+    name: string
+}
+
 export interface IPoetListItem {
     id: number
     name: string
@@ -24,14 +30,22 @@ export interface IGetPoetNames {
 
 export interface IGetPoetsQuery {
     id?: number
-    //poets?: number[]
-    //tags?: number[]
+    poets?: number[]
+    tags?: number[]
     //words?: number[]
     //hasAudio?: boolean
     //hasVideo?: boolean
     //orderBy?: PoemOrderByEnum
 }
 
+export interface IGetNamesParams {
+    name: string
+}
+
 export interface IPoetTableRowProps {
     item: IPoet
+}
+
+export interface IPoetFiltersProps {
+    handleFilterChange: (selectedOptions: IGetPoetsQuery) => void
 }

@@ -23,8 +23,8 @@ export default function Poet(): JSX.Element {
     const [poet, setPoet] = useState({} as IPoet)
     const [poetContent, setPoetContent] = useState([] as React.ReactNode[])
 
-    const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
-    const handwritingEnumKey = handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never
+    //const handwritingEnumKeys = Object.keys(HandwritingFontEnum)
+    //const handwritingEnumKey = handwritingEnumKeys[randomInteger(0, handwritingEnumKeys.length - 1)] as never
 
     const getPoem = useCallback(async () => {
         try {
@@ -41,7 +41,7 @@ export default function Poet(): JSX.Element {
                 words.forEach((word: string, index: number) => {
                     content.push(<span className={'whitespace-pre'}>{word} </span>)
                     counter++  
-                    if (counter === 9){
+                    if (counter === 12){
                         content.push(<span className={'whitespace-pre hover:text-shadow-lg hover:text-rose-500'}>{"\n"} </span>)
                         counter = 0;
                     }
@@ -69,7 +69,7 @@ export default function Poet(): JSX.Element {
             height={TailwindHeightEnum.Screen90}
             width={TailwindWidthEnum.OneHalf}
             cardType={CardTypeEnum.Paper}
-            handwritingEnumKey={handwritingEnumKey}
+            //handwritingEnumKey={handwritingEnumKey}
             header={
                 <Header headerType={HeaderTypeEnum.HeaderWeb}>
                     {poet.name}

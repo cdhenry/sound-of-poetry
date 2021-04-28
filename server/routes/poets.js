@@ -42,6 +42,36 @@ router.get("/", function (req, res) {
   });
 });
 
+router.get("/tags", function (req, res) {
+  var poemIds;
+
+  if (req.query.poemIds) poemIds = req.query.poemIds;
+
+  var selectClause = "SELECT t.id as value, t.name as label";
+  var joinClause = "";
+  var whereClause = "";
+
+  if (poemIds) {
+    selectClause = "SELECT t.id, t.name, pt.poem_id";
+    joinClause += "JOIN poem_tag pt ON t.id = pt.tag_id";
+    whereClause += `WHERE pt.poem_id IN (${poemIds})`;
+  }
+
+  var query = `
+      ${selectClause}
+      FROM tag t
+      ${joinClause}
+      ${whereClause}
+    `;
+
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
 router.get("/regions", function (req, res) {
   var query = `
     SELECT r.name AS region, count(p.id) AS count_poet

@@ -1,28 +1,28 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { IGetPoetsQuery, IPoetListItem } from '../../interfaces/poet' //, IPoemTag 
-import { IGetPoemsQuery, IPoemListItem } from '../../interfaces/poem' //, IPoemTag 
+//import { IGetPoemsQuery, IPoemListItem } from '../../interfaces/poem' //, IPoemTag 
 import { PoetService, poetService } from '../../services/poet'
 import PaginateTemplate from '../../templates/Paginate'
 import Loading from '../Loading'
-import PoemFilters from './Filters'
-import PoemsList from './PoetsList'
+import PoetFilters from './Filters'
+import PoetsList from './PoetsList'
 
 export default function Poets(): JSX.Element {
     const _poetService: PoetService = poetService
     const [isLoading, setIsLoading] = useState(true)
     const [list, setList] = useState([] as IPoetListItem[])
     const [total, setTotal] = useState(0)
-    const [getPoemQuery, setGetPoemQuery] = useState({} as IGetPoetsQuery)
+    const [getPoetQuery, setGetPoetQuery] = useState({} as IGetPoetsQuery)
     const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
         await getList(pageNumber)
     }
 
-    const handleFilterChange = async (selectedOptions: IGetPoemsQuery) => {
-        setGetPoemQuery({ ...getPoemQuery, ...selectedOptions })
-        await getList(0, { ...getPoemQuery, ...selectedOptions })
+    const handleFilterChange = async (selectedOptions: IGetPoetsQuery) => {
+        setGetPoetQuery({ ...getPoetQuery, ...selectedOptions })
+        await getList(0, { ...getPoetQuery, ...selectedOptions })
     }
 
     const getList = useCallback(async (pageNumber: number = 0, selectedOptions?: IGetPoetsQuery) => {
@@ -56,9 +56,9 @@ export default function Poets(): JSX.Element {
 
     return (
         <>
-            <PoemFilters handleFilterChange={handleFilterChange} />
+            <PoetFilters handleFilterChange={handleFilterChange} />
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
-                {isLoading ? <Loading /> : <PoemsList list={list} />}
+                {isLoading ? <Loading /> : <PoetsList list={list} />}
             </PaginateTemplate>
             )
         </>
