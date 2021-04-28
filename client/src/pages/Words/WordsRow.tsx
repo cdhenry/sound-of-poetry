@@ -12,7 +12,8 @@ export default function WordsRow(props: IWordTableRowProps): JSX.Element {
     return (
         <TableListRow>
             <TableListItem className="cursor-pointer">
-                <Link to={{ pathname: `${url}/${item.id}` }}>{item.lemma}</Link>
+                {/* <Link to={{ pathname: `${url}/${item.id}` }}>{item.lemma}</Link> */}
+                {item.lemma}
             </TableListItem>
             <TableListItem>{item.definition}</TableListItem>
             <TableListItem>{item.occurrence}</TableListItem>
