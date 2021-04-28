@@ -51,7 +51,7 @@ router.get("/", function (req, res) {
       INNER JOIN words w ON w.wordid=pw.word_id
       INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid
       GROUP BY w.wordid
-      ${orderByClause}
+--       ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset};
     `;
