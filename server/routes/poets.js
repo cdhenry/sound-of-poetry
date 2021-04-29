@@ -7,8 +7,7 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(id) AS total FROM poet";
-  var limit = req.query.limit || null;
+  var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
   var whereClause = "";
@@ -25,6 +24,7 @@ router.get("/", function (req, res) {
   var queryTotal = `
       SELECT COUNT(p.id) as total
       FROM poet p
+      ${joinClause}
       ${whereClause}
     `;
 
@@ -37,20 +37,16 @@ router.get("/", function (req, res) {
       totalCount = rows[0].total;
     }
 
-    var query = limit
-      ? `
-      SELECT *
+    var query = `
+      SELECT p.id, p.name, p.yob, p.yod, r.name as region, s.name as school
       FROM poet p
-      ${joinClause}
+      LEFT JOIN isfrom pf ON pf.poet_id = p.id 
+      JOIN region r ON pf.region_id = r.id
+      LEFT JOIN inschool ps ON ps.poet_id = p.id 
+      JOIN school s ON ps.school_id = s.id
       ${whereClause}
       LIMIT ${limit}
-      OFFSET ${offset};
-    `
-      : `
-      SELECT *
-      FROM poet p;
-      ${joinClause}
-      ${whereClause}
+      OFFSET ${offset}
     `;
 
     connection.query(query, function (err, rest) {

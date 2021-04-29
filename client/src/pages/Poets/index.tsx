@@ -47,7 +47,13 @@ export default function Poets(): JSX.Element {
         <>
             <PoetFilters handleFilterChange={handleFilterChange} />
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
-                {isLoading ? <Loading /> : <PoetsList list={list} />}
+                {isLoading ? (
+                    <Loading />
+                ) : !list.length ? (
+                    <div className="flex justify-center">No poets exist for this filter set</div>
+                ) : (
+                    <PoetsList list={list} />
+                )}
             </PaginateTemplate>
         </>
     )

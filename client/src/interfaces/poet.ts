@@ -19,9 +19,8 @@ export interface IPoetListItem {
     name: string
     yob: number
     yod: number
-    img_url: string
-    bio: string
-    url: string
+    region: string
+    school: string
 }
 
 export interface IGetPoetNames {
@@ -38,7 +37,7 @@ export interface IGetNamesParams {
 }
 
 export interface IPoetTableRowProps {
-    item: IPoet
+    item: IPoetListItem
 }
 
 export interface IPoetFiltersProps {

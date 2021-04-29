@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import TableList from '../../components/organisms/TableList'
-import { IPoetListItem } from '../../interfaces/poet'
-import PoetsRow from './PoetsRow'
+import TableList from '../../components/organisms/TableList';
+import { IPoetListItem } from '../../interfaces/poet';
+import PoetsRow from './PoetsRow';
 
 export default function PoetsList(props: { list: IPoetListItem[] }): JSX.Element {
-    const tableHeaders = ['Author', 'Year of Birth', 'Year of Death', 'Url']
+    const tableHeaders = ['Author', 'Region', 'School', 'Lifespan']
 
     return (
         <TableList context="PoetsTableList" headers={tableHeaders}>
