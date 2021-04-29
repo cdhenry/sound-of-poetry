@@ -27,6 +27,7 @@ export default function Poets(): JSX.Element {
     const getList = useCallback(async (pageNumber: number = 0, selectedOptions?: IGetPoetsQuery) => {
         try {
             setIsLoading(true)
+
             const data = await _poetService.getPoets({ limit, pageNumber }, selectedOptions)
 
             setTotal(data.total)
@@ -48,8 +49,6 @@ export default function Poets(): JSX.Element {
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
                 {isLoading ? <Loading /> : <PoetsList list={list} />}
             </PaginateTemplate>
-            )
         </>
     )
 }
-

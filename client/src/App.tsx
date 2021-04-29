@@ -1,11 +1,11 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { createBrowserHistory } from 'history'
-import React from 'react'
-import { Router } from 'react-router-dom'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { createBrowserHistory } from 'history';
+import React from 'react';
+import { Router } from 'react-router-dom';
 
-import Navigation from './pages/Navigation'
-import Routes from './Routes'
+import Navigation from './pages/Navigation';
+import Routes from './Routes';
 
 library.add(faTimes)
 
