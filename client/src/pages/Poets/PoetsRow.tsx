@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import Button from '../../components/atoms/Button'
 import Card from '../../components/atoms/Card'
-import Icon from '../../components/atoms/Icon'
 import TableListItem from '../../components/atoms/TableListItem'
 import TableListRow from '../../components/molecules/TableListRow'
 import { CardTypeEnum } from '../../enums/cardType'
-import { IconTypeEnum } from '../../enums/iconType'
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { IPoemTableRowProps } from '../../interfaces/poem'
+import { IPoetTableRowProps } from '../../interfaces/poet'
 import ModalTemplate from '../../templates/Modal'
 
 export default function PoetsRow(props: any): JSX.Element {
@@ -22,16 +19,6 @@ export default function PoetsRow(props: any): JSX.Element {
         setIsModalActive(!isModalActive)
     }
 
-    const handleAudio = async () => {
-        setModal(<embed src={item.audio_url}></embed>)
-        toggleIsModalActive()
-    }
-
-    const handleVideo = () => {
-        setModal(<embed src={item.video_url}></embed>)
-        toggleIsModalActive()
-    }
-
     return (
         <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
             {isModalActive ? (
@@ -41,25 +28,16 @@ export default function PoetsRow(props: any): JSX.Element {
             ) : (
                 <TableListRow>
                     <TableListItem className="cursor-pointer">
-                        <Link to={{ pathname: `${url}/${item.id}`, state: { poemName: item.poet_name } }}>
-                            {item.title}
+                        <Link to={{ pathname: `${url}/${item.id}`, state: { poetName: item.name } }}>
+                            {item.name}
                         </Link>
                     </TableListItem>
-                    <TableListItem>{item.poet_name}</TableListItem>
-                    <TableListItem>{item.tags?.join(', ')}</TableListItem>
-                    <TableListItem>
-                        <div className="flex space-x-2">
-                            {item.audio_url && (
-                                <Button onClick={handleAudio}>
-                                    <Icon iconType={IconTypeEnum.Audio} />
-                                </Button>
-                            )}
-                            {item.video_url && (
-                                <Button onClick={handleVideo}>
-                                    <Icon iconType={IconTypeEnum.Video} />
-                                </Button>
-                            )}
-                        </div>
+                    <TableListItem>{item.yob}</TableListItem>
+                    <TableListItem>{item.yod}</TableListItem>
+                    <TableListItem className="cursor-pointer" >
+                        <Link to={{ pathname: `${item.url}`}} target="_blank" >
+                            {item.url}
+                        </Link>    
                     </TableListItem>
                 </TableListRow>
             )}

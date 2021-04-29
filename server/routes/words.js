@@ -7,10 +7,35 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal = "SELECT COUNT(wordid) AS total FROM dict";
+  var queryTotal =
+    "SELECT COUNT(distinct w.wordid) AS total FROM poem_wordnet pw INNER JOIN words w ON w.wordid=pw.word_id INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid";
   var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
+  var orderByClause = "";
+  var orderByAZ = "1";
+  var orderByZA = "2";
+  var orderByOccr = "3";
+  var orderByUse = "4";
+  var orderBy;
+
+  if (req.query.orderBy) orderBy = req.query.orderBy;
+
+  switch (orderBy) {
+    case orderByAZ:
+      orderByClause = "ORDER BY id ASC";
+      break;
+    case orderByZA:
+      orderByClause = "ORDER BY id DESC";
+      break;
+    case orderByOccr:
+      "ORDER BY occurrence DESC";
+      break;
+    case orderByUse:
+      "ORDER BY num_poems DESC";
+      break;
+  }
+
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -21,8 +46,12 @@ router.get("/", function (req, res) {
     }
 
     var query = `
-      SELECT *
-      FROM dict
+      SELECT w.wordid AS id, w.lemma AS lemma, wx.definition AS definition, sum(use_count) AS occurrence, count(poem_id) AS num_poems 
+      FROM poem_wordnet pw 
+      INNER JOIN words w ON w.wordid=pw.word_id
+      INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid
+      GROUP BY w.wordid
+--       ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset};
     `;
@@ -42,7 +71,7 @@ router.get("/lemmas", function (req, res) {
   var query = `
     SELECT wordid as value, lemma as label
     FROM words
-    WHERE lemma LIKE '%${lemma}%'
+    WHERE lemma LIKE "${lemma}%"
   `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
@@ -89,11 +118,11 @@ router.get("/:word/sounds", function (req, res) {
 router.get("/:word/images", function (req, res) {
   var id = req.params.word;
   var query = `
-      SELECT DISTINCT gil.original_url, w.lemma, gil.title, gil.author
-      FROM wordsXsensesXsynsets w 
-      JOIN google_images_synsets gis ON gis.synsetid = w.synsetid
-      JOIN google_mid_imageid_lean gmil ON gmil.m_id = gis.m_id
-      JOIN google_images_lean gil ON gil.image_id = gmil.image_id
+    SELECT DISTINCT gil.original_url, w.lemma, gil.title, gil.author
+    FROM wordsXsensesXsynsets w
+           JOIN imagenet_imageid_synset gis ON gis.synsetid = w.synsetid
+           JOIN google_imageid_mid gmil ON gmil.m_id = gis.image_id
+           JOIN google_images gil ON gil.image_id = gmil.image_id
       WHERE w.wordid = ${id}
     `;
   connection.query(query, function (err, rows, fields) {

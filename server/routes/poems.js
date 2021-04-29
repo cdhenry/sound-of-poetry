@@ -283,10 +283,10 @@ router.get("/:poem/media", function (req, res) {
 router.get("/:poem/stats", function (req, res) {
   var id = req.params.poem;
   var query = `
-      SELECT w.wordid, w.lemma, pw.use_count, SUM(st.pos_score) - SUM(st.neg_score) as sentiment 
+      SELECT w.wordid, w.lemma, pw.use_count, SUM(s.pos_score) - SUM(s.neg_score) as sentiment 
       FROM poem_wordnet pw 
       JOIN wordsXsensesXsynsets w on w.wordid = pw.word_id
-      JOIN sentiment st on st.synsetid = w.synsetid
+      JOIN synsets s on w.synsetid = s.synsetid
       WHERE pw.poem_id = ${id}
       GROUP BY w.lemma
       ORDER BY use_count DESC
