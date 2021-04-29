@@ -13,17 +13,34 @@ router.get("/", function (req, res) {
   var whereClause = "";
   var joinClause = "";
   var poets;
+  var regions;
+  var schools;
 
   if (req.query.poets) poets = req.query.poets;
-  if (req.query.title) title = req.query.title;
+  if (req.query.regions) regions = req.query.regions;
+  if (req.query.schools) schools = req.query.schools;
 
   if (poets) {
-    whereClause += `WHERE p.id IN (${poets})`;
+    whereClause = `WHERE p.id IN (${poets})`;
+  }
+
+  if (regions) {
+    if (whereClause) whereClause += ` AND r.id IN (${regions})`;
+    else whereClause += `WHERE r.id IN (${regions})`;
+  }
+
+  if (schools) {
+    if (whereClause) whereClause += ` AND s.id IN (${schools})`;
+    else whereClause += `WHERE s.id IN (${schools})`;
   }
 
   var queryTotal = `
       SELECT COUNT(p.id) as total
       FROM poet p
+      LEFT JOIN isfrom pf ON pf.poet_id = p.id 
+      JOIN region r ON pf.region_id = r.id
+      LEFT JOIN inschool ps ON ps.poet_id = p.id 
+      JOIN school s ON ps.school_id = s.id
       ${joinClause}
       ${whereClause}
     `;
@@ -97,6 +114,34 @@ router.get("/regions", function (req, res) {
     JOIN region r ON i.region_id = r.id
     GROUP BY 1;
   `;
+  connection.query(query, function (err, rows) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/regions/dropdown", function (req, res) {
+  var query = `
+        SELECT r.id as value, r.name as label
+        FROM region r
+      `;
+
+  connection.query(query, function (err, rows) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+});
+
+router.get("/schools/dropdown", function (req, res) {
+  var query = `
+      SELECT s.id as value, s.name as label
+      FROM school s
+    `;
+
   connection.query(query, function (err, rows) {
     if (err) console.log(err);
     else {

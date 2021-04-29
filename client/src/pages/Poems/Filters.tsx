@@ -86,7 +86,7 @@ export default function PoemFilters(props: IPoemFiltersProps): JSX.Element {
 
     useEffect(() => {
         getTags()
-    }, [getTags])
+    }, [])
 
     return isLoading ? (
         <Loading />
