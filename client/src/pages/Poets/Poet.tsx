@@ -32,7 +32,7 @@ export default function Poet(): JSX.Element {
                 const words = line.split(' ')
 
                 words.forEach((word: string, index: number) => {
-                    content.push(<span className={'whitespace-pre break-all'}>{word} </span>)
+                    content.push(<span className={'whitespace-pre whitespace-pre-line'}>{word} </span>)
                 })
                 content.push(<br />)
             })
