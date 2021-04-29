@@ -118,11 +118,11 @@ router.get("/:word/sounds", function (req, res) {
 router.get("/:word/images", function (req, res) {
   var id = req.params.word;
   var query = `
-    SELECT DISTINCT gil.original_url, w.lemma, gil.title, gil.author
-    FROM wordsXsensesXsynsets w
-           JOIN imagenet_imageid_synset gis ON gis.synsetid = w.synsetid
-           JOIN google_imageid_mid gmil ON gmil.m_id = gis.image_id
-           JOIN google_images gil ON gil.image_id = gmil.image_id
+      SELECT DISTINCT gi.original_url, w.lemma, gi.title, gi.author
+      FROM wordsXsensesXsynsets w 
+      JOIN mid_synset ms ON ms.synsetid = w.synsetid
+      JOIN google_imageid_mid gim ON gim.m_id = ms.m_id
+      JOIN google_images gi ON gi.image_id = gim.image_id
       WHERE w.wordid = ${id}
     `;
   connection.query(query, function (err, rows, fields) {
