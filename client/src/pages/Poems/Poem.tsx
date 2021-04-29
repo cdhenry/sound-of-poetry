@@ -1,18 +1,19 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { randomInteger } from '../../common/utils/randomInteger'
-import Button from '../../components/atoms/Button'
-import Card from '../../components/atoms/Card'
-import Header from '../../components/atoms/Header'
-import { CardTypeEnum } from '../../enums/cardType'
-import { HandwritingFontEnum } from '../../enums/fonts'
-import { HeaderTypeEnum } from '../../enums/headerType'
-import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { IPoem, IPoemStat } from '../../interfaces/poem'
-import { IParams } from '../../interfaces/shared'
-import { PoemService, poemService } from '../../services/poem'
-import { WordService, wordService } from '../../services/word'
-import Loading from '../Loading'
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { randomInteger } from '../../common/utils/randomInteger';
+import Button from '../../components/atoms/Button';
+import Card from '../../components/atoms/Card';
+import Header from '../../components/atoms/Header';
+import { CardTypeEnum } from '../../enums/cardType';
+import { HandwritingFontEnum } from '../../enums/fonts';
+import { HeaderTypeEnum } from '../../enums/headerType';
+import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind';
+import { IPoem, IPoemStat } from '../../interfaces/poem';
+import { IParams } from '../../interfaces/shared';
+import { PoemService, poemService } from '../../services/poem';
+import { WordService, wordService } from '../../services/word';
+import Loading from '../Loading';
 
 export default function Poem(): JSX.Element {
     const _poemService: PoemService = poemService
@@ -25,6 +26,7 @@ export default function Poem(): JSX.Element {
     const [isLoading, setIsLoading] = useState(true)
     const [isWordInfoLoading, setIsWordInfoLoading] = useState(false)
     const [poem, setPoem] = useState({} as IPoem)
+    const [wordCount, setWordCount] = useState(0)
     const [poemStats, setPoemStats] = useState([] as IPoemStat[])
     const [wordSounds, setWordSounds] = useState([] as React.ReactNode[])
     const [wordImages, setWordImages] = useState([] as React.ReactNode[])
@@ -95,11 +97,14 @@ export default function Poem(): JSX.Element {
             const wordNetData = await _poemService.getPoemWordNet(parseInt(id))
             const poemLines = poemData.poem_string.split(/\n/)
             const content = [] as React.ReactNode[]
+            let wordsCounter = 0
 
             setPoemStats(poemStatsData)
 
             poemLines.forEach((line, i) => {
                 const words = line.split(' ')
+                wordsCounter += words.length
+
                 words.forEach((word: string, index: number) => {
                     const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
                     const cleanedWord = word.replace(regex, '').toLowerCase()
@@ -132,6 +137,7 @@ export default function Poem(): JSX.Element {
                 content.push(<br key={`PoemLineBreak${i}`} />)
             })
 
+            setWordCount(wordsCounter)
             setPoem(poemData)
             setPoemContent(content)
         } catch (e) {
@@ -178,9 +184,11 @@ export default function Poem(): JSX.Element {
                             Overall Sentiment:
                             <span className="ml-3">
                                 {!!poemStats.length &&
-                                    poemStats
-                                        .map((stat) => stat.sentiment * stat.use_count)
-                                        .reduce((previous, current) => previous + current)}
+                                    Number(
+                                        poemStats
+                                            .map((stat) => stat.sentiment * stat.use_count)
+                                            .reduce((previous, current) => previous + current) / wordCount
+                                    ).toFixed(2)}
                             </span>
                         </div>
 
