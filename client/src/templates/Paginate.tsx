@@ -1,7 +1,7 @@
-import React from 'react'
-import ReactPaginate from 'react-paginate'
+import React from 'react';
+import ReactPaginate from 'react-paginate';
 
-import { IPaginateTemplate } from '../interfaces/templates'
+import { IPaginateTemplate } from '../interfaces/templates';
 
 export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element {
     const { total, limit, children } = props
@@ -28,7 +28,7 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
                     activeClassName={'underline'}
                 />
             </div>
-            <div className="flex-grow flex w-11/12">{children}</div>
+            <div className="flex-grow flex justify-center w-11/12">{children}</div>
         </section>
     )
 }
