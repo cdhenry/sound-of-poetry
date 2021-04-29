@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { IGetPoemsQuery, IPoemListItem, IPoemTag } from '../../interfaces/poem';
+import { IGetPoemsQuery, IPoemListItem } from '../../interfaces/poem';
 import { PoemService, poemService } from '../../services/poem';
 import PaginateTemplate from '../../templates/Paginate';
 import Loading from '../Loading';
@@ -29,9 +29,9 @@ export default function Poems(): JSX.Element {
             setIsLoading(true)
             const data = await _poemService.getPoems({ limit, pageNumber }, selectedOptions)
 
-            const tags = (await _poemService.getTags({
+            const tags = await _poemService.getTags({
                 poemIds: data.items.map((item) => (item as IPoemListItem).id)
-            })) as IPoemTag[]
+            })
 
             data.items.forEach(
                 (item) =>
