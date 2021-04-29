@@ -4,3 +4,10 @@ export enum PoemOrderByEnum {
     MostSounds = 3,
     MostImages = 4
 }
+
+export enum WordOrderByEnum {
+    AZ = 1,
+    ZA = 2,
+    MostFrequentlyUsed = 3,
+    UsedbyMostPoems = 4
+}
