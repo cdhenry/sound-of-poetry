@@ -114,7 +114,7 @@ export default function PoemFilters(props: IPoemFiltersProps): JSX.Element {
                 loadOptions={loadWords}
                 onChange={onWordChange}
             />
-            <Select placeholder="Order by" options={orderByOptions} onChange={onOrderByChange} />
+            <Select isClearable={true} placeholder="Order by" options={orderByOptions} onChange={onOrderByChange} />
             <div></div> {/* div for grid spacing */}
             <ToggleInput label="Related Audio" isOnOff={true} onClick={onAudioToggle} />
             <ToggleInput label="Related Video" isOnOff={true} onClick={onVideoToggle} />

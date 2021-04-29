@@ -103,9 +103,14 @@ export default function PoetFilters(props: IPoetFiltersProps): JSX.Element {
             />
             <Select placeholder="Regions" options={regionOptions} onChange={onRegionChange} isMulti />
             <Select placeholder="Schools" options={schoolOptions} onChange={onSchoolChange} isMulti />
-            <Select placeholder="Order by" options={orderByOptions} onChange={onOrderByChange} />
-            <Select placeholder="Span Start" options={spanStartOptions} onChange={onSpanStartChange} />
-            <Select placeholder="Span End" options={spanEndOptions} onChange={onSpanEndChange} />
+            <Select placeholder="Order by" isClearable={true} options={orderByOptions} onChange={onOrderByChange} />
+            <Select
+                placeholder="Span Start"
+                isClearable={true}
+                options={spanStartOptions}
+                onChange={onSpanStartChange}
+            />
+            <Select placeholder="Span End" isClearable={true} options={spanEndOptions} onChange={onSpanEndChange} />
         </section>
     )
 }

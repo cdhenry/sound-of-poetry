@@ -11,14 +11,33 @@ router.get("/", function (req, res) {
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
   var whereClause = "";
-  var joinClause = "";
+  var orderByClause = "";
+  var joinClause = `      
+      LEFT JOIN isfrom pf ON pf.poet_id = p.id 
+      LEFT JOIN region r ON pf.region_id = r.id
+      LEFT JOIN inschool ps ON ps.poet_id = p.id 
+      LEFT JOIN school s ON ps.school_id = s.id
+    `;
   var poets;
   var regions;
   var schools;
+  var yob;
+  var yod;
+  var orderBy;
+  var orderByAuthor = "1";
+  var orderByRegion = "2";
+  var orderBySchool = "3";
+  var orderByMostVerbose = "4";
+  var orderByMostTerse = "5";
+  var orderByWidestVocabulary = "6";
+  var orderBySmallestVocabulary = "7";
 
   if (req.query.poets) poets = req.query.poets;
   if (req.query.regions) regions = req.query.regions;
   if (req.query.schools) schools = req.query.schools;
+  if (req.query.yob) yob = req.query.yob;
+  if (req.query.yod) yod = req.query.yod;
+  if (req.query.orderBy) orderBy = req.query.orderBy;
 
   if (poets) {
     whereClause = `WHERE p.id IN (${poets})`;
@@ -34,13 +53,63 @@ router.get("/", function (req, res) {
     else whereClause += `WHERE s.id IN (${schools})`;
   }
 
+  if (yob) {
+    orderByClause += "ORDER BY p.yob";
+    if (whereClause) whereClause += ` AND p.yob > ${parseInt(yob)}`;
+    else whereClause += `WHERE p.yob > ${parseInt(yob)}`;
+  }
+
+  if (yod) {
+    if (whereClause) whereClause += ` AND p.yod < ${parseInt(yod)}`;
+    else whereClause += `WHERE p.yod < ${parseInt(yod)}`;
+  }
+
+  switch (orderBy) {
+    case orderByAuthor:
+      if (orderByClause) orderByClause += ",p.name";
+      else orderByClause = "ORDER BY p.name";
+      break;
+    case orderByRegion:
+      if (orderByClause) orderByClause += ",r.name";
+      else orderByClause = "ORDER BY r.name";
+      joinClause = `      
+        JOIN isfrom pf ON pf.poet_id = p.id 
+        JOIN region r ON pf.region_id = r.id
+        LEFT JOIN inschool ps ON ps.poet_id = p.id 
+        LEFT JOIN school s ON ps.school_id = s.id
+      `;
+      break;
+    case orderBySchool:
+      if (orderByClause) orderByClause += ",s.name";
+      else orderByClause = "ORDER BY s.name";
+      joinClause = `      
+        LEFT JOIN isfrom pf ON pf.poet_id = p.id 
+        LEFT JOIN region r ON pf.region_id = r.id
+        JOIN inschool ps ON ps.poet_id = p.id 
+        JOIN school s ON ps.school_id = s.id
+      `;
+      break;
+    case orderByMostVerbose:
+      if (orderByClause) orderByClause += ",";
+      else orderByClause = "ORDER BY";
+      break;
+    case orderByMostTerse:
+      if (orderByClause) orderByClause += ",";
+      else orderByClause = "ORDER BY";
+      break;
+    case orderByWidestVocabulary:
+      if (orderByClause) orderByClause += ",";
+      else orderByClause = "ORDER BY";
+      break;
+    case orderBySmallestVocabulary:
+      if (orderByClause) orderByClause += ",";
+      else orderByClause = "ORDER BY";
+      break;
+  }
+
   var queryTotal = `
       SELECT COUNT(p.id) as total
       FROM poet p
-      LEFT JOIN isfrom pf ON pf.poet_id = p.id 
-      JOIN region r ON pf.region_id = r.id
-      LEFT JOIN inschool ps ON ps.poet_id = p.id 
-      JOIN school s ON ps.school_id = s.id
       ${joinClause}
       ${whereClause}
     `;
@@ -57,11 +126,9 @@ router.get("/", function (req, res) {
     var query = `
       SELECT p.id, p.name, p.yob, p.yod, r.name as region, s.name as school
       FROM poet p
-      LEFT JOIN isfrom pf ON pf.poet_id = p.id 
-      JOIN region r ON pf.region_id = r.id
-      LEFT JOIN inschool ps ON ps.poet_id = p.id 
-      JOIN school s ON ps.school_id = s.id
+      ${joinClause}
       ${whereClause}
+      ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset}
     `;
