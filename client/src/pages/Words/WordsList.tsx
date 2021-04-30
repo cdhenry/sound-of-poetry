@@ -1,12 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import TableList from '../../components/organisms/TableList'
-import { IWordTableListProps } from '../../interfaces/word'
-
-import WordsRow from './WordsRow'
+import TableList from '../../components/organisms/TableList';
+import { IWordTableListProps } from '../../interfaces/word';
+import WordsRow from './WordsRow';
 
 export default function WordsList(props: IWordTableListProps): JSX.Element {
-    const tableHeaders = ['Word', 'Definition', 'Occurrence', 'Usage (number of poems)']
+    const tableHeaders = ['Word', 'Occurrences', 'Usages (number of poems)', 'Sound Associations', 'Image Associations']
 
     return (
         <TableList context="WordsTableList" headers={tableHeaders}>
