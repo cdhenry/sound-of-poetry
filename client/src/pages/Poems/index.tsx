@@ -13,7 +13,7 @@ export default function Poems(): JSX.Element {
     const [list, setList] = useState([] as IPoemListItem[])
     const [total, setTotal] = useState(0)
     const [getPoemQuery, setGetPoemQuery] = useState({} as IGetPoemsQuery)
-    const limit = 20
+    let limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
         await getList(pageNumber)

@@ -8,5 +8,6 @@ export enum IconTypeEnum {
     Map = 7,
     AngleDoubleRight = 8,
     AngleDoubleLeft = 9,
-    Times = 10
+    Times = 10,
+    Spinner = 11
 }

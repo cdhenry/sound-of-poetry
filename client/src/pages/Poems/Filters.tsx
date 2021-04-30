@@ -88,36 +88,47 @@ export default function PoemFilters(props: IPoemFiltersProps): JSX.Element {
         getTags()
     }, [])
 
-    return isLoading ? (
-        <Loading />
-    ) : (
+    return (
         <section className={defaultClassName}>
-            <AsyncSelect
-                placeholder="Titles"
-                isClearable={true}
-                noOptionsMessage={noOptionsMessage}
-                loadOptions={loadTitles}
-                onChange={onTitleChange}
-            />
-            <AsyncSelect
-                isMulti
-                placeholder="Poets"
-                noOptionsMessage={noOptionsMessage}
-                loadOptions={loadPoets}
-                onChange={onPoetChange}
-            />
-            <Select placeholder="Topics" options={tagOptions} onChange={onTagChange} isMulti />
-            <AsyncSelect
-                isMulti
-                placeholder="Words"
-                noOptionsMessage={noOptionsMessage}
-                loadOptions={loadWords}
-                onChange={onWordChange}
-            />
-            <Select isClearable={true} placeholder="Order by" options={orderByOptions} onChange={onOrderByChange} />
-            <div></div> {/* div for grid spacing */}
-            <ToggleInput label="Related Audio" isOnOff={true} onClick={onAudioToggle} />
-            <ToggleInput label="Related Video" isOnOff={true} onClick={onVideoToggle} />
+            {isLoading ? (
+                <div className="col-span-full">
+                    <Loading />
+                </div>
+            ) : (
+                <>
+                    <AsyncSelect
+                        placeholder="Titles"
+                        isClearable={true}
+                        noOptionsMessage={noOptionsMessage}
+                        loadOptions={loadTitles}
+                        onChange={onTitleChange}
+                    />
+                    <AsyncSelect
+                        isMulti
+                        placeholder="Poets"
+                        noOptionsMessage={noOptionsMessage}
+                        loadOptions={loadPoets}
+                        onChange={onPoetChange}
+                    />
+                    <Select placeholder="Topics" options={tagOptions} onChange={onTagChange} isMulti />
+                    <AsyncSelect
+                        isMulti
+                        placeholder="Words"
+                        noOptionsMessage={noOptionsMessage}
+                        loadOptions={loadWords}
+                        onChange={onWordChange}
+                    />
+                    <Select
+                        isClearable={true}
+                        placeholder="Order by"
+                        options={orderByOptions}
+                        onChange={onOrderByChange}
+                    />
+                    <div></div> {/* div for grid spacing */}
+                    <ToggleInput label="Related Audio" isOnOff={true} onClick={onAudioToggle} />
+                    <ToggleInput label="Related Video" isOnOff={true} onClick={onVideoToggle} />
+                </>
+            )}
         </section>
     )
 }

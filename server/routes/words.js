@@ -51,7 +51,7 @@ router.get("/", function (req, res) {
       INNER JOIN words w ON w.wordid=pw.word_id
       INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid
       GROUP BY w.wordid
---       ${orderByClause}
+      ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset};
     `;
@@ -98,6 +98,9 @@ router.get("/:word", function (req, res) {
 
 router.get("/:word/sounds", function (req, res) {
   var id = req.params.word;
+  var limit = req.query.limit || 20;
+  var pageNumber = req.query.pageNumber;
+  var offset = pageNumber * limit;
   var query = `
       SELECT ys.ytid, ys.start_seconds, mc.display_name
       FROM youtube_sound ys
@@ -105,7 +108,8 @@ router.get("/:word/sounds", function (req, res) {
       JOIN media_class mc on ym.m_id = mc.m_id 
       JOIN media_class_wordnet mcw ON mcw.m_id = ym.m_id
       WHERE word_id = ${id}
-      LIMIT 5
+      LIMIT ${limit}
+      OFFSET ${offset};
     `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
@@ -117,6 +121,9 @@ router.get("/:word/sounds", function (req, res) {
 
 router.get("/:word/images", function (req, res) {
   var id = req.params.word;
+  var limit = req.query.limit || 20;
+  var pageNumber = req.query.pageNumber;
+  var offset = pageNumber * limit;
   var query = `
       SELECT DISTINCT gi.original_url, w.lemma, gi.title, gi.author
       FROM wordsXsensesXsynsets w 
@@ -124,6 +131,8 @@ router.get("/:word/images", function (req, res) {
       JOIN google_imageid_mid gim ON gim.m_id = ms.m_id
       JOIN google_images gi ON gi.image_id = gim.image_id
       WHERE w.wordid = ${id}
+      LIMIT ${limit}
+      OFFSET ${offset};
     `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
