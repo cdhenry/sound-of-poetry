@@ -12,6 +12,8 @@ router.get("/", function (req, res) {
   var offset = pageNumber * limit;
   var whereClause = "";
   var orderByClause = "";
+  var groupByClause = "";
+  var selectClause = "SELECT p.id, p.name, p.yob, p.yod, r.name as region, s.name as school";
   var joinClause = `      
       LEFT JOIN isfrom pf ON pf.poet_id = p.id 
       LEFT JOIN region r ON pf.region_id = r.id
@@ -90,12 +92,28 @@ router.get("/", function (req, res) {
       `;
       break;
     case orderByMostVerbose:
-      if (orderByClause) orderByClause += ",";
-      else orderByClause = "ORDER BY";
+      selectClause += `, SUM(po.word_count) / COUNT(pp.poem_id) as words_per_poem`;
+      joinClause += `
+        JOIN poet_poem pp ON p.id = pp.poet_id
+        JOIN poem po ON pp.poem_id = po.id
+      `;
+      groupByClause = `
+        GROUP BY p.id, p.name, p.yob, p.yod, r.name, s.name
+      `;
+      if (orderByClause) orderByClause += ", words_per_poem";
+      else orderByClause = "ORDER BY words_per_poem DESC";
       break;
     case orderByMostTerse:
-      if (orderByClause) orderByClause += ",";
-      else orderByClause = "ORDER BY";
+      selectClause += `, SUM(po.word_count) / COUNT(pp.poem_id) as words_per_poem`;
+      joinClause += `
+        JOIN poet_poem pp ON p.id = pp.poet_id
+        JOIN poem po ON pp.poem_id = po.id
+      `;
+      groupByClause = `
+        GROUP BY p.id, p.name, p.yob, p.yod, r.name, s.name
+      `;
+      if (orderByClause) orderByClause += ", words_per_poem";
+      else orderByClause = "ORDER BY words_per_poem";
       break;
     case orderByWidestVocabulary:
       if (orderByClause) orderByClause += ",";
@@ -111,6 +129,7 @@ router.get("/", function (req, res) {
       SELECT COUNT(p.id) as total
       FROM poet p
       ${joinClause}
+      ${groupByClause}
       ${whereClause}
     `;
 
@@ -124,10 +143,11 @@ router.get("/", function (req, res) {
     }
 
     var query = `
-      SELECT p.id, p.name, p.yob, p.yod, r.name as region, s.name as school
+      ${selectClause}
       FROM poet p
       ${joinClause}
       ${whereClause}
+      ${groupByClause}
       ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset}
