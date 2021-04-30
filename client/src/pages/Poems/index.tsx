@@ -60,7 +60,7 @@ export default function Poems(): JSX.Element {
                 {isLoading ? (
                     <Loading />
                 ) : !list.length ? (
-                    <div className="flex justify-center">No poems exist for this filter set</div>
+                    <div className="flex justify-center">No poets exist for this filter set</div>
                 ) : (
                     <PoemsList list={list} />
                 )}
