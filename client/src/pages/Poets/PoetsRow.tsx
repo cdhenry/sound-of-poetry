@@ -1,46 +1,27 @@
-import React, { useState } from 'react'
-import { Link, useRouteMatch } from 'react-router-dom'
+import React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import Card from '../../components/atoms/Card'
-import TableListItem from '../../components/atoms/TableListItem'
-import TableListRow from '../../components/molecules/TableListRow'
-import { CardTypeEnum } from '../../enums/cardType'
-import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { IPoetTableRowProps } from '../../interfaces/poet'
-import ModalTemplate from '../../templates/Modal'
+import TableListItem from '../../components/atoms/TableListItem';
+import TableListRow from '../../components/molecules/TableListRow';
+import { IPoetTableRowProps } from '../../interfaces/poet';
 
-export default function PoetsRow(props: any): JSX.Element {
+export default function PoetsRow(props: IPoetTableRowProps): JSX.Element {
     const { item } = props
     const { url } = useRouteMatch()
-    const [isModalActive, setIsModalActive] = useState(false)
-    const [modal, setModal] = useState(<></>)
+    const history = useHistory()
 
-    const toggleIsModalActive = () => {
-        setIsModalActive(!isModalActive)
+    function handleRowClick() {
+        history.push(`${url}/${item.id}`)
     }
 
     return (
-        <ModalTemplate isActive={isModalActive} closeModal={toggleIsModalActive}>
-            {isModalActive ? (
-                <Card cardType={CardTypeEnum.Modal} height={TailwindHeightEnum.Auto} width={TailwindWidthEnum.Auto}>
-                    {modal}
-                </Card>
-            ) : (
-                <TableListRow>
-                    <TableListItem className="cursor-pointer">
-                        <Link to={{ pathname: `${url}/${item.id}`, state: { poetName: item.name } }}>
-                            {item.name}
-                        </Link>
-                    </TableListItem>
-                    <TableListItem>{item.yob}</TableListItem>
-                    <TableListItem>{item.yod}</TableListItem>
-                    <TableListItem className="cursor-pointer" >
-                        <Link to={{ pathname: `${item.url}`}} target="_blank" >
-                            {item.url}
-                        </Link>    
-                    </TableListItem>
-                </TableListRow>
-            )}
-        </ModalTemplate>
+        <TableListRow className="cursor-pointer" onClick={handleRowClick}>
+            <TableListItem>{item.name}</TableListItem>
+            <TableListItem>{item.region}</TableListItem>
+            <TableListItem>{item.school}</TableListItem>
+            <TableListItem>
+                {item.yob} - {item.yod}
+            </TableListItem>
+        </TableListRow>
     )
 }

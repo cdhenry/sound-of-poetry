@@ -1,11 +1,11 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { createBrowserHistory } from 'history'
-import React from 'react'
-import { Router } from 'react-router-dom'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { createBrowserHistory } from 'history';
+import React from 'react';
+import { Router } from 'react-router-dom';
 
-import Navigation from './pages/Navigation'
-import Routes from './Routes'
+import Navigation from './pages/Navigation';
+import Routes from './Routes';
 
 library.add(faTimes)
 
@@ -19,7 +19,7 @@ function App(): JSX.Element {
                     <Navigation />
                 </nav>
                 <main className="h-screen overflow-y-auto">
-                    <div className="flex flex-col items-center mt-16">
+                    <div className="flex flex-col items-center mt-16 h-full">
                         <Routes />
                     </div>
                 </main>

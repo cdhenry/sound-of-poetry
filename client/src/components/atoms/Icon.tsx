@@ -1,21 +1,22 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-    faAngleDoubleLeft,
-    faAngleDoubleRight,
-    faBook,
-    faFilm,
-    faHome,
-    faMapMarkerAlt,
-    faMicrophone,
-    faPen,
-    faTimes,
-    faVolumeUp
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
+  faBook,
+  faFilm,
+  faHome,
+  faMapMarkerAlt,
+  faMicrophone,
+  faPen,
+  faSpinner,
+  faTimes,
+  faVolumeUp
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
-import { IconTypeEnum } from '../../enums/iconType'
-import { IIconProps } from '../../interfaces/atoms'
+import { IconTypeEnum } from '../../enums/iconType';
+import { IIconProps } from '../../interfaces/atoms';
 
 library.add(
     faBook,
@@ -27,7 +28,8 @@ library.add(
     faAngleDoubleLeft,
     faTimes,
     faFilm,
-    faVolumeUp
+    faVolumeUp,
+    faSpinner
 )
 
 function Icon(props: IIconProps): JSX.Element {
@@ -54,6 +56,8 @@ function Icon(props: IIconProps): JSX.Element {
             return <FontAwesomeIcon {...faProps} icon={faAngleDoubleLeft} />
         case IconTypeEnum.Times:
             return <FontAwesomeIcon {...faProps} icon={faTimes} />
+        case IconTypeEnum.Spinner:
+            return <FontAwesomeIcon {...faProps} icon={faSpinner} />
         default:
             return <></>
     }

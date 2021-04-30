@@ -11,3 +11,13 @@ export enum WordOrderByEnum {
     MostFrequentlyUsed = 3,
     UsedbyMostPoems = 4
 }
+
+export enum PoetOrderByEnum {
+    Author = 1,
+    Region = 2,
+    School = 3,
+    MostVerbose = 4,
+    MostTerse = 5,
+    WidestVocabulary = 6,
+    SmallestVocabulary = 7
+}

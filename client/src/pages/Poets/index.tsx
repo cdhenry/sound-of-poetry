@@ -4,7 +4,7 @@ import { IGetPoetsQuery, IPoetListItem } from '../../interfaces/poet';
 import { PoetService, poetService } from '../../services/poet';
 import PaginateTemplate from '../../templates/Paginate';
 import Loading from '../Loading';
-import PoetFilters from './Filters';
+import PoetFilters from './PoetFilters';
 import PoetsList from './PoetsList';
 
 export default function Poets(): JSX.Element {
@@ -27,6 +27,7 @@ export default function Poets(): JSX.Element {
     const getList = useCallback(async (pageNumber: number = 0, selectedOptions?: IGetPoetsQuery) => {
         try {
             setIsLoading(true)
+
             const data = await _poetService.getPoets({ limit, pageNumber }, selectedOptions)
 
             setTotal(data.total)
@@ -46,10 +47,14 @@ export default function Poets(): JSX.Element {
         <>
             <PoetFilters handleFilterChange={handleFilterChange} />
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
-                {isLoading ? <Loading /> : <PoetsList list={list} />}
+                {isLoading ? (
+                    <Loading />
+                ) : !list.length ? (
+                    <div className="flex justify-center">No poets exist for this filter set</div>
+                ) : (
+                    <PoetsList list={list} />
+                )}
             </PaginateTemplate>
-            )
         </>
     )
 }
-

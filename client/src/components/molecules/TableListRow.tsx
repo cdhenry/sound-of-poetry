@@ -8,7 +8,7 @@ export default function TableListRow(props: ITableListRowProps): JSX.Element {
     const defaultClassName = `bg-trueGray-200 overflow-hidden ${border} ${hover}`
 
     return (
-        <tr {...props} className={`${props.className} ${defaultClassName}`}>
+        <tr {...props} className={`${props.className ? props.className : ''} ${defaultClassName}`}>
             {props.children}
         </tr>
     )

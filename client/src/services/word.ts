@@ -1,17 +1,16 @@
-import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
+import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared';
 import {
-    IGetLemmas,
-    IGetWordsQuery,
-    IGetWordStats,
-    IWord,
-    IWordDict,
-    IWordImage,
-    IWordSound,
-    IWordStats,
-    IWordSynonym
-    
-} from '../interfaces/word'
-import API from './api'
+  IGetLemmas,
+  IGetWordsQuery,
+  IGetWordStats,
+  IWord,
+  IWordDict,
+  IWordImage,
+  IWordSound,
+  IWordStats,
+  IWordSynonym
+} from '../interfaces/word';
+import API from './api';
 
 export class WordService {
     private _baseUrl: string = 'words/'
@@ -47,16 +46,15 @@ export class WordService {
         return response.data as IWordStats
     }
 
-    public async getWordSounds(id: number) {
-        const response = await API.get(`${this._baseUrl}${id}/sounds`)
+    public async getWordSounds(params: IPaginatedParams, id: number) {
+        const response = await API.get(`${this._baseUrl}${id}/sounds`, { params })
         return response.data as IWordSound[]
     }
 
-    public async getWordImages(id: number) {
-        const response = await API.get(`${this._baseUrl}${id}/images`)
+    public async getWordImages(params: IPaginatedParams, id: number) {
+        const response = await API.get(`${this._baseUrl}${id}/images`, { params })
         return response.data as IWordImage[]
     }
-
 }
 
 export const wordService = new WordService()

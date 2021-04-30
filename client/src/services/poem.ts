@@ -1,16 +1,16 @@
+import { IGetRegionsQuery, IMap } from '../interfaces/map';
 import {
-    IGetPoemsQuery,
-    IGetTagsParams,
-    IGetTitlesParams,
-    IPoem,
-    IPoemListItem,
-    IPoemStat,
-    IPoemTag,
-    IPoemWord
-} from '../interfaces/poem'
-import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared'
-import API from './api'
-import { IGetRegionsQuery, IMap } from '../interfaces/map'
+  IGetPoemsQuery,
+  IGetTagsParams,
+  IGetTitlesParams,
+  IPoem,
+  IPoemListItem,
+  IPoemStat,
+  IPoemTag,
+  IPoemWord
+} from '../interfaces/poem';
+import { IPaginatedList, IPaginatedParams, ISelectOption } from '../interfaces/shared';
+import API from './api';
 
 export class PoemService {
     private _baseUrl: string = 'poems/'
@@ -22,13 +22,18 @@ export class PoemService {
     }
 
     public async getTitles(params: IGetTitlesParams) {
-        const response = await API.get(`${this._baseUrl}titles/`, { params })
+        const response = await API.get(`${this._baseUrl}titles`, { params })
         return response.data as ISelectOption[]
     }
 
     public async getTags(params?: IGetTagsParams) {
         const response = await API.get(`${this._baseUrl}tags`, { params })
-        return response.data as ISelectOption[] | IPoemTag[]
+        return response.data as IPoemTag[]
+    }
+
+    public async getTagsDropdown() {
+        const response = await API.get(`${this._baseUrl}tags/dropdown`)
+        return response.data as ISelectOption[]
     }
 
     public async getPoem(id: number) {

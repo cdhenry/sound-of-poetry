@@ -11,7 +11,7 @@ export default function TableListItem(props: ITableListItemProps): JSX.Element {
     const defaultClassName = `p-2 ${font}`
 
     return (
-        <td {...htmlProps} className={`${htmlProps.className} ${defaultClassName}`}>
+        <td {...htmlProps} className={`${htmlProps.className ? htmlProps.className : ''} ${defaultClassName}`}>
             {props.children}
         </td>
     )

@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { IGetWordsQuery, IWord } from '../../interfaces/word'
-import { wordService, WordService } from '../../services/word'
-import PaginateTemplate from '../../templates/Paginate'
-import Loading from '../Loading'
-import WordFilters from './Filters'
-import WordsList from './WordsList'
+import { IGetWordsQuery, IWord } from '../../interfaces/word';
+import { WordService, wordService } from '../../services/word';
+import PaginateTemplate from '../../templates/Paginate';
+import Loading from '../Loading';
+import WordFilters from './Filters';
+import WordsList from './WordsList';
 
 export default function Words(): JSX.Element {
     const _wordService: WordService = wordService
     const [isLoading, setIsLoading] = useState(true)
     const [list, setList] = useState([] as IWord[])
     const [total, setTotal] = useState(0)
-    const [getPoemQuery, setGetPoemQuery] = useState({} as IGetWordsQuery)
+    const [getWordQuery, setGetWordQuery] = useState({} as IGetWordsQuery)
     const limit = 20
 
     const handlePageChange = async (pageNumber: number) => {
@@ -20,8 +20,8 @@ export default function Words(): JSX.Element {
     }
 
     const handleFilterChange = async (selectedOptions: IGetWordsQuery) => {
-        setGetPoemQuery({ ...getPoemQuery, ...selectedOptions })
-        await getList(0, { ...getPoemQuery, ...selectedOptions })
+        setGetWordQuery({ ...getWordQuery, ...selectedOptions })
+        await getList(0, { ...getWordQuery, ...selectedOptions })
     }
 
     const getList = useCallback(
@@ -51,7 +51,6 @@ export default function Words(): JSX.Element {
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
                 {isLoading ? <Loading /> : <WordsList list={list} />}
             </PaginateTemplate>
-            )
         </>
     )
 }
