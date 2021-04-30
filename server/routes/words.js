@@ -7,35 +7,107 @@ config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 
 router.get("/", function (req, res) {
-  var queryTotal =
-    "SELECT COUNT(distinct w.wordid) AS total FROM poem_wordnet pw INNER JOIN words w ON w.wordid=pw.word_id INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid";
   var limit = req.query.limit || 20;
   var pageNumber = req.query.pageNumber;
   var offset = pageNumber * limit;
-  var orderByClause = "";
   var orderByAZ = "1";
   var orderByZA = "2";
-  var orderByOccr = "3";
+  var orderByOccur = "3";
   var orderByUse = "4";
+  var orderByMostSounds = "5";
+  var orderByMostImages = "6";
   var orderBy;
+  var words;
+  var poemIds;
+  var poets;
+  var tags;
+  var regions;
+  var schools;
+  var joinClause = "";
+  var whereClause = "";
+  var orderByClause = "ORDER BY occurrence DESC";
 
   if (req.query.orderBy) orderBy = req.query.orderBy;
+  if (req.query.words) words = req.query.words;
+  if (req.query.poemIds) poemIds = req.query.poemIds;
+  if (req.query.tags) tags = req.query.tags;
+  if (req.query.poets) poets = req.query.poets;
+  if (req.query.regions) regions = req.query.regions;
+  if (req.query.schools) schools = req.query.schools;
+  if (poets || regions || schools) joinClause = "JOIN poet_poem pp ON pp.poem_id = pw.poem_id";
+
+  if (words) {
+    whereClause = `WHERE w.wordid IN (${words})`;
+  }
+
+  if (poemIds) {
+    if (whereClause) whereClause += ` AND pw.poem_id IN (${poems})`;
+    else whereClause = `WHERE pw.poem_id IN (${poems})`;
+  }
+
+  if (poets) {
+    if (whereClause) whereClause += ` AND pp.poet_id IN (${poets})`;
+    else whereClause = `WHERE pp.poet_id IN (${poets})`;
+  }
+
+  if (tags) {
+    joinClause += `
+      JOIN (SELECT pt.poem_id
+      FROM poem_tag pt
+      WHERE pt.tag_id IN (${tags})
+      GROUP BY pt.poem_id
+      HAVING COUNT(DISTINCT pt.tag_id) = ${tags.length})  
+      x ON x.poem_id = pw.poem_id
+    `;
+  }
+
+  if (regions) {
+    joinClause += `
+        JOIN isfrom pf ON pf.poet_id = pp.poet_id
+        JOIN region r ON pf.region_id = r.id
+      `;
+    if (whereClause) whereClause += ` AND r.id IN (${regions})`;
+    else whereClause += `WHERE r.id IN (${regions})`;
+  }
+
+  if (schools) {
+    joinClause += `
+        JOIN inschool ps ON ps.poet_id = pp.poet_id
+        JOIN school s ON ps.school_id = s.id
+      `;
+    if (whereClause) whereClause += ` AND s.id IN (${schools})`;
+    else whereClause += `WHERE s.id IN (${schools})`;
+  }
 
   switch (orderBy) {
     case orderByAZ:
-      orderByClause = "ORDER BY id ASC";
+      orderByClause = "ORDER BY w.lemma ASC";
       break;
     case orderByZA:
-      orderByClause = "ORDER BY id DESC";
+      orderByClause = "ORDER BY w.lemma DESC";
       break;
-    case orderByOccr:
-      "ORDER BY occurrence DESC";
+    case orderByOccur:
+      orderBYClause = "ORDER BY occurrence DESC";
       break;
     case orderByUse:
-      "ORDER BY num_poems DESC";
+      orderByClause = "ORDER BY num_poems DESC";
+      break;
+    case orderByMostSounds:
+      orderByClause = "ORDER BY sound_count DESC";
+      break;
+    case orderByMostImages:
+      orderByClause = "ORDER BY image_count DESC";
       break;
   }
 
+  var queryTotal = `
+    SELECT COUNT(DISTINCT pw.word_id) as total
+    FROM poem_wordnet pw
+    JOIN words w ON w.wordid = pw.word_id
+    ${joinClause}
+    ${whereClause}
+  `;
+  console.log(queryTotal);
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -46,16 +118,31 @@ router.get("/", function (req, res) {
     }
 
     var query = `
-      SELECT w.wordid AS id, w.lemma AS lemma, wx.definition AS definition, sum(use_count) AS occurrence, count(poem_id) AS num_poems 
-      FROM poem_wordnet pw 
-      INNER JOIN words w ON w.wordid=pw.word_id
-      INNER JOIN wordsXsensesXsynsets wx ON pw.word_id=wx.wordid
-      GROUP BY w.wordid
+      WITH num_sounds as (
+        SELECT mcw.word_id, COUNT(ym.ytid) sound_count
+        FROM media_class_wordnet mcw 
+        JOIN ytid_mid ym on ym.m_id = mcw.m_id
+        GROUP BY mcw.word_id 
+      ), num_images as (
+        SELECT w.wordid as word_id, COUNT(DISTINCT gim.image_id) as image_count
+        FROM wordsXsensesXsynsets w
+        JOIN mid_synset ms ON ms.synsetid = w.synsetid
+        JOIN google_imageid_mid gim ON gim.m_id = ms.m_id
+        GROUP BY w.wordid
+      )
+      SELECT pw.word_id, w.lemma, SUM(use_count) as occurrence, COUNT(DISTINCT pw.poem_id) as num_poems, ns.sound_count, ni.image_count
+      FROM poem_wordnet pw
+      JOIN words w ON w.wordid = pw.word_id
+      LEFT JOIN num_sounds ns ON ns.word_id = w.wordid 
+      LEFT JOIN num_images ni ON ni.word_id = w.wordid
+      ${joinClause}
+      ${whereClause}
+      GROUP BY pw.word_id
       ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset};
     `;
-
+    console.log(query);
     connection.query(query, function (err, rest) {
       if (err) {
         return err;

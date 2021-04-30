@@ -4,7 +4,7 @@ import { IGetWordsQuery, IWord } from '../../interfaces/word';
 import { WordService, wordService } from '../../services/word';
 import PaginateTemplate from '../../templates/Paginate';
 import Loading from '../Loading';
-import WordFilters from './Filters';
+import WordFilters from './WordFilters';
 import WordsList from './WordsList';
 
 export default function Words(): JSX.Element {
@@ -49,7 +49,13 @@ export default function Words(): JSX.Element {
         <>
             <WordFilters handleFilterChange={handleFilterChange} />
             <PaginateTemplate total={total} limit={limit} handlePageChange={handlePageChange}>
-                {isLoading ? <Loading /> : <WordsList list={list} />}
+                {isLoading ? (
+                    <Loading />
+                ) : !list.length ? (
+                    <div className="flex justify-center">No words exist for this filter set</div>
+                ) : (
+                    <WordsList list={list} />
+                )}
             </PaginateTemplate>
         </>
     )

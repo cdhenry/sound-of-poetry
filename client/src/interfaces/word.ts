@@ -1,11 +1,12 @@
-import { WordOrderByEnum } from "../enums/orderBy";
+import { WordOrderByEnum } from '../enums/orderBy';
 
 export interface IWord {
     id: number
     lemma: string
-    definition: string
     occurrence: number
     num_poems: number
+    sound_count: number
+    image_count: number
 }
 
 export interface IGetLemmas {
@@ -76,11 +77,12 @@ export interface IWordDict {
 }
 
 export interface IGetWordsQuery {
-    id?: number
-    lemma?: string
-    definition?: string
-    occurrence?: number
-    num_poems?: number
+    poemIds?: number[]
+    poets?: number[]
+    tags?: number[]
+    words?: number[]
+    regions?: number[]
+    schools?: number[]
     orderBy?: WordOrderByEnum
 }
 

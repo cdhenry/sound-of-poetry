@@ -9,7 +9,9 @@ export enum WordOrderByEnum {
     AZ = 1,
     ZA = 2,
     MostFrequentlyUsed = 3,
-    UsedbyMostPoems = 4
+    UsedByMostPoems = 4,
+    MostSounds = 5,
+    MostImages = 6
 }
 
 export enum PoetOrderByEnum {
