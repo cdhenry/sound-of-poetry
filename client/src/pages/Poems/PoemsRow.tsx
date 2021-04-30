@@ -22,10 +22,16 @@ export default function PoemsRow(props: IPoemTableRowProps): JSX.Element {
     }
 
     return (
-        <TableListRow onClick={handleRowClick} className="cursor-pointer">
-            <TableListItem className="cursor-pointer w-1/4">{item.title}</TableListItem>
-            <TableListItem className="w-1/6">{item.poet_name}</TableListItem>
-            <TableListItem className="w-1/2">{item.tags?.join(', ')}</TableListItem>
+        <TableListRow className="cursor-pointer">
+            <TableListItem onClick={handleRowClick} className="cursor-pointer w-1/4">
+                {item.title}
+            </TableListItem>
+            <TableListItem onClick={handleRowClick} className="w-1/6">
+                {item.poet_name}
+            </TableListItem>
+            <TableListItem onClick={handleRowClick} className="w-1/2">
+                {item.tags?.join(', ')}
+            </TableListItem>
             <TableListItem className="w-1/12">
                 <div className="flex space-x-2">
                     {item.audio_url && (
