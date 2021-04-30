@@ -38,21 +38,25 @@ router.get("/", function (req, res) {
   }
 
   if (tags) {
-    joinClause += `JOIN (SELECT pt.poem_id
-                    FROM poem_tag pt
-                    WHERE pt.tag_id IN (${tags})
-                    GROUP BY pt.poem_id
-                    HAVING COUNT(DISTINCT pt.tag_id) = ${tags.length})  
-                    x ON x.poem_id = p.id`;
+    joinClause += `
+      JOIN (SELECT pt.poem_id
+      FROM poem_tag pt
+      WHERE pt.tag_id IN (${tags})
+      GROUP BY pt.poem_id
+      HAVING COUNT(DISTINCT pt.tag_id) = ${tags.length})  
+      x ON x.poem_id = p.id
+    `;
   }
 
   if (words) {
-    joinClause += ` JOIN (SELECT pw.poem_id
-                    FROM poem_wordnet pw
-                    WHERE pw.word_id IN (${words})
-                    GROUP BY pw.poem_id
-                    HAVING COUNT(DISTINCT pw.word_id) = ${words.length})  
-                    y ON y.poem_id = p.id`;
+    joinClause += `
+      JOIN (SELECT pw.poem_id
+      FROM poem_wordnet pw
+      WHERE pw.word_id IN (${words})
+      GROUP BY pw.poem_id
+      HAVING COUNT(DISTINCT pw.word_id) = ${words.length})  
+      y ON y.poem_id = p.id
+    `;
   }
 
   if (poemId) {
