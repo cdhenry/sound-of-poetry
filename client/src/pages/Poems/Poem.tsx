@@ -104,12 +104,12 @@ export default function Poem(): JSX.Element {
                 getWordImages(id)
 
                 setWordDict([
-                    <div key={'PoemWordTitle'} className="flex items-center justify-center mb-4">
+                    <div key={`PoemWordTitle${id}`} className="flex items-center justify-center mb-4">
                         <strong>{lemma}</strong>
                     </div>,
                     <ul>
                         {wordDictList.map((item, idx) => (
-                            <li key={`PoemWordDefinition${idx}`}>+ {item.definition}</li>
+                            <li key={`PoemWordDefinition${id}${idx}`}>+ {item.definition}</li>
                         ))}
                     </ul>
                 ])
@@ -289,9 +289,15 @@ export default function Poem(): JSX.Element {
                                 <>
                                     {wordImages}
                                     <div className="flex justify-around items-center">
-                                        {wordImagePage > 0 && <Button onClick={handleBackImage}>{'<'}</Button>}
+                                        {wordImagePage > 0 && (
+                                            <Button key="ImageBack" onClick={handleBackImage}>
+                                                {'<'}
+                                            </Button>
+                                        )}
                                         {wordImages.length === limit && (
-                                            <Button onClick={handleMoreImage}>{'>'}</Button>
+                                            <Button key="ImageForward" onClick={handleMoreImage}>
+                                                {'>'}
+                                            </Button>
                                         )}
                                     </div>
                                 </>
@@ -307,9 +313,15 @@ export default function Poem(): JSX.Element {
                                 <>
                                     {wordSounds}
                                     <div className="flex justify-around items-center">
-                                        {wordSoundPage > 0 && <Button onClick={handleBackSound}>{'<'}</Button>}
+                                        {wordSoundPage > 0 && (
+                                            <Button key="SoundBack" onClick={handleBackSound}>
+                                                {'<'}
+                                            </Button>
+                                        )}
                                         {wordSounds.length === limit && (
-                                            <Button onClick={handleMoreSound}>{'>'}</Button>
+                                            <Button key="SoundForward" onClick={handleMoreSound}>
+                                                {'>'}
+                                            </Button>
                                         )}
                                     </div>
                                 </>

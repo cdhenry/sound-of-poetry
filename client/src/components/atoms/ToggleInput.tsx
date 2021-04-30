@@ -6,6 +6,7 @@ export default function ToggleInput(props: IToggleInputProps): JSX.Element {
     const toggleRightColor = props.isOnOff ? 'toggle-input-green' : 'toggle-input-blue'
     const toggleLeftColor = props.isOnOff ? 'bg-gray-400' : 'bg-blue-500'
     const inputClassName = `${toggleRightColor} toggle-input appearance-none transition-colors cursor-pointer w-16 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 ${toggleLeftColor}`
+
     return (
         <label className="flex items-center relative w-max cursor-pointer select-none">
             {props.label && <span className="mr-3">{props.label}</span>}

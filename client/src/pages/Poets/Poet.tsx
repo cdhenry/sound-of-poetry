@@ -1,16 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { randomInteger } from '../../common/utils/randomInteger'
-import Card from '../../components/atoms/Card'
-import Header from '../../components/atoms/Header'
-import { CardTypeEnum } from '../../enums/cardType'
-import { HeaderTypeEnum } from '../../enums/headerType'
-import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind'
-import { IPoet } from '../../interfaces/poet'
-import { IParams } from '../../interfaces/shared'
-import { PoetService, poetService } from '../../services/poet'
-import Loading from '../Loading'
+import Card from '../../components/atoms/Card';
+import Header from '../../components/atoms/Header';
+import { CardTypeEnum } from '../../enums/cardType';
+import { HeaderTypeEnum } from '../../enums/headerType';
+import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind';
+import { IPoet } from '../../interfaces/poet';
+import { IParams } from '../../interfaces/shared';
+import { PoetService, poetService } from '../../services/poet';
+import Loading from '../Loading';
 
 export default function Poet(): JSX.Element {
     const _poetService: PoetService = poetService
@@ -28,7 +27,7 @@ export default function Poet(): JSX.Element {
             const poetData = await _poetService.getPoet(parseInt(id))
             const poetLines = poetData.bio.trim().split(/\n/)
             const content = [] as React.ReactNode[]
-            poetLines.forEach((line: any) => {                
+            poetLines.forEach((line: any) => {
                 const words = line.split(' ')
 
                 words.forEach((word: string, index: number) => {
@@ -57,11 +56,7 @@ export default function Poet(): JSX.Element {
             height={TailwindHeightEnum.Screen90}
             width={TailwindWidthEnum.OneHalf}
             cardType={CardTypeEnum.Paper}
-            header={
-                <Header headerType={HeaderTypeEnum.HeaderWeb}>
-                    {poet.name}
-                </Header>
-            }
+            header={<Header headerType={HeaderTypeEnum.HeaderWeb}>{poet.name}</Header>}
         >
             <>{poetContent}</>
         </Card>

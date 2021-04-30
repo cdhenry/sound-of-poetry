@@ -4,7 +4,7 @@ import { IGetPoetsQuery, IPoetListItem } from '../../interfaces/poet';
 import { PoetService, poetService } from '../../services/poet';
 import PaginateTemplate from '../../templates/Paginate';
 import Loading from '../Loading';
-import PoetFilters from './Filters';
+import PoetFilters from './PoetFilters';
 import PoetsList from './PoetsList';
 
 export default function Poets(): JSX.Element {

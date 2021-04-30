@@ -90,27 +90,43 @@ export default function PoetFilters(props: IPoetFiltersProps): JSX.Element {
         getDropdowns()
     }, [])
 
-    return isLoading ? (
-        <Loading />
-    ) : (
+    return (
         <section className={defaultClassName}>
-            <AsyncSelect
-                isMulti
-                placeholder="Poets"
-                noOptionsMessage={noOptionsMessage}
-                loadOptions={loadPoets}
-                onChange={onPoetChange}
-            />
-            <Select placeholder="Regions" options={regionOptions} onChange={onRegionChange} isMulti />
-            <Select placeholder="Schools" options={schoolOptions} onChange={onSchoolChange} isMulti />
-            <Select placeholder="Order by" isClearable={true} options={orderByOptions} onChange={onOrderByChange} />
-            <Select
-                placeholder="Span Start"
-                isClearable={true}
-                options={spanStartOptions}
-                onChange={onSpanStartChange}
-            />
-            <Select placeholder="Span End" isClearable={true} options={spanEndOptions} onChange={onSpanEndChange} />
+            {isLoading ? (
+                <div className="col-span-full">
+                    <Loading />
+                </div>
+            ) : (
+                <>
+                    <AsyncSelect
+                        isMulti
+                        placeholder="Poets"
+                        noOptionsMessage={noOptionsMessage}
+                        loadOptions={loadPoets}
+                        onChange={onPoetChange}
+                    />
+                    <Select placeholder="Regions" options={regionOptions} onChange={onRegionChange} isMulti />
+                    <Select placeholder="Schools" options={schoolOptions} onChange={onSchoolChange} isMulti />
+                    <Select
+                        placeholder="Order by"
+                        isClearable={true}
+                        options={orderByOptions}
+                        onChange={onOrderByChange}
+                    />
+                    <Select
+                        placeholder="Span Start"
+                        isClearable={true}
+                        options={spanStartOptions}
+                        onChange={onSpanStartChange}
+                    />
+                    <Select
+                        placeholder="Span End"
+                        isClearable={true}
+                        options={spanEndOptions}
+                        onChange={onSpanEndChange}
+                    />
+                </>
+            )}
         </section>
     )
 }

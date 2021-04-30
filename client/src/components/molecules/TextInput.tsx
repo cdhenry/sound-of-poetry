@@ -8,7 +8,7 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
     const defaultClassName = 'flex flex-col'
 
     return (
-        <div className={`${defaultClassName} ${props.className}`}>
+        <div className={`${props.className ? props.className : ''} ${defaultClassName}`}>
             <Label id={props.id}>{props.label}</Label>
             <Input {...props} />
         </div>
