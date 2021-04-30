@@ -79,11 +79,11 @@ router.get("/", function (req, res) {
       break;
     case orderByMostSounds:
       joinClause += " JOIN poem_media_count pmc ON pmc.poem_id = p.id";
-      orderByClause = "ORDER BY pmc.sound_count / pmc.word_count DESC";
+      orderByClause = "ORDER BY pmc.sound_count / p.unique_word_count DESC";
       break;
     case orderByMostImages:
       joinClause += " JOIN poem_media_count pmc ON pmc.poem_id = p.id";
-      orderByClause = "ORDER BY pmc.image_count / pmc.word_count DESC";
+      orderByClause = "ORDER BY pmc.image_count / p.unique_word_count DESC";
       break;
   }
 
