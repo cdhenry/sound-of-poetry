@@ -19,7 +19,7 @@ function App(): JSX.Element {
                     <Navigation />
                 </nav>
                 <main className="h-screen overflow-y-auto">
-                    <div className="flex flex-col items-center mt-16">
+                    <div className="flex flex-col items-center mt-16 h-full">
                         <Routes />
                     </div>
                 </main>
