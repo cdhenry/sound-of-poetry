@@ -98,8 +98,14 @@ export default function PoetFilters(props: IPoetFiltersProps): JSX.Element {
                 </div>
             ) : (
                 <>
+                    <AsyncSelect
+                        isMulti
+                        placeholder="Poets"
+                        noOptionsMessage={noOptionsMessage}
+                        loadOptions={loadPoets}
+                        onChange={onPoetChange}
+                    />
                     <Select placeholder="Regions" options={regionOptions} onChange={onRegionChange} isMulti />
-                    <Select placeholder="Schools" options={schoolOptions} onChange={onSchoolChange} isMulti />
                     <Select
                         placeholder="Span Start"
                         isClearable={true}
@@ -118,13 +124,7 @@ export default function PoetFilters(props: IPoetFiltersProps): JSX.Element {
                         options={orderByOptions}
                         onChange={onOrderByChange}
                     />
-                    <AsyncSelect
-                        isMulti
-                        placeholder="Poets"
-                        noOptionsMessage={noOptionsMessage}
-                        loadOptions={loadPoets}
-                        onChange={onPoetChange}
-                    />
+                    <Select placeholder="Schools" options={schoolOptions} onChange={onSchoolChange} isMulti />
                 </>
             )}
         </section>
