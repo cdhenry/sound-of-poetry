@@ -28,7 +28,7 @@ export class WordService {
 
     public async getWord(id: number) {
         const response = await API.get(`${this._baseUrl}${id}`)
-        return response.data as IWord
+        return response.data as IWordDict[]
     }
 
     public async getWordSynonyms(id: number) {

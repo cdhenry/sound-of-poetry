@@ -27,7 +27,7 @@ export default function Poet(): JSX.Element {
     const [poet, setPoet] = useState({} as IPoet)
     const [poetContent, setPoetContent] = useState([] as React.ReactNode[])
 
-    const getPoem = useCallback(async () => {
+    const getPoet = useCallback(async () => {
         try {
             setIsLoading(true)
             const poetId = parseInt(id)
@@ -36,16 +36,12 @@ export default function Poet(): JSX.Element {
                 { limit: Number.MAX_SAFE_INTEGER, pageNumber: 0 },
                 { poets: [poetId] }
             )
-            console.log(poemList)
-            const poemListContent = [] as React.ReactNode[]
 
-            poemList.items.forEach((poem) => {
-                poemListContent.push(
-                    <div className="hover:text-shadow-lg hover:text-cyan-500">
-                        <Link to={`${RoutesEnum.Poems}/${poem.id}`}>{poem.title}</Link>
-                    </div>
-                )
-            })
+            const poemListContent = poemList.items.map((poem) => (
+                <div className="hover:text-shadow-lg hover:text-cyan-500">
+                    <Link to={`${RoutesEnum.Poems}/${poem.id}`}>{poem.title}</Link>
+                </div>
+            ))
 
             setPoet(poetData)
             setPoetContent(poemListContent)
@@ -57,7 +53,7 @@ export default function Poet(): JSX.Element {
     }, [_poemService, _poetService, id])
 
     useEffect(() => {
-        getPoem()
+        getPoet()
     }, [])
 
     return isLoading ? (
