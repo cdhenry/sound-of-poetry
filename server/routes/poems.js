@@ -233,7 +233,7 @@ router.get("/titles", function (req, res) {
 router.get("/:poem", function (req, res) {
   var id = req.params.poem;
   var query = `
-    SELECT p.id, t.name as poet_name, p.poem_string, p.title, p.audio_url, p.video_url
+    SELECT p.id, t.id as poet_id, t.name as poet_name, p.poem_string, p.title, p.audio_url, p.video_url
     FROM poem p
     JOIN poet_poem pp on pp.poem_id = p.id
     JOIN poet t on pp.poet_id = t.id
