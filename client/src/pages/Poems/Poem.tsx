@@ -56,6 +56,7 @@ export default function Poem(): JSX.Element {
                     ))
                 )
             } catch (e) {
+                console.log(e)
             } finally {
                 setIsSoundMediaLoading(false)
             }
@@ -83,6 +84,7 @@ export default function Poem(): JSX.Element {
                     ))
                 )
             } catch (e) {
+                console.log(e)
             } finally {
                 setIsImageMediaLoading(false)
             }
@@ -116,6 +118,7 @@ export default function Poem(): JSX.Element {
 
                 setWordSynonyms(wordSynonymList.map((item, idx) => <span>{item.lemma} | </span>))
             } catch (e) {
+                console.log(e)
             } finally {
                 setIsWordInfoLoading(false)
             }
