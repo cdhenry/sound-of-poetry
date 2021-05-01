@@ -1,7 +1,8 @@
-import { PoemOrderByEnum } from '../enums/orderBy'
+import { PoemOrderByEnum } from '../enums/orderBy';
 
 export interface IPoem {
     id: number
+    poet_id: number
     poet_name: string
     poem_string: string
     title: string
