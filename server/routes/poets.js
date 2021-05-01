@@ -149,7 +149,7 @@ router.get("/", function (req, res) {
       selectClause += ", SUM(paw.unique_word_count) as unique_word_count";
       joinClause += " LEFT JOIN poet_all_words paw ON p.id = paw.poet_id";
       groupByClause = "GROUP BY p.id, p.name, p.yob, p.yod, r.name, s.name";
-      if (orderByClause) orderByClause += ", unique_word_count DESC";
+      if (orderByClause) orderByClause += ", unique_word_count";
       else orderByClause = "ORDER BY unique_word_count";
       break;
   }
