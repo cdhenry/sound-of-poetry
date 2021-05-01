@@ -267,7 +267,7 @@ export default function Poem(): JSX.Element {
                         </div>
                     </div>
                 ) : (
-                    <div className="grid grid-flow-row auto-rows-min gap-4 pb-7">
+                    <div className="grid grid-flow-row auto-rows-min gap-4">
                         <div>{wordDict}</div>
                         {!!wordSynonyms.length && (
                             <div>
