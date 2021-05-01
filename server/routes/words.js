@@ -107,7 +107,7 @@ router.get("/", function (req, res) {
     ${joinClause}
     ${whereClause}
   `;
-  console.log(queryTotal);
+
   connection.query(queryTotal, function (err, rows) {
     let totalCount;
 
@@ -130,7 +130,7 @@ router.get("/", function (req, res) {
         JOIN google_imageid_mid gim ON gim.m_id = ms.m_id
         GROUP BY w.wordid
       )
-      SELECT pw.word_id, w.lemma, SUM(use_count) as occurrence, COUNT(DISTINCT pw.poem_id) as num_poems, ns.sound_count, ni.image_count
+      SELECT pw.word_id as id, w.lemma, SUM(use_count) as occurrence, COUNT(DISTINCT pw.poem_id) as num_poems, ns.sound_count, ni.image_count
       FROM poem_wordnet pw
       JOIN words w ON w.wordid = pw.word_id
       LEFT JOIN num_sounds ns ON ns.word_id = w.wordid 
@@ -142,7 +142,7 @@ router.get("/", function (req, res) {
       LIMIT ${limit}
       OFFSET ${offset};
     `;
-    console.log(query);
+
     connection.query(query, function (err, rest) {
       if (err) {
         return err;
@@ -171,14 +171,14 @@ router.get("/lemmas", function (req, res) {
 router.get("/:word", function (req, res) {
   var id = req.params.word;
   var query = `
-    SELECT word
-    FROM word
-    WHERE id = ${id};
-  `;
+      SELECT *
+      FROM dict d
+      WHERE d.wordid = ${id}       
+    `;
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
-      res.json(rows[0]);
+      res.json(rows);
     }
   });
 });

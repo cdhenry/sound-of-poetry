@@ -28,7 +28,7 @@ export default function PaginateTemplate(props: IPaginateTemplate): JSX.Element 
                     activeClassName={'underline'}
                 />
             </div>
-            <div className={`${total <= 0 ? 'flex-grow ' : ''}flex justify-center w-11/12`}>{children}</div>
+            <div className={`flex ${total <= 0 ? 'flex-grow' : ''} w-11/12`}>{children}</div>
         </section>
     )
 }
