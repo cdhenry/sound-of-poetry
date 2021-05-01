@@ -36,7 +36,7 @@ export default function Poet(): JSX.Element {
                 { limit: Number.MAX_SAFE_INTEGER, pageNumber: 0 },
                 { poets: [poetId] }
             )
-            console.log(poemList)
+
             const poemListContent = [] as React.ReactNode[]
 
             poemList.items.forEach((poem) => {
