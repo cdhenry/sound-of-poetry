@@ -81,11 +81,11 @@ function MapChart({ data }) {
     }
 
     return (
-        <section className="flex items-center flex-col p-2 w-full h-full">
+        <section className="flex items-center flex-col p-2 w-full">
             <svg
                 width={svgWidth}
                 height={svgHeight}
-                className={'mapBox'}
+                className={'mapBox bg-lightBlue-300 rounded-full mt-20'}
                 // onClick={ () => handleOuterClick() }
             >
                 <g className="map">
