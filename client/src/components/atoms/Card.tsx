@@ -32,7 +32,7 @@ export default function Card(props: ICardProps): JSX.Element {
     return (
         <section className={defaultClassName}>
             <div className="flex-none">{header}</div>
-            <div className="flex-grow h-full">{children}</div>
+            <div className="flex-grow h-auto pb-7">{children}</div>
         </section>
     )
 }
