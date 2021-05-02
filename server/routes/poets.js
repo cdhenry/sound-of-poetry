@@ -117,37 +117,15 @@ router.get("/", function (req, res) {
       else orderByClause = "ORDER BY words_per_poem";
       break;
     case orderByWidestVocabulary:
-      cte = `WITH poet_all_words as (
-        SELECT pp.poet_id, COUNT(DISTINCT pw.word_id) unique_word_count
-        FROM poet_poem pp
-        JOIN poem_wordnet pw ON pw.poem_id = pp.poem_id
-        GROUP BY pp.poet_id
-        UNION
-        SELECT pp.poet_id, COUNT(DISTINCT pnw.word_id) unique_word_count
-        FROM poet_poem pp
-        JOIN poem_non_wordnet pnw ON pnw.poem_id = pp.poem_id
-        GROUP BY pp.poet_id
-      )`;
-      selectClause += ", SUM(paw.unique_word_count) as unique_word_count";
-      joinClause += " LEFT JOIN poet_all_words paw ON p.id = paw.poet_id";
+      selectClause += ", pwc.unique_word_count";
+      joinClause += " LEFT JOIN poet_word_count pwc ON p.id = pwc.poet_id";
       groupByClause = "GROUP BY p.id, p.name, p.yob, p.yod, r.name, s.name";
       if (orderByClause) orderByClause += ", unique_word_count DESC";
       else orderByClause = "ORDER BY unique_word_count DESC";
       break;
     case orderBySmallestVocabulary:
-      cte = `WITH poet_all_words as (
-        SELECT pp.poet_id, COUNT(DISTINCT pw.word_id) unique_word_count
-        FROM poet_poem pp
-        JOIN poem_wordnet pw ON pw.poem_id = pp.poem_id
-        GROUP BY pp.poet_id
-        UNION
-        SELECT pp.poet_id, COUNT(DISTINCT pnw.word_id) unique_word_count
-        FROM poet_poem pp
-        JOIN poem_non_wordnet pnw ON pnw.poem_id = pp.poem_id
-        GROUP BY pp.poet_id
-      )`;
-      selectClause += ", SUM(paw.unique_word_count) as unique_word_count";
-      joinClause += " LEFT JOIN poet_all_words paw ON p.id = paw.poet_id";
+      selectClause += ", pwc.unique_word_count";
+      joinClause += " LEFT JOIN poet_word_count pwc ON p.id = pwc.poet_id";
       groupByClause = "GROUP BY p.id, p.name, p.yob, p.yod, r.name, s.name";
       if (orderByClause) orderByClause += ", unique_word_count";
       else orderByClause = "ORDER BY unique_word_count";

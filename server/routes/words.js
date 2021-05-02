@@ -25,7 +25,7 @@ router.get("/", function (req, res) {
   var schools;
   var joinClause = "";
   var whereClause = "";
-  var orderByClause = "ORDER BY occurrence DESC";
+  var orderByClause = "ORDER BY wc.occurrence DESC";
 
   if (req.query.orderBy) orderBy = req.query.orderBy;
   if (req.query.words) words = req.query.words;
@@ -34,15 +34,21 @@ router.get("/", function (req, res) {
   if (req.query.poets) poets = req.query.poets;
   if (req.query.regions) regions = req.query.regions;
   if (req.query.schools) schools = req.query.schools;
-  if (poets || regions || schools) joinClause = "JOIN poet_poem pp ON pp.poem_id = pw.poem_id";
+
+  if (poemIds || tags || poets || regions || schools) joinClause = "JOIN poem_wordnet pw ON wc.word_id = pw.word_id";
+
+  if (poets || regions || schools)
+    joinClause += `
+      JOIN poet_poem pp ON pp.poem_id = pw.poem_id
+    `;
 
   if (words) {
-    whereClause = `WHERE w.wordid IN (${words})`;
+    whereClause = `WHERE wc.word_id IN (${words})`;
   }
 
   if (poemIds) {
-    if (whereClause) whereClause += ` AND pw.poem_id IN (${poems})`;
-    else whereClause = `WHERE pw.poem_id IN (${poems})`;
+    if (whereClause) whereClause += ` AND pw.poem_id IN (${poemIds})`;
+    else whereClause = `WHERE pw.poem_id IN (${poemIds})`;
   }
 
   if (poets) {
@@ -81,29 +87,28 @@ router.get("/", function (req, res) {
 
   switch (orderBy) {
     case orderByAZ:
-      orderByClause = "ORDER BY w.lemma ASC";
+      orderByClause = "ORDER BY wc.lemma ASC";
       break;
     case orderByZA:
-      orderByClause = "ORDER BY w.lemma DESC";
+      orderByClause = "ORDER BY wc.lemma DESC";
       break;
     case orderByOccur:
-      orderBYClause = "ORDER BY occurrence DESC";
+      orderBYClause = "ORDER BY wc.occurrence DESC";
       break;
     case orderByUse:
-      orderByClause = "ORDER BY num_poems DESC";
+      orderByClause = "ORDER BY wc.num_poems DESC";
       break;
     case orderByMostSounds:
-      orderByClause = "ORDER BY sound_count DESC";
+      orderByClause = "ORDER BY wc.sound_count DESC";
       break;
     case orderByMostImages:
-      orderByClause = "ORDER BY image_count DESC";
+      orderByClause = "ORDER BY wc.image_count DESC";
       break;
   }
 
   var queryTotal = `
-    SELECT COUNT(DISTINCT pw.word_id) as total
-    FROM poem_wordnet pw
-    JOIN words w ON w.wordid = pw.word_id
+    SELECT COUNT(wc.word_id) as total
+    FROM word_counts wc
     ${joinClause}
     ${whereClause}
   `;
@@ -118,26 +123,11 @@ router.get("/", function (req, res) {
     }
 
     var query = `
-      WITH num_sounds as (
-        SELECT mcw.word_id, COUNT(ym.ytid) sound_count
-        FROM media_class_wordnet mcw 
-        JOIN ytid_mid ym on ym.m_id = mcw.m_id
-        GROUP BY mcw.word_id 
-      ), num_images as (
-        SELECT w.wordid as word_id, COUNT(DISTINCT gim.image_id) as image_count
-        FROM wordsXsensesXsynsets w
-        JOIN mid_synset ms ON ms.synsetid = w.synsetid
-        JOIN google_imageid_mid gim ON gim.m_id = ms.m_id
-        GROUP BY w.wordid
-      )
-      SELECT pw.word_id as id, w.lemma, SUM(use_count) as occurrence, COUNT(DISTINCT pw.poem_id) as num_poems, ns.sound_count, ni.image_count
-      FROM poem_wordnet pw
-      JOIN words w ON w.wordid = pw.word_id
-      LEFT JOIN num_sounds ns ON ns.word_id = w.wordid 
-      LEFT JOIN num_images ni ON ni.word_id = w.wordid
+      SELECT wc.word_id as id, wc.lemma, wc.occurrence, wc.num_poems, wc.sound_count, wc.image_count
+      FROM word_counts wc
       ${joinClause}
       ${whereClause}
-      GROUP BY pw.word_id
+      GROUP BY wc.word_id
       ${orderByClause}
       LIMIT ${limit}
       OFFSET ${offset};

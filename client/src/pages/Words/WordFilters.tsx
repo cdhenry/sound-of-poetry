@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Select, { OptionsType, OptionTypeBase } from 'react-select';
-import AsyncSelect from 'react-select/async';
+import React, { useCallback, useEffect, useState } from 'react'
+import Select, { OptionsType, OptionTypeBase } from 'react-select'
+import AsyncSelect from 'react-select/async'
 
-import { WordOrderByEnum } from '../../enums/orderBy';
-import { ISelectOption } from '../../interfaces/shared';
-import { IWordFiltersProps } from '../../interfaces/word';
-import { PoemService, poemService } from '../../services/poem';
-import { PoetService, poetService } from '../../services/poet';
-import { WordService, wordService } from '../../services/word';
-import Loading from '../Loading';
+import { WordOrderByEnum } from '../../enums/orderBy'
+import { ISelectOption } from '../../interfaces/shared'
+import { IWordFiltersProps } from '../../interfaces/word'
+import { PoemService, poemService } from '../../services/poem'
+import { PoetService, poetService } from '../../services/poet'
+import { WordService, wordService } from '../../services/word'
+import Loading from '../Loading'
 
 export default function WordFilters(props: IWordFiltersProps): JSX.Element {
     const defaultClassName =
@@ -124,7 +124,12 @@ export default function WordFilters(props: IWordFiltersProps): JSX.Element {
                         loadOptions={loadWords}
                         onChange={onWordChange}
                     />
-                    <Select placeholder="Order by" options={orderByOptions} onChange={onOrderByChange} />
+                    <Select
+                        isClearable={true}
+                        placeholder="Order by"
+                        options={orderByOptions}
+                        onChange={onOrderByChange}
+                    />
                     <Select placeholder="Regions" options={regionOptions} onChange={onRegionChange} isMulti />
                     <Select placeholder="Schools" options={schoolOptions} onChange={onSchoolChange} isMulti />
                 </>
