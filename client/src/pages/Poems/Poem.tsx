@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { randomInteger } from '../../common/utils/randomInteger';
 import Button from '../../components/atoms/Button';
@@ -8,6 +8,7 @@ import Header from '../../components/atoms/Header';
 import { CardTypeEnum } from '../../enums/cardType';
 import { HandwritingFontEnum } from '../../enums/fonts';
 import { HeaderTypeEnum } from '../../enums/headerType';
+import { RoutesEnum } from '../../enums/routes';
 import { TailwindHeightEnum, TailwindWidthEnum } from '../../enums/tailwind';
 import { IPoem, IPoemStat } from '../../interfaces/poem';
 import { IParams } from '../../interfaces/shared';
@@ -106,8 +107,13 @@ export default function Poem(): JSX.Element {
                 getWordImages(id)
 
                 setWordDict([
-                    <div key={`PoemWordTitle${id}`} className="flex items-center justify-center mb-4">
-                        <strong>{lemma}</strong>
+                    <div
+                        key={`PoemWordTitle${id}`}
+                        className="flex items-center justify-center mb-4 hover:text-shadow-lg hover:text-cyan-500"
+                    >
+                        <Link to={`${RoutesEnum.Words}/${id}`}>
+                            <strong>{lemma}</strong>
+                        </Link>
                     </div>,
                     <ul>
                         {wordDictList.map((item, idx) => (
@@ -222,7 +228,17 @@ export default function Poem(): JSX.Element {
                 header={
                     <div>
                         <Header headerType={HeaderTypeEnum.HeaderWeb}>
-                            {poem.title} by {poem.poet_name}
+                            {poem.title} by{' '}
+                            {poem.poet_id ? (
+                                <Link
+                                    className="hover:text-shadow-lg hover:text-cyan-500"
+                                    to={`${RoutesEnum.Poets}/${poem.poet_id}`}
+                                >
+                                    {poem.poet_name}
+                                </Link>
+                            ) : (
+                                poem.poet_name
+                            )}
                         </Header>
                     </div>
                 }

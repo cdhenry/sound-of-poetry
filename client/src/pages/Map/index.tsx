@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import MapChart from '../../components/atoms/MapChart';
-import {IGetRegionsQuery, IMap} from '../../interfaces/map';
-import MapTemplate from '../../templates/Map';
+import { IGetRegionsQuery, IMap } from '../../interfaces/map';
+import { PoemService, poemService } from '../../services/poem';
 import Loading from '../Loading';
-import {poemService, PoemService} from "../../services/poem";
-import MapFilters from "./Filters";
+import MapFilters from './Filters';
 
 export default function Map(): JSX.Element {
     const _poemService: PoemService = poemService
@@ -36,14 +35,9 @@ export default function Map(): JSX.Element {
     }, [getRegions, data.length])
 
     return (
-        <MapTemplate
-            content={
-                <>
-                    <MapFilters handleFilterChange={handleFilterChange} />
-                    {isLoading ? <Loading /> : !hasError ? <MapChart data={data} /> : 'Error'}
-                </>
-
-            }
-        />
+        <>
+            <MapFilters handleFilterChange={handleFilterChange} />
+            {isLoading ? <Loading /> : !hasError ? <MapChart data={data} /> : 'Error'}
+        </>
     )
 }

@@ -46,18 +46,22 @@ export default function MapFilters(props: IMapFiltersProps): JSX.Element {
         getTags()
     }, [getTags])
 
-    return isLoading ? (
-        <Loading />
-    ) : (
+    return (
         <section className={defaultClassName}>
-            <Select placeholder="Topics" options={tagOptions} onChange={onTagChange} isMulti />
-            <AsyncSelect
-                isMulti
-                placeholder="Words"
-                noOptionsMessage={noOptionsMessage}
-                loadOptions={loadWords}
-                onChange={onWordChange}
-            />
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <>
+                    <Select placeholder="Topics" options={tagOptions} onChange={onTagChange} isMulti />
+                    <AsyncSelect
+                        isMulti
+                        placeholder="Words"
+                        noOptionsMessage={noOptionsMessage}
+                        loadOptions={loadWords}
+                        onChange={onWordChange}
+                    />
+                </>
+            )}
         </section>
     )
 }
