@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Select, { OptionsType, OptionTypeBase } from 'react-select';
-import AsyncSelect from 'react-select/async';
+import React, { useCallback, useEffect, useState } from 'react'
+import Select, { OptionsType, OptionTypeBase } from 'react-select'
+import AsyncSelect from 'react-select/async'
 
-import ToggleInput from '../../components/atoms/ToggleInput';
-import { PoemOrderByEnum } from '../../enums/orderBy';
-import { IPoemFiltersProps } from '../../interfaces/poem';
-import { ISelectOption } from '../../interfaces/shared';
-import { PoemService, poemService } from '../../services/poem';
-import { PoetService, poetService } from '../../services/poet';
-import { WordService, wordService } from '../../services/word';
-import Loading from '../Loading';
+import ToggleInput from '../../components/atoms/ToggleInput'
+import { PoemOrderByEnum } from '../../enums/orderBy'
+import { IPoemFiltersProps } from '../../interfaces/poem'
+import { ISelectOption } from '../../interfaces/shared'
+import { PoemService, poemService } from '../../services/poem'
+import { PoetService, poetService } from '../../services/poet'
+import { WordService, wordService } from '../../services/word'
+import Loading from '../Loading'
 
 export default function PoemFilters(props: IPoemFiltersProps): JSX.Element {
     const defaultClassName =
