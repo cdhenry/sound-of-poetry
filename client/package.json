@@ -70,7 +70,7 @@
         "@types/react-router-dom": "^5.1.7",
         "@types/react-select": "^4.0.15",
         "autoprefixer": "^9",
-        "postcss": "^7",
+        "postcss": "^8",
         "prettier": "2.2.1",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat",
         "tailwindcss-textshadow": "^2.1.3"
